@@ -1,0 +1,28 @@
+{
+  "name": "nanoexpress",
+  "version": "0.0.1",
+  "description": "Nano-framework for Node.js powered by uWebSockets.js",
+  "main": "build/server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dalisoft/nanoexpress.git"
+  },
+  "keywords": [
+    "nano",
+    "node",
+    "fast",
+    "uws",
+    "websocket",
+    "http",
+    "c++"
+  ],
+  "author": "dalisoft",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/dalisoft/nanoexpress/issues"
+  },
+  "homepage": "https://github.com/dalisoft/nanoexpress#readme"
+}
