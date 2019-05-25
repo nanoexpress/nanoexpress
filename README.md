@@ -10,6 +10,7 @@ Nano-framework for Node.js powered by uWebSockets.js
 
 - Blazing fast performance
 - Ultra lightweight size
+- Resource (CPU / Memory) effecient
 - Familiar API
 - Normalised API
 
