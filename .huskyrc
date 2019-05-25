@@ -1,0 +1,5 @@
+{
+  "hooks": {
+    "pre-commit": "git config core.ignorecase false && lint-staged"
+  }
+}

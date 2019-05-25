@@ -1,0 +1,1 @@
+export default (res) => res;
