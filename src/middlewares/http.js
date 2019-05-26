@@ -10,10 +10,22 @@ export default (path = '/*', fns, config) => {
     path,
     async (req, res) => {
       let result;
-      for await (const fn of fns) {
+      let fn;
+      let i = 0;
+      const len = fns.length;
+      for (; i < len; i++) {
+        fn = fns[i];
+
         // Add Express-like middlewares support
         if (typeof fn === 'function') {
-          if (!fn.then && fn.constructor.name !== 'AsyncFunction') {
+          if (fn.then || fn.constructor.name === 'AsyncFunction') {
+            result = await fn(req, res, config).catch((err) => {
+              console.error(
+                '[Server]: Error - Middleware crashed or failed',
+                err
+              );
+            });
+          } else {
             if (fn === lastFn) {
               result = fn(req, res, config);
             } else {
@@ -32,13 +44,6 @@ export default (path = '/*', fns, config) => {
                 fn(req, res, next, config);
               });
             }
-          } else if (fn.then || fn.constructor.name === 'AsyncFunction') {
-            result = await fn(req, res, config).catch((err) => {
-              console.error(
-                '[Server]: Error - Middleware crashed or failed',
-                err
-              );
-            });
           }
         }
       }
