@@ -8,6 +8,7 @@ This application isn't production ready and use at your own risk
 
 ## Features
 
+- Easy to use (for Express users especially)
 - Blazing fast performance
 - Ultra lightweight size
 - Resource (CPU / Memory) effecient
