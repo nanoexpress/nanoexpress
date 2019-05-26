@@ -117,7 +117,7 @@ app.ws(
   }
 );
 
-app.get('/', async (req) => ({ status: 'success', query: req.query }));
+app.get('/', () => 'hello');
 
 app.listen(4000);
 

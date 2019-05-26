@@ -35,33 +35,51 @@ export default (res) => {
       console.error('[Server]: Error, Response was aborted before responsing');
       return;
     }
-    if (typeof result === 'object' && result) {
-      res.setHeader('Content-Type', 'application/json');
-      result = JSON.stringify(result);
-    } else if (typeof result === 'string') {
-      if (result.startsWith('<xml')) {
-        res.setHeader('Content-Type', 'application/xml');
-      } else if (result.startsWith('<!DOCTYPE')) {
-        res.setHeader('Content-Type', 'text/html');
-      } else {
-        res.setHeader('Content-Type', 'text/plain');
-      }
-    }
     return res.end(result);
   };
 
   // It boosts performance by large-margin
   // if you use it right :)
-  res.cork = (result) => {
-    res.experimental_cork(() => {
-      res.send(result);
-    });
+  res.cork = (result, method = 'send') => {
+    if (res.experimental_cork) {
+      res.experimental_cork(() => {
+        res[method](result);
+      });
+    } else {
+      return res[method](result);
+    }
   };
 
   // Aliases for beginners and/or users from Express!
-  res.json = res.send;
-  res.html = res.send;
-  res.xml = res.send;
+  res.json = (result, schema) => {
+    if (typeof result === 'object' && result) {
+      res.setHeader('Content-Type', 'application/json');
+      if (schema && typeof schema === 'function') {
+        result = schema(result);
+      } else {
+        result = JSON.stringify(result);
+      }
+    }
+    return res.send(result);
+  };
+  res.plain = (result) => {
+    if (typeof result === 'string') {
+      res.setHeader('Content-Type', 'text/plain');
+    }
+    return res.send(result);
+  };
+  res.html = (result) => {
+    if (typeof result === 'string' && result.startsWith('<!DOCTYPE')) {
+      res.setHeader('Content-Type', 'text/html');
+    }
+    return res.send(result);
+  };
+  res.xml = (result) => {
+    if (typeof result === 'string' && result.startsWith('<xml')) {
+      res.setHeader('Content-Type', 'application/xml');
+    }
+    return res.send(result);
+  };
 
   return res;
 };
