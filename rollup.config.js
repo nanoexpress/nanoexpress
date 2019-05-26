@@ -33,9 +33,10 @@ export default {
       }),
     dev
       ? watch && run()
-      : terser({
-        compress: true,
-        mangle: true
-      })
+      : !watch &&
+        terser({
+          compress: true,
+          mangle: true
+        })
   ]
 };

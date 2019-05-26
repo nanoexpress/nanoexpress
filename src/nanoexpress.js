@@ -1,6 +1,6 @@
 import uWS from 'uWebSockets.js';
 
-import { http } from './handler';
+import { http } from './middlewares';
 
 const nanoexpress = (options = {}) => {
   const time = Date.now(); // For better managing start-time / lags
@@ -12,7 +12,26 @@ const nanoexpress = (options = {}) => {
     app = uWS.App();
   }
 
-  return {
+  const httpMethods = [
+    'get',
+    'post',
+    'put',
+    'patch',
+    'delete',
+    'any',
+    'head',
+    'options',
+    'trace'
+  ];
+  // App configuration
+  let middlewares = [];
+  const config = {};
+
+  const _app = {
+    set: (key, value) => {
+      config[key] = value;
+    },
+    get: (key) => config[key],
     listen: (port, host) =>
       new Promise((resolve, reject) => {
         if (port === undefined) {
@@ -32,37 +51,30 @@ const nanoexpress = (options = {}) => {
           }
         });
       }),
-    use: async (path = '/*', ...fns) => {
-      if (typeof path === 'function') {
-        fns.unshift(path);
-        path = '/*';
-      }
-      await app.all(
-        path,
-        http(async (req, res) => {
-          for await (const fn of fns) {
-            await fn(req, res);
-          }
-        })
-      );
-    },
-    get: async (path, fn) => await app.get(path, http(path, fn)),
-    post: async (path, fn) => await app.post(path, http(path, fn)),
-    put: async (path, fn) => await app.put(path, http(path, fn)),
-    patch: async (path, fn) => await app.get(path, http(path, fn)),
-    head: async (path, fn) => await app.head(path, http(path, fn)),
-    delete: async (path, fn) => await app.delete(path, http(path, fn)),
-    options: async (path, fn) => await app.options(path, http(path, fn)),
-    trace: async (path, fn) => await app.trace(path, http(path, fn)),
-    any: async (path, fn) => await app.any(path, http(path, fn)),
-    all: async (path, fn) => await app.all(path, http(path, fn))
+    use: async (...fns) => {
+      middlewares = fns;
+    }
   };
+
+  httpMethods.forEach((method) => {
+    _app[method] = async (path, ...fns) =>
+      await app[method](
+        path,
+        await http(path, middlewares.concat(fns), config)
+      );
+  });
+
+  return _app;
 };
 
 const myapp = nanoexpress();
 
+myapp.use((req, res, next) => {
+  req.say = 'hello';
+  next();
+});
 myapp.get('/', async () => ({ status: 'success' }));
-myapp.get('/:name/:app', async () => ({ status: 'param' }));
+myapp.get('/:name/:app', async (req) => ({ status: 'param', say: req.say }));
 myapp.listen(4000);
 
 export { nanoexpress as default };
