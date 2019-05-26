@@ -102,23 +102,4 @@ const nanoexpress = (options = {}) => {
   return _app;
 };
 
-const app = nanoexpress();
-
-app.ws(
-  '/ws',
-  { compression: 0, maxPayloadLength: 16 * 1024 * 1024, idleTimeout: 10 },
-  (req, ws) => {
-    console.log('connection established');
-    ws.on('message', (msg) => console.log('message', msg));
-    ws.on('drain', (amount) => console.log('drain', amount));
-    ws.on('close', (code, msg) => console.log('closed', code, msg));
-
-    ws.send('hello');
-  }
-);
-
-app.get('/', () => 'hello');
-
-app.listen(4000);
-
 export { nanoexpress as default };
