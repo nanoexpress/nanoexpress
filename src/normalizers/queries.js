@@ -1,5 +1,5 @@
-import querystring from 'query-string';
+import { parse } from 'querystring';
 
 export default (req) => {
-  return querystring.parse(req.getQuery());
+  return parse(req.getQuery().substr(1));
 };

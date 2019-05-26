@@ -1,7 +1,8 @@
 import uWS from 'uWebSockets.js';
 
-import { http } from './middlewares';
+import { http, ws } from './middlewares';
 import { routeMapper } from './helpers';
+import { middlewares as builtinMiddlewares } from './builtins';
 
 const nanoexpress = (options = {}) => {
   const time = Date.now(); // For better managing start-time / lags
@@ -12,6 +13,11 @@ const nanoexpress = (options = {}) => {
   } else {
     app = uWS.App();
   }
+
+  // For Performance reason
+  process.on('beforeExit', () => {
+    app.forcefully_free();
+  });
 
   const httpMethods = [
     'get',
@@ -25,7 +31,7 @@ const nanoexpress = (options = {}) => {
     'trace'
   ];
   // App configuration
-  let middlewares = [];
+  let middlewares = [...builtinMiddlewares];
   const pathMiddlewares = {};
   const config = {};
 
@@ -59,6 +65,8 @@ const nanoexpress = (options = {}) => {
       if (typeof path === 'function') {
         fns.unshift(path);
         middlewares.push(...fns);
+
+        // Avoid duplicates if contains for performance
         middlewares = middlewares.filter(
           (item, i, self) => self.indexOf(item) === i
         );
@@ -66,12 +74,15 @@ const nanoexpress = (options = {}) => {
         if (!pathMiddlewares[path]) {
           pathMiddlewares[path] = [];
         }
+
+        // Avoid duplicates if contains for performance
         pathMiddlewares[path].push(...fns);
         pathMiddlewares[path] = pathMiddlewares[path].filter(
           (item, i, self) => self.indexOf(item) === i
         );
       }
-    }
+    },
+    ws: (path, options, fn) => app.ws(path, ws(path, options, fn))
   };
 
   httpMethods.forEach((method) => {
@@ -90,5 +101,24 @@ const nanoexpress = (options = {}) => {
 
   return _app;
 };
+
+const app = nanoexpress();
+
+app.ws(
+  '/ws',
+  { compression: 0, maxPayloadLength: 16 * 1024 * 1024, idleTimeout: 10 },
+  (req, ws) => {
+    console.log('connection established');
+    ws.on('message', (msg) => console.log('message', msg));
+    ws.on('drain', (amount) => console.log('drain', amount));
+    ws.on('close', (code, msg) => console.log('closed', code, msg));
+
+    ws.send('hello');
+  }
+);
+
+app.get('/', async (req) => ({ status: 'success', query: req.query }));
+
+app.listen(4000);
 
 export { nanoexpress as default };

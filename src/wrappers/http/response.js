@@ -1,6 +1,12 @@
 import { httpCodes } from '../../constants';
+import { sendStream } from '../../helpers';
 
 export default (res) => {
+  // Crash handling
+  res.onAborted(() => {
+    res.aborted = true;
+  });
+
   // Normalize status method
   res.status = (code) => {
     if (httpCodes[code] !== undefined) {
@@ -15,11 +21,20 @@ export default (res) => {
     res.writeHeader(key, value);
   };
 
+  // Add stream feature by just method
+  // for easy and clean code
+  res.stream = sendStream(res);
+
   // Normalise send method
   // And some features, like
   // HTML, JSON, XML and Plain
   // parsing out-of-the-box
   res.send = (result) => {
+    /* If we were aborted, you cannot respond */
+    if (res.aborted) {
+      console.error('[Server]: Error, Response was aborted before responsing');
+      return;
+    }
     if (typeof result === 'object' && result) {
       res.setHeader('Content-Type', 'application/json');
       result = JSON.stringify(result);

@@ -1,4 +1,4 @@
 import request from './request';
-import response from './response';
+import ws from './ws';
 
-export { request, response };
+export { request, ws };

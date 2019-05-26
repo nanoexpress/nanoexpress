@@ -1,1 +1,1 @@
-export default (req) => req;
+export { request as default } from '../http';

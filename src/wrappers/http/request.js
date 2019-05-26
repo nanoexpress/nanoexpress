@@ -10,7 +10,7 @@ export default async (req, res) => {
   req.headers = Object.assign(req.headers || {}, headers(req));
   req.query = Object.assign(req.query || {}, queries(req));
   req.params = Object.assign(req.params || {}, params(req));
-  req.body = await body(res);
+  req.body = res.onData && (await body(res));
 
   return req;
 };

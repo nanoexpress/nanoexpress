@@ -15,11 +15,13 @@ This application isn't production ready and use at your own risk
 - Normalised API
 - Can define routes Declaratively
 - Express-compatible middleware
+- In-built `body-parser` middleware (JSON, FormEncoded, Plain, XML)
+- In-built Stream (Video stream, yay!) support
+- In-built WebSocket support
 
 ## Credits
 
 - [uWebSockets.js](https://github.com/uNetworking/uWebSockets.js)
-- [query-string](https://github.com/sindresorhus/query-string)
 
 And to other libraries which used to create this library and without these libraries wouldn't be possible to create this library
 

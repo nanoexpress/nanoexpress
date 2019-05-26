@@ -15,7 +15,7 @@ export default {
     file: './build/nanoexpress.js',
     esModule: false
   },
-  external: Object.keys(pkg.dependencies),
+  external: Object.keys(pkg.dependencies).concat(['fs', 'querystring']),
   plugins: [
     commonjs({
       sourceMap: false
