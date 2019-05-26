@@ -21,10 +21,32 @@ const onAbortedOrFinishedResponse = (res, readStream) =>
     resolve(readStream);
   });
 
-export default (res) => {
+const bytes = 'bytes=';
+export default (req, res) => {
+  const { headers } = req;
   return async (fileName) => {
-    const fileSize = (await promisify(fs.stat, fileName)).size;
-    const readStream = fs.createReadStream(fileName);
+    let fileSize = (await promisify(fs.stat, fileName)).size;
+
+    // Allow partial content
+    let start = 0,
+      end = fileSize - 1;
+
+    if (headers.range) {
+      const parts = headers.range.replace(bytes, '').split('-');
+      start = parseInt(parts[0], 10);
+      end = parts[1] ? parseInt(parts[1], 10) : end;
+      headers['accept-ranges'] = 'bytes';
+      headers['content-range'] = `bytes ${start}-${end}/${fileSize}`;
+      fileSize = end - start + 1;
+      res.writeStatus('206 Partial Content');
+    }
+
+    // for size = 0
+    if (end < 0) {
+      end = 0;
+    }
+
+    const readStream = fs.createReadStream(fileName, { start, end });
 
     const result = await new Promise((resolve, reject) => {
       readStream

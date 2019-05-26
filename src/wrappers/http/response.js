@@ -1,7 +1,7 @@
 import { httpCodes } from '../../constants';
 import { sendStream } from '../../helpers';
 
-export default (res) => {
+export default (res, req) => {
   // Crash handling
   res.onAborted(() => {
     res.aborted = true;
@@ -21,9 +21,14 @@ export default (res) => {
     res.writeHeader(key, value);
   };
 
+  // Normalize removeHeader (TODO: this not works still :( )
+  res.removeHeader = (key) => {
+    res.writeHeader(key, '');
+  };
+
   // Add stream feature by just method
   // for easy and clean code
-  res.stream = sendStream(res);
+  res.stream = sendStream(req, res);
 
   // Normalise send method
   // And some features, like

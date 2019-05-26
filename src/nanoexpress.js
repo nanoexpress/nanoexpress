@@ -14,11 +14,6 @@ const nanoexpress = (options = {}) => {
     app = uWS.App();
   }
 
-  // For Performance reason
-  process.on('beforeExit', () => {
-    app.forcefully_free();
-  });
-
   const httpMethods = [
     'get',
     'post',

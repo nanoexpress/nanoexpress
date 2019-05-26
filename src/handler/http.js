@@ -1,4 +1,5 @@
 import { http } from '../wrappers';
+import flatstr from 'flatstr';
 
 export default (path, fn, config) => {
   return async (res, req) => {
@@ -9,6 +10,7 @@ export default (path, fn, config) => {
     const response = await http.response(res, req, config);
     const result = await fn(request, response, config);
 
+    flatstr(result);
     res.send(result);
   };
 };
