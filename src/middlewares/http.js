@@ -6,13 +6,13 @@ export default (path = '/*', fns, config) => {
     path = '/*';
   }
   const lastFn = fns[fns.length - 1];
+  const len = fns.length;
   return http(
     path,
     async (req, res) => {
       let result;
       let fn;
       let i = 0;
-      const len = fns.length;
       for (; i < len; i++) {
         fn = fns[i];
 
