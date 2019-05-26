@@ -30,7 +30,12 @@ export default async (path = '/*', fns, config) => {
                 syncFn(req, res, next, config);
               });
           }
-          result = await fn(req, res, config);
+          result = await fn(req, res, config).catch((err) => {
+            console.error(
+              '[Server]: Error - Middleware crashed or failed',
+              err
+            );
+          });
         }
         if (result === undefined || result === null) {
           result = '[Server]: Error - Response not found';

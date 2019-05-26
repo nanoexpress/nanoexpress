@@ -1,6 +1,7 @@
 import uWS from 'uWebSockets.js';
 
 import { http } from './middlewares';
+import { routeMapper } from './helpers';
 
 const nanoexpress = (options = {}) => {
   const time = Date.now(); // For better managing start-time / lags
@@ -28,10 +29,12 @@ const nanoexpress = (options = {}) => {
   const config = {};
 
   const _app = {
-    set: (key, value) => {
-      config[key] = value;
+    config: {
+      set: (key, value) => {
+        config[key] = value;
+      },
+      get: (key) => config[key]
     },
-    get: (key) => config[key],
     listen: (port, host) =>
       new Promise((resolve, reject) => {
         if (port === undefined) {
@@ -64,17 +67,24 @@ const nanoexpress = (options = {}) => {
       );
   });
 
+  _app.define = routeMapper(_app);
+
   return _app;
 };
 
 const myapp = nanoexpress();
 
-myapp.use((req, res, next) => {
+myapp.use(async (req) => {
   req.say = 'hello';
-  next();
 });
-myapp.get('/', async () => ({ status: 'success' }));
-myapp.get('/:name/:app', async (req) => ({ status: 'param', say: req.say }));
+myapp.define({
+  '/': {
+    get: async () => ({ status: 'success' })
+  },
+  '/:name': {
+    '/:app': { get: async (req) => ({ status: 'param', say: req.say }) }
+  }
+});
 myapp.listen(4000);
 
 export { nanoexpress as default };
