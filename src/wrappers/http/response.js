@@ -1,4 +1,4 @@
-import { httpCodes } from '../../constants';
+import http from 'http';
 import { sendStream } from '../../helpers';
 
 export default (res, req) => {
@@ -9,8 +9,8 @@ export default (res, req) => {
 
   // Normalize status method
   res.status = (code) => {
-    if (httpCodes[code] !== undefined) {
-      res.writeStatus(code + ' ' + httpCodes[code]);
+    if (http.STATUS_CODES[code] !== undefined) {
+      res.___status = code + ' ' + http.STATUS_CODES[code];
     } else {
       console.error('[Server]: Invalid Code ' + code);
     }
@@ -18,12 +18,25 @@ export default (res, req) => {
 
   // Normalize setHeader method
   res.setHeader = (key, value) => {
-    res.writeHeader(key, value);
+    if (!res.___headers) {
+      res.___headers = {};
+    }
+    res.___headers[key] = value;
   };
 
-  // Normalize removeHeader (TODO: this not works still :( )
+  // Normalize hasHeader method
+  res.hasHeader = (key) => res.___headers && res.___headers[key] === undefined;
+
+  // Normalize removeHeader
   res.removeHeader = (key) => {
-    res.writeHeader(key, '');
+    if (!res.___headers) {
+      return;
+    }
+    delete res.___headers[key];
+
+    if (Object.keys(res.___headers).length === 0) {
+      delete res.___headers;
+    }
   };
 
   // Add stream feature by just method
@@ -39,6 +52,14 @@ export default (res, req) => {
     if (res.aborted) {
       console.error('[Server]: Error, Response was aborted before responsing');
       return;
+    }
+    if (res.___status) {
+      res.writeStatus(res.___status);
+    }
+    if (res.___headers) {
+      for (const header in res.___headers) {
+        res.writeHeader(header, res.___headers[header]);
+      }
     }
     return res.end(result);
   };

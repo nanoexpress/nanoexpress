@@ -18,6 +18,14 @@ const onAbortedOrFinishedResponse = (res, readStream) =>
       reject(new Error('[Server]: Error, Stream was closed'));
     }
     res.id = -1;
+    if (res.___status) {
+      res.writeStatus(res.___status);
+    }
+    if (res.___headers) {
+      for (const header in res.___headers) {
+        res.writeHeader(header, res.___headers[header]);
+      }
+    }
     resolve(readStream);
   });
 
