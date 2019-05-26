@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "Nano-framework for Node.js powered by uWebSockets.js",
   "main": "build/nanoexpress.js",
+  "module": "src/nanoexpress.js",
   "scripts": {
     "dev": "NODE_ENV=development rollup -c -w",
     "build": "rollup -c"
@@ -27,7 +28,6 @@
   },
   "homepage": "https://github.com/dalisoft/nanoexpress#readme",
   "dependencies": {
-    "dotenv-safe": "^6.1.0",
     "query-string": "^6.5.0",
     "uWebSockets.js": "github:uNetworking/uWebSockets.js#binaries"
   },
@@ -43,7 +43,6 @@
     "rollup-plugin-babel": "^4.3.2",
     "rollup-plugin-commonjs": "^10.0.0",
     "rollup-plugin-node-resolve": "^5.0.0",
-    "rollup-plugin-run": "^1.1.0",
-    "rollup-plugin-terser": "^5.0.0"
+    "rollup-plugin-run": "^1.1.0"
   }
 }

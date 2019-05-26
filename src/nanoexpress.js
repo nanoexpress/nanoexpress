@@ -26,6 +26,7 @@ const nanoexpress = (options = {}) => {
   ];
   // App configuration
   let middlewares = [];
+  const pathMiddlewares = {};
   const config = {};
 
   const _app = {
@@ -54,8 +55,22 @@ const nanoexpress = (options = {}) => {
           }
         });
       }),
-    use: async (...fns) => {
-      middlewares = fns;
+    use: async (path, ...fns) => {
+      if (typeof path === 'function') {
+        fns.unshift(path);
+        middlewares.push(...fns);
+        middlewares = middlewares.filter(
+          (item, i, self) => self.indexOf(item) === i
+        );
+      } else if (typeof path === 'string') {
+        if (!pathMiddlewares[path]) {
+          pathMiddlewares[path] = [];
+        }
+        pathMiddlewares[path].push(...fns);
+        pathMiddlewares[path] = pathMiddlewares[path].filter(
+          (item, i, self) => self.indexOf(item) === i
+        );
+      }
     }
   };
 
@@ -63,7 +78,11 @@ const nanoexpress = (options = {}) => {
     _app[method] = async (path, ...fns) =>
       await app[method](
         path,
-        await http(path, middlewares.concat(fns), config)
+        await http(
+          path,
+          middlewares.concat(pathMiddlewares[path] || []).concat(fns),
+          config
+        )
       );
   });
 
@@ -71,20 +90,5 @@ const nanoexpress = (options = {}) => {
 
   return _app;
 };
-
-const myapp = nanoexpress();
-
-myapp.use(async (req) => {
-  req.say = 'hello';
-});
-myapp.define({
-  '/': {
-    get: async () => ({ status: 'success' })
-  },
-  '/:name': {
-    '/:app': { get: async (req) => ({ status: 'param', say: req.say }) }
-  }
-});
-myapp.listen(4000);
 
 export { nanoexpress as default };
