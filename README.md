@@ -17,7 +17,7 @@ This application isn't production ready and use at your own risk
 - Express-compatible middleware
 - In-built `body-parser` middleware (JSON, FormEncoded, Plain, XML)
 - In-built Stream (Video stream, yay!) support
-- In-built WebSocket support
+- In-built WebSocket support (Express-like API and Events)
 
 ## Credits
 
