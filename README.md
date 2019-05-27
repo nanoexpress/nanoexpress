@@ -50,6 +50,10 @@ app.use(middlewares.bodyParser); // or app.use(bodyParser);
 - `body-parser`
 - `cookie`
 
+## Working Middlewares
+
+- `express-fileupload`
+
 ## Credits
 
 - [uWebSockets.js](https://github.com/uNetworking/uWebSockets.js)

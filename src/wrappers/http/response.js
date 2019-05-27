@@ -9,103 +9,125 @@ export default (res, req, config, schema) => {
   });
 
   // Normalize status method
-  res.status = (code) => {
-    if (http.STATUS_CODES[code] !== undefined) {
-      res.writeStatus(code + ' ' + http.STATUS_CODES[code]);
-    } else {
-      console.error('[Server]: Invalid Code ' + code);
-    }
-  };
+  res.status =
+    res.status ||
+    ((code) => {
+      if (http.STATUS_CODES[code] !== undefined) {
+        res.writeStatus(code + ' ' + http.STATUS_CODES[code]);
+      } else {
+        console.error('[Server]: Invalid Code ' + code);
+      }
+    });
 
   // Normalize setHeader method
   let headers;
   let headersCount = 0;
-  res.setHeader = (key, value) => {
-    if (!headers) {
-      headers = {};
-    }
-    headersCount++;
-    headers[key] = value;
-  };
+  res.setHeader =
+    res.setHeader ||
+    ((key, value) => {
+      if (!headers) {
+        headers = {};
+      }
+      headersCount++;
+      headers[key] = value;
+    });
 
   // Normalize hasHeader method
-  res.hasHeader = (key) => headers && headers[key] === undefined;
+  res.hasHeader =
+    res.hasHeader || ((key) => headers && headers[key] !== undefined);
 
   // Normalize removeHeader
-  res.removeHeader = (key) => {
-    if (!headers) {
-      return;
-    }
-    delete headers[key];
-    headersCount--;
+  res.removeHeader =
+    res.removeHeader ||
+    ((key) => {
+      if (!headers) {
+        return;
+      }
+      delete headers[key];
+      headersCount--;
 
-    if (headersCount === 0) {
-      headers = null;
-    }
-  };
+      if (headersCount === 0) {
+        headers = null;
+      }
+    });
 
   // For rare some cases
-  res.applyHeaders = () => {
-    if (headersCount) {
+  res.applyHeaders =
+    res.applyHeaders ||
+    (() => {
+      if (headersCount) {
+        for (const header in headers) {
+          res.writeHeader(header, headers[header]);
+          headersCount--;
+        }
+      }
+    });
+  res.setHeaders =
+    res.setHeaders ||
+    ((headers) => {
       for (const header in headers) {
         res.writeHeader(header, headers[header]);
-        headersCount--;
       }
-    }
-  };
-  res.setHeaders = (headers) => {
-    for (const header in headers) {
-      res.writeHeader(header, headers[header]);
-    }
-  };
+    });
+  res.writeHead =
+    res.writeHead ||
+    ((code, headers) => {
+      res.status(code);
+      res.setHeaders(headers);
+      res.applyHeaders();
+    });
 
   // Add stream feature by just method
   // for easy and clean code
-  res.sendFile = sendFile(req, res);
+  res.sendFile = res.sendFile || sendFile(req, res);
 
   // Normalise send method
   // And some features, like
   // HTML, JSON, XML and Plain
   // parsing out-of-the-box
-  res.send = (result) => {
-    /* If we were aborted, you cannot respond */
-    if (!result || res.aborted) {
-      console.error(
-        '[Server]: Error, Response was aborted before responsing or result is marlformed'
-      );
-      return;
-    }
-    if (typeof result === 'string') {
-      if (result.indexOf('<!DOCTYPE') === 0) {
-        res.setHeader('Content-Type', 'text/html');
-      } else if (result.indexOf('<xml') === 0) {
-        res.setHeader('Content-Type', 'application/xml');
+  res.send =
+    res.send ||
+    ((result) => {
+      /* If we were aborted, you cannot respond */
+      if (!result || res.aborted) {
+        console.error(
+          '[Server]: Error, Response was aborted before responsing or result is marlformed'
+        );
+        return;
       }
-    } else if (typeof result === 'object') {
-      res.setHeader('Content-Type', 'application/json');
-      if (schema) {
-        result = schema(result);
-      } else {
-        result = jsonStringify(result);
+      if (typeof result === 'string') {
+        if (result.indexOf('<!DOCTYPE') === 0) {
+          res.setHeader('Content-Type', 'text/html');
+        } else if (result.indexOf('<xml') === 0) {
+          res.setHeader('Content-Type', 'application/xml');
+        }
+      } else if (typeof result === 'object') {
+        res.setHeader('Content-Type', 'application/json');
+        if (schema) {
+          result = schema(result);
+        } else {
+          result = jsonStringify(result);
+        }
       }
-    }
-    if (headersCount) {
-      for (const header in headers) {
-        res.writeHeader(header, headers[header]);
-        headersCount--;
+      if (headersCount) {
+        for (const header in headers) {
+          res.writeHeader(header, headers[header]);
+          headersCount--;
+        }
       }
-    }
-    return res.end(result);
-  };
+      return res.end(result);
+    });
 
   // It boosts performance by large-margin
   // if you use it right :)
-  res.cork = res.experimental_cork
-    ? (result) =>
-      res.experimental_cork(() => {
-        res.send(result);
-      })
-    : res.send;
+  res.cork =
+    res.cork ||
+    (res.experimental_cork
+      ? (result) =>
+        res.experimental_cork(() => {
+          res.send(result);
+        })
+      : res.send);
 
   // Aliases for beginners and/or users from Express!
   res.json = res.send;

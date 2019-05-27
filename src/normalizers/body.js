@@ -1,10 +1,22 @@
-export default (res) =>
-  new Promise((resolve, reject) => {
+import { Readable } from 'stream';
+
+export default (req, res) => {
+  const stream = new Readable();
+  stream._read = () => true;
+  req.pipe = stream.pipe.bind(stream);
+  req.stream = stream;
+
+  return new Promise((resolve, reject) => {
     let buffer;
-    /* Register data cb */
     res.onData((chunkPart, isLast) => {
       const chunk = Buffer.from(chunkPart);
+      stream.push(
+        new Uint8Array(
+          chunkPart.slice(chunkPart.byteOffset, chunkPart.byteLength)
+        )
+      );
       if (isLast) {
+        stream.push(null);
         if (buffer) {
           resolve(Buffer.concat([buffer, chunk]).toString('utf8'));
         } else {
@@ -22,3 +34,4 @@ export default (res) =>
     /* Register error cb */
     res.onAborted(reject);
   });
+};

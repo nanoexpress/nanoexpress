@@ -1,6 +1,7 @@
 import { headers, queries, params, body } from '../../normalizers';
 
-const bodyMethods = ['post', 'put', 'delete'];
+const bodyDisallowedMethods = ['get', 'options', 'head', 'trace', 'ws'];
+
 export default async (req, res) => {
   req.path = req.getUrl();
   req.method = req.getMethod();
@@ -14,7 +15,9 @@ export default async (req, res) => {
   req.params = params(req, req.params);
   req.query = queries(req, req.query);
   req.body =
-    bodyMethods.indexOf(req.method) !== -1 && res.onData && (await body(res));
+    bodyDisallowedMethods.indexOf(req.method) === -1 &&
+    res.onData &&
+    (await body(req, res));
 
   // Clean Request
   if (!req.body) {

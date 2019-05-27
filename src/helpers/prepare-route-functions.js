@@ -1,5 +1,9 @@
 export default (fns) => {
+  if (fns.length === 0) {
+    return {};
+  }
   // Fetch last function as Route
+
   const routeFn = fns.pop();
   const isRouteAsync =
     routeFn.then || routeFn.constructor.name === 'AsyncFunction';

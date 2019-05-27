@@ -1,6 +1,6 @@
-import { parse, serialize } from 'cookie';
+const { parse, serialize } = require('cookie');
 
-export default async (req, res) => {
+module.exports = async (req, res) => {
   const { headers } = req;
   let { cookies } = req;
 

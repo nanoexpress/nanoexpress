@@ -1,14 +1,14 @@
-import { parse } from 'querystring';
+const { parse } = require('querystring');
 
-export default async (req) => {
+module.exports = async (req) => {
   const { headers, body } = req;
 
   if (typeof body === 'string') {
     const contentType = headers['content-type'];
     if (contentType) {
-      if (contentType.includes('/json')) {
+      if (contentType.indexOf('/json') !== -1) {
         req.body = JSON.parse(body);
-      } else if (contentType.startsWith('application/x-www-form-urlencoded')) {
+      } else if (contentType.indexOf('/x-www-form-urlencoded') !== -1) {
         req.body = parse(req.body);
       }
     }

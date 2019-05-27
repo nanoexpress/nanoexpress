@@ -1,3 +1,3 @@
-import * as middlewares from './middlewares';
+const middlewares = require('./middlewares');
 
-export { middlewares };
+module.exports = { middlewares };

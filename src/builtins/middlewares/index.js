@@ -1,4 +1,4 @@
-import bodyParser from './body-parser';
-import cookie from './cookie';
+const bodyParser = require('./body-parser');
+const cookie = require('./cookie');
 
-export { bodyParser, cookie };
+module.exports = { bodyParser, cookie };

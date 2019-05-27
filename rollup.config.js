@@ -19,7 +19,8 @@ export default {
     'fs',
     'querystring',
     'http',
-    'zlib'
+    'zlib',
+    'stream'
   ]),
   plugins: [
     commonjs({
