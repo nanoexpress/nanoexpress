@@ -2,7 +2,6 @@ import uWS from 'uWebSockets.js';
 
 import { http, ws } from './middlewares';
 import { routeMapper } from './helpers';
-import { middlewares as builtinMiddlewares } from './builtins';
 
 const nanoexpress = (options = {}) => {
   const time = Date.now(); // For better managing start-time / lags
@@ -26,7 +25,7 @@ const nanoexpress = (options = {}) => {
     'trace'
   ];
   // App configuration
-  let middlewares = [...builtinMiddlewares];
+  let middlewares = [];
   const pathMiddlewares = {};
   const config = {};
 

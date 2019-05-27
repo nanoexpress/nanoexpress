@@ -1,5 +1,5 @@
 import http from 'http';
-import { sendStream } from '../../helpers';
+import { sendFile } from '../../helpers';
 import jsonStringify from 'fast-json-stable-stringify';
 
 export default (res, req, config, schema) => {
@@ -44,9 +44,24 @@ export default (res, req, config, schema) => {
     }
   };
 
+  // For rare some cases
+  res.applyHeaders = () => {
+    if (headersCount) {
+      for (const header in headers) {
+        res.writeHeader(header, headers[header]);
+        headersCount--;
+      }
+    }
+  };
+  res.setHeaders = (headers) => {
+    for (const header in headers) {
+      res.writeHeader(header, headers[header]);
+    }
+  };
+
   // Add stream feature by just method
   // for easy and clean code
-  res.stream = sendStream(req, res);
+  res.sendFile = sendFile(req, res);
 
   // Normalise send method
   // And some features, like
@@ -77,6 +92,7 @@ export default (res, req, config, schema) => {
     if (headersCount) {
       for (const header in headers) {
         res.writeHeader(header, headers[header]);
+        headersCount--;
       }
     }
     return res.end(result);

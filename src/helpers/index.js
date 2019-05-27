@@ -1,13 +1,13 @@
 import routeMapper from './route-mapper';
 import promisify from './promisify';
-import sendStream from './send-stream';
+import sendFile from './send-file';
 import toArrayBuffer from './to-array-buffer';
 import prepareRouteFunctions from './prepare-route-functions';
 
 export {
   routeMapper,
   promisify,
-  sendStream,
+  sendFile,
   toArrayBuffer,
   prepareRouteFunctions
 };

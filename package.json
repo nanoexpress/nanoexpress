@@ -1,6 +1,6 @@
 {
   "name": "nanoexpress",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "Nano-framework for Node.js powered by uWebSockets.js",
   "main": "build/nanoexpress.js",
   "module": "src/nanoexpress.js",
@@ -33,6 +33,8 @@
   "homepage": "https://github.com/dalisoft/nanoexpress#readme",
   "dependencies": {
     "@dalisoft/events": "0.0.7",
+    "@sifrr/server": "0.0.5",
+    "cookie": "^0.4.0",
     "fast-json-stable-stringify": "^2.0.0",
     "fast-json-stringify": "^1.15.2",
     "uWebSockets.js": "github:uNetworking/uWebSockets.js#binaries"

@@ -47,6 +47,7 @@ export default (fns) => {
 
   return {
     prepared,
+    empty: prepared.length === 0,
     schema,
     route: {
       fn: routeFn,

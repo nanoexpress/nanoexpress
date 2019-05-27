@@ -28,13 +28,35 @@ This library makes very thin layer between uWebSockets.js and your code. But, gi
 - Can define routes Declaratively
 - Express-compatible middleware
 - In-built `body-parser` middleware (JSON, FormEncoded, Plain, XML)
+- In-built `cookie` middleware
 - In-built Stream (Video stream, yay!) support
 - In-built WebSocket support (Express-like API and Events)
 - Out-of-the-box `fast-json-stringify` support via `{schema}` middleware
 
+## Built-in Middlewares
+
+I'm excluded built-ins modules from initialization for performance reason
+
+### How-to import
+
+```js
+import { middlewares } from 'nanoexpress/builtins';
+// or import { bodyParser, cookie } from 'nanoexpress/builtins/middlewares';
+
+const app = nanoexpress();
+app.use(middlewares.bodyParser); // or app.use(bodyParser);
+```
+
+- `body-parser`
+- `cookie`
+
 ## Credits
 
 - [uWebSockets.js](https://github.com/uNetworking/uWebSockets.js)
+- [Siffr Server](https://github.com/sifrr/sifrr/tree/master/packages/server/sifrr-server)
+- [fast-json-stringify](https://github.com/fastify/fast-json-stringify)
+- [fast-json-stable-stringify](https://github.com/epoberezkin/fast-json-stable-stringify)
+- [cookie](https://github.com/jshttp/cookie#readme)
 
 And to other libraries which used to create this library and without these libraries wouldn't be possible to create this library
 

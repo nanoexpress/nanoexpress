@@ -24,6 +24,8 @@ export default (path, fn, config, { schema } = {}) => {
 
     const result = await fn(request, response, config);
 
-    res.send(result);
+    if (result && !result.stream) {
+      res.send(result);
+    }
   };
 };
