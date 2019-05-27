@@ -2,7 +2,7 @@ const uWS = require('../node_modules/uWebSockets.js');
 
 const app = uWS.App();
 
-app.get('/', async (res) => {
+app.get('/', (res) => {
   res.writeHeader('Content-Type', 'application/json');
   res.end('{"hello":"world"}');
 });
