@@ -4,7 +4,7 @@ export default (req, params = {}) => {
   const { rawPath } = req;
 
   if (rawPath.indexOf(':') !== -1) {
-    const paramsMatch = req.rawPath.match(PARAMS_REGEX);
+    const paramsMatch = rawPath.match(PARAMS_REGEX);
 
     if (paramsMatch && paramsMatch.length > 0) {
       for (let i = 0, len = paramsMatch.length; i < len; i++) {
