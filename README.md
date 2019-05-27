@@ -6,7 +6,7 @@ Nano-framework for Node.js powered by uWebSockets.js
 
 This application isn't production ready and use at your own risk
 
-Very strange, when using this module, performance is slower by ~50% than uWebSockets.js while i'm expected maximum 10-20% performance loss. I'll already looking to fix this!
+Very strange, when using this module, performance is slower by ~30% than uWebSockets.js while i'm expected maximum 10-20% performance loss. I'll already looking to fix this!
 
 ## Motiviation
 
