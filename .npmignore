@@ -1,0 +1,4 @@
+examples/
+.git/
+.gitignore
+.gitattributes
