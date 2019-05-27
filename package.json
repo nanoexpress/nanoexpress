@@ -8,7 +8,9 @@
     "dev": "rollup -c -w",
     "watch": "nodemon build/server.js",
     "watch-dev": "NODE_ENV=development rollup -c -w",
-    "build": "rollup -c"
+    "build": "rollup -c",
+    "lint": "eslint ./src",
+    "test": "exit 0"
   },
   "repository": {
     "type": "git",
