@@ -31,8 +31,8 @@
   "homepage": "https://github.com/dalisoft/nanoexpress#readme",
   "dependencies": {
     "@dalisoft/events": "0.0.7",
+    "fast-json-stable-stringify": "^2.0.0",
     "fast-json-stringify": "^1.15.2",
-    "flatstr": "^1.0.12",
     "uWebSockets.js": "github:uNetworking/uWebSockets.js#binaries"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 import http from 'http';
-import flatstr from 'flatstr';
 import { sendStream } from '../../helpers';
+import jsonStringify from 'fast-json-stable-stringify';
 
 export default (res, req, config, schema) => {
   // Crash handling
@@ -70,7 +70,7 @@ export default (res, req, config, schema) => {
       if (schema) {
         result = schema(result);
       } else {
-        result = JSON.stringify(result);
+        result = jsonStringify(result);
       }
     } else if (typeof result === 'string') {
       if (result.indexOf('<!DOCTYPE') === 0) {
@@ -79,7 +79,6 @@ export default (res, req, config, schema) => {
         res.setHeader('Content-Type', 'application/xml');
       }
     }
-    flatstr(result);
     return res.end(result);
   };
 
