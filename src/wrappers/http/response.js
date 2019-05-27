@@ -60,23 +60,23 @@ export default (res, req, config, schema) => {
       );
       return;
     }
-    if (headersCount) {
-      for (const header in headers) {
-        res.writeHeader(header, headers[header]);
+    if (typeof result === 'string') {
+      if (result.indexOf('<!DOCTYPE') === 0) {
+        res.setHeader('Content-Type', 'text/html');
+      } else if (result.indexOf('<xml') === 0) {
+        res.setHeader('Content-Type', 'application/xml');
       }
-    }
-    if (typeof result === 'object') {
+    } else if (typeof result === 'object') {
       res.setHeader('Content-Type', 'application/json');
       if (schema) {
         result = schema(result);
       } else {
         result = jsonStringify(result);
       }
-    } else if (typeof result === 'string') {
-      if (result.indexOf('<!DOCTYPE') === 0) {
-        res.setHeader('Content-Type', 'text/html');
-      } else if (result.indexOf('<xml') === 0) {
-        res.setHeader('Content-Type', 'application/xml');
+    }
+    if (headersCount) {
+      for (const header in headers) {
+        res.writeHeader(header, headers[header]);
       }
     }
     return res.end(result);
