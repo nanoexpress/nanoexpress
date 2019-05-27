@@ -1,6 +1,5 @@
 import http from 'http';
 import { sendFile } from '../../helpers';
-import jsonStringify from 'fast-json-stable-stringify';
 
 export default (res, req, config, schema) => {
   // Crash handling
@@ -106,7 +105,7 @@ export default (res, req, config, schema) => {
         if (schema) {
           result = schema(result);
         } else {
-          result = jsonStringify(result);
+          result = JSON.stringify(result);
         }
       }
       if (headersCount) {

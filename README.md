@@ -8,8 +8,6 @@ Nano-framework for Node.js powered by uWebSockets.js
 
 This application isn't production ready and use at your own risk
 
-Very strange, when using this module, performance is slower by ~30% than uWebSockets.js while i'm expected maximum 10-20% performance loss. I'll already looking to fix this!
-
 ## Motiviation
 
 I've long-time planned somehow create own Express-like alternative Node.js framework, then seen uWebSockets.js. Almost 2 month i've think how do this right and decided to create Node.js framework with almost same as Express API.
@@ -59,7 +57,6 @@ app.use(middlewares.bodyParser); // or app.use(bodyParser);
 - [uWebSockets.js](https://github.com/uNetworking/uWebSockets.js)
 - [Siffr Server](https://github.com/sifrr/sifrr/tree/master/packages/server/sifrr-server)
 - [fast-json-stringify](https://github.com/fastify/fast-json-stringify)
-- [fast-json-stable-stringify](https://github.com/epoberezkin/fast-json-stable-stringify)
 - [cookie](https://github.com/jshttp/cookie#readme)
 
 And to other libraries which used to create this library and without these libraries wouldn't be possible to create this library
