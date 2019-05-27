@@ -11,9 +11,13 @@ export default (path, fn, config, { schema } = {}) => {
     // For future usage
     req.rawPath = path;
 
-    let request = http.request(req, res, config);
-    if (request.then || request.constructor.name === 'AsyncFunction') {
-      request = await request;
+    let request;
+
+    // Don't run `await` immediately for small performance gain
+    if (res.onData) {
+      request = await http.request(req, res, config);
+    } else {
+      request = http.request(req, res, config);
     }
 
     const response = http.response(res, req, config, responseSchema);

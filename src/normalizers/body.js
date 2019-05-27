@@ -2,8 +2,8 @@ export default (res) =>
   new Promise((resolve, reject) => {
     let buffer;
     /* Register data cb */
-    res.onData((ab, isLast) => {
-      const chunk = Buffer.from(ab);
+    res.onData((chunkPart, isLast) => {
+      const chunk = Buffer.from(chunkPart);
       if (isLast) {
         if (buffer) {
           resolve(Buffer.concat([buffer, chunk]).toString('utf8'));
