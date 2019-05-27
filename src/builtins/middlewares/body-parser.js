@@ -3,9 +3,8 @@ import { parse } from 'querystring';
 export default async (req) => {
   const { headers, body } = req;
 
-  const contentType = headers['content-type'];
-
   if (typeof body === 'string') {
+    const contentType = headers['content-type'];
     if (contentType) {
       if (contentType.includes('/json')) {
         req.body = JSON.parse(body);

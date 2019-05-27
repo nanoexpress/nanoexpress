@@ -26,7 +26,7 @@ This library makes very thin layer between uWebSockets.js and your code, maximum
 - In-built `body-parser` middleware (JSON, FormEncoded, Plain, XML)
 - In-built Stream (Video stream, yay!) support
 - In-built WebSocket support (Express-like API and Events)
-- `fast-json-stringify` support
+- Out-of-the-box `fast-json-stringify` support via `{schema}` middleware
 
 ## Credits
 

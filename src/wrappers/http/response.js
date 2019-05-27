@@ -1,7 +1,8 @@
 import http from 'http';
+import flatstr from 'flatstr';
 import { sendStream } from '../../helpers';
 
-export default (res, req) => {
+export default (res, req, config, schema) => {
   // Crash handling
   res.onAborted(() => {
     res.aborted = true;
@@ -61,51 +62,38 @@ export default (res, req) => {
         res.writeHeader(header, res.___headers[header]);
       }
     }
+    if (typeof result === 'object' && result) {
+      res.setHeader('Content-Type', 'application/json');
+      if (schema) {
+        result = schema(result);
+      } else {
+        result = JSON.stringify(result);
+      }
+    } else if (typeof result === 'string') {
+      if (result.indexOf('<!DOCTYPE') === 0) {
+        res.setHeader('Content-Type', 'text/html');
+      } else if (result.indexOf('<xml') === 0) {
+        res.setHeader('Content-Type', 'application/xml');
+      }
+    }
+    flatstr(result);
     return res.end(result);
   };
 
   // It boosts performance by large-margin
   // if you use it right :)
-  res.cork = (result, method = 'send') => {
-    if (res.experimental_cork) {
+  res.cork = res.experimental_cork
+    ? (result) =>
       res.experimental_cork(() => {
-        res[method](result);
-      });
-    } else {
-      return res[method](result);
-    }
-  };
+        res.send(result);
+      })
+    : res.send;
 
   // Aliases for beginners and/or users from Express!
-  res.json = (result, schema) => {
-    if (typeof result === 'object' && result) {
-      res.setHeader('Content-Type', 'application/json');
-      if (schema && typeof schema === 'function') {
-        result = schema(result);
-      } else {
-        result = JSON.stringify(result);
-      }
-    }
-    return res.send(result);
-  };
-  res.plain = (result) => {
-    if (typeof result === 'string') {
-      res.setHeader('Content-Type', 'text/plain');
-    }
-    return res.send(result);
-  };
-  res.html = (result) => {
-    if (typeof result === 'string' && result.startsWith('<!DOCTYPE')) {
-      res.setHeader('Content-Type', 'text/html');
-    }
-    return res.send(result);
-  };
-  res.xml = (result) => {
-    if (typeof result === 'string' && result.startsWith('<xml')) {
-      res.setHeader('Content-Type', 'application/xml');
-    }
-    return res.send(result);
-  };
+  res.json = res.send;
+  res.plain = res.send;
+  res.html = res.send;
+  res.xml = res.send;
 
   return res;
 };

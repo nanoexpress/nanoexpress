@@ -7,6 +7,7 @@ export default (path = '/*', fns, config) => {
   }
   const lastFn = fns[fns.length - 1];
   const len = fns.length;
+  const schema = fns.find((fn) => fn.schema);
   return http(
     path,
     async (req, res) => {
@@ -15,6 +16,11 @@ export default (path = '/*', fns, config) => {
       let i = 0;
       for (; i < len; i++) {
         fn = fns[i];
+
+        // If Schema was passed, we continue it for performance reason
+        if (typeof fn === 'object' && fn.schema) {
+          continue;
+        }
 
         // Add Express-like middlewares support
         if (typeof fn === 'function') {
@@ -52,6 +58,7 @@ export default (path = '/*', fns, config) => {
       }
       return result;
     },
-    config
+    config,
+    schema
   );
 };
