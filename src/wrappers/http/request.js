@@ -1,5 +1,6 @@
 import { headers, queries, params, body } from '../../normalizers';
 
+const bodyMethods = ['post', 'put', 'delete'];
 export default async (req, res) => {
   req.path = req.getUrl();
   req.method = req.getMethod();
@@ -9,8 +10,9 @@ export default async (req, res) => {
 
   req.headers = headers(req, req.headers);
   req.params = params(req, req.params);
-  req.query = Object.assign(req.query || {}, queries(req));
-  req.body = res.onData && (await body(res));
+  req.query = queries(req, req.query);
+  req.body =
+    bodyMethods.indexOf(req.method) !== -1 && res.onData && (await body(res));
 
   return req;
 };

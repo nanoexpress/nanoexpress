@@ -4,9 +4,10 @@ export default (req, params = {}) => {
   const paramsMatch = req.rawPath.match(PARAMS_REGEX);
 
   if (paramsMatch && paramsMatch.length > 0) {
-    paramsMatch.forEach((name, index) => {
-      params[name.substr(1)] = req.getParameter(index);
-    });
+    for (let i = 0, len = paramsMatch.length; i < len; i++) {
+      const name = paramsMatch[i];
+      params[name.substr(1)] = req.getParameter(i);
+    }
   }
 
   return params;

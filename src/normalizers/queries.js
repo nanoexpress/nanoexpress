@@ -1,5 +1,9 @@
 import { parse } from 'querystring';
 
-export default (req) => {
-  return parse(req.getQuery().substr(1));
+export default (req, queries = {}) => {
+  const query = req.getQuery();
+  if (query.length < 2) {
+    return queries;
+  }
+  return Object.assign(queries, parse(query.substr(1)));
 };
