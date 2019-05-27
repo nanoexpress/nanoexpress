@@ -6,7 +6,9 @@ export default async (req, res) => {
   req.method = req.getMethod();
 
   // IP solution still in progress
-  req.ip = Buffer.from(res.getRemoteAddress()).toString('hex');
+  // I decided not use this method as who needs
+  // manually requests
+  // req.ip = Buffer.from(res.getRemoteAddress()).toString('hex');
 
   req.headers = headers(req, req.headers);
   req.params = params(req, req.params);
