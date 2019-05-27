@@ -7,9 +7,9 @@ export default async (req, res) => {
   // IP solution still in progress
   req.ip = Buffer.from(res.getRemoteAddress()).toString('hex');
 
-  req.headers = Object.assign(req.headers || {}, headers(req));
+  req.headers = headers(req, req.headers);
+  req.params = params(req, req.params);
   req.query = Object.assign(req.query || {}, queries(req));
-  req.params = Object.assign(req.params || {}, params(req));
   req.body = res.onData && (await body(res));
 
   return req;

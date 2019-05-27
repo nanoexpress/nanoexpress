@@ -11,7 +11,11 @@ export default (path, fn, config, { schema } = {}) => {
     // For future usage
     req.rawPath = path;
 
-    const request = await http.request(req, res, config);
+    let request = http.request(req, res, config);
+    if (request.then || request.constructor.name === 'AsyncFunction') {
+      request = await request;
+    }
+
     const response = http.response(res, req, config, responseSchema);
 
     const result = await fn(request, response, config);

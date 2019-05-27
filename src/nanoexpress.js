@@ -81,10 +81,10 @@ const nanoexpress = (options = {}) => {
   };
 
   httpMethods.forEach((method) => {
-    _app[method] = async (path, ...fns) =>
-      await app[method](
+    _app[method] = (path, ...fns) =>
+      app[method](
         path,
-        await http(
+        http(
           path,
           middlewares.concat(pathMiddlewares[path] || []).concat(fns),
           config

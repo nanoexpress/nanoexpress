@@ -11,32 +11,36 @@ export default (res, req, config, schema) => {
   // Normalize status method
   res.status = (code) => {
     if (http.STATUS_CODES[code] !== undefined) {
-      res.___status = code + ' ' + http.STATUS_CODES[code];
+      res.writeStatus(code + ' ' + http.STATUS_CODES[code]);
     } else {
       console.error('[Server]: Invalid Code ' + code);
     }
   };
 
   // Normalize setHeader method
+  let headers;
+  let headersCount = 0;
   res.setHeader = (key, value) => {
-    if (!res.___headers) {
-      res.___headers = {};
+    if (!headers) {
+      headers = {};
     }
-    res.___headers[key] = value;
+    headersCount++;
+    headers[key] = value;
   };
 
   // Normalize hasHeader method
-  res.hasHeader = (key) => res.___headers && res.___headers[key] === undefined;
+  res.hasHeader = (key) => headers && headers[key] === undefined;
 
   // Normalize removeHeader
   res.removeHeader = (key) => {
-    if (!res.___headers) {
+    if (!headers) {
       return;
     }
-    delete res.___headers[key];
+    delete headers[key];
+    headersCount--;
 
-    if (Object.keys(res.___headers).length === 0) {
-      delete res.___headers;
+    if (headersCount === 0) {
+      headers = null;
     }
   };
 
@@ -50,19 +54,18 @@ export default (res, req, config, schema) => {
   // parsing out-of-the-box
   res.send = (result) => {
     /* If we were aborted, you cannot respond */
-    if (res.aborted) {
-      console.error('[Server]: Error, Response was aborted before responsing');
+    if (!result || res.aborted) {
+      console.error(
+        '[Server]: Error, Response was aborted before responsing or result is marlformed'
+      );
       return;
     }
-    if (res.___status) {
-      res.writeStatus(res.___status);
-    }
-    if (res.___headers) {
-      for (const header in res.___headers) {
-        res.writeHeader(header, res.___headers[header]);
+    if (headersCount) {
+      for (const header in headers) {
+        res.writeHeader(header, headers[header]);
       }
     }
-    if (typeof result === 'object' && result) {
+    if (typeof result === 'object') {
       res.setHeader('Content-Type', 'application/json');
       if (schema) {
         result = schema(result);

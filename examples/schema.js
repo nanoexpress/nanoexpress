@@ -14,7 +14,7 @@ app.get(
       }
     }
   },
-  () => ({ hello: 'world' })
+  async () => ({ hello: 'world' })
 );
 
 app.listen(4000);

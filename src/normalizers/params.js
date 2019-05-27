@@ -1,7 +1,6 @@
 const PARAMS_REGEX = /:([A-Za-z]+)/g;
 
-export default (req) => {
-  const params = {};
+export default (req, params = {}) => {
   const paramsMatch = req.rawPath.match(PARAMS_REGEX);
 
   if (paramsMatch && paramsMatch.length > 0) {

@@ -1,5 +1,4 @@
-export default (req) => {
-  const headers = {};
+export default (req, headers = {}) => {
   req.forEach((key, value) => {
     headers[key] = value;
   });
