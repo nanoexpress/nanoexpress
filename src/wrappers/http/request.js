@@ -16,5 +16,10 @@ export default async (req, res) => {
   req.body =
     bodyMethods.indexOf(req.method) !== -1 && res.onData && (await body(res));
 
+  // Clean Request
+  if (!req.body) {
+    delete req.body;
+  }
+
   return req;
 };

@@ -2,16 +2,16 @@ import { parse, serialize } from 'cookie';
 
 export default async (req, res) => {
   const { headers } = req;
-  let { cookie } = req;
+  let { cookies } = req;
 
-  if (cookie && headers.cookie) {
-    Object.assign(cookie, cookie.parse(headers.cookie));
-  } else if (!cookie && headers.cookie) {
-    cookie = parse(headers.cookie);
-  } else if (!cookie) {
-    cookie = {};
+  if (cookies && headers.cookie) {
+    Object.assign(cookies, parse(headers.cookie));
+  } else if (!cookies && headers.cookie) {
+    cookies = parse(headers.cookie);
+  } else if (!cookies) {
+    cookies = {};
   }
-  req.cookie = cookie;
+  req.cookies = cookies;
 
   res.setCookie =
     res.setCookie ||
@@ -40,7 +40,7 @@ export default async (req, res) => {
       res.setHeader('Set-Cookie', setCookie);
     });
 
-  res.hasCookie = res.hasCookie || ((name) => cookie[name] !== undefined);
+  res.hasCookie = res.hasCookie || ((name) => cookies[name] !== undefined);
 
   res.removeCookie =
     res.removeCookie ||
