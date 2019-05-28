@@ -1,4 +1,5 @@
 import uWS from 'uWebSockets.js';
+import Ajv from 'ajv';
 
 import { http, ws } from './middlewares';
 import { routeMapper } from './helpers';
@@ -6,11 +7,15 @@ import { routeMapper } from './helpers';
 const nanoexpress = (options = {}) => {
   const time = Date.now(); // For better managing start-time / lags
   let app;
+  let ajv = new Ajv(options.ajv);
 
   if (options.https) {
     app = uWS.SSLApp(options.https);
   } else {
     app = uWS.App();
+  }
+  if (options.configureAjv) {
+    ajv = options.configureAjv(ajv);
   }
 
   const httpMethods = [
@@ -86,7 +91,8 @@ const nanoexpress = (options = {}) => {
         http(
           path,
           middlewares.concat(pathMiddlewares[path] || []).concat(fns),
-          config
+          config,
+          ajv
         )
       );
   });

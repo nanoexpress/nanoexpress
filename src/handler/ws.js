@@ -1,9 +1,6 @@
 import { ws as wsWrapper } from '../wrappers';
-import Events from '@dalisoft/events';
 
 export default (path, options = {}, fn) => {
-  const wsEvents = new Events();
-
   // If users just opens WebSocket
   // without any parameters
   // we just normalize it for users
@@ -29,7 +26,7 @@ export default (path, options = {}, fn) => {
       req.rawPath = path;
 
       const request = wsWrapper.request(req, ws);
-      const websocket = wsWrapper.ws(wsEvents, ws);
+      const websocket = wsWrapper.ws(ws);
       fn(request, websocket);
     },
     message: (ws, message, isBinary) => {

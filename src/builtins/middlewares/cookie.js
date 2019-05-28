@@ -5,7 +5,10 @@ module.exports = async (req, res) => {
   let { cookies } = req;
 
   if (cookies && headers.cookie) {
-    Object.assign(cookies, parse(headers.cookie));
+    const parsedCookie = parse(headers.cookie);
+    for (const cookie in parsedCookie) {
+      cookies[cookie] = parsedCookie[cookie];
+    }
   } else if (!cookies && headers.cookie) {
     cookies = parse(headers.cookie);
   } else if (!cookies) {
@@ -16,14 +19,10 @@ module.exports = async (req, res) => {
   res.setCookie =
     res.setCookie ||
     ((name, value, options = {}) => {
-      let { expires } = options;
-      if (expires && Number.isInteger(expires)) {
-        expires = new Date(expires);
+      if (options.expires && Number.isInteger(options.expires)) {
+        options.expires = new Date(options.expires);
       }
-      const serialized = serialize(name, value, {
-        ...options,
-        expires
-      });
+      const serialized = serialize(name, value, options);
 
       let setCookie = req.getHeader('Set-Cookie');
       if (!setCookie) {
@@ -45,9 +44,10 @@ module.exports = async (req, res) => {
   res.removeCookie =
     res.removeCookie ||
     ((name, options = {}) => {
-      res.setCookie(name, '', {
-        ...options,
-        expires: Date.now() - 1000
-      });
+      const currTime = Date.now();
+      if (!options.expires || options.expires >= currTime) {
+        options.expires = currTime - 1000;
+      }
+      res.setCookie(name, '', options);
     });
 };

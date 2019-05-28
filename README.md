@@ -25,10 +25,11 @@ This library makes very thin layer between uWebSockets.js and your code. But, gi
 - Normalised API
 - Can define routes Declaratively
 - Express-compatible middleware
-- In-built `body-parser` middleware (JSON, FormEncoded, Plain, XML)
-- In-built `cookie` middleware
+- In-box `body-parser` middleware (JSON, FormEncoded, Plain, XML)
+- In-box `cookie` middleware
 - In-built Stream (Video stream, yay!) support
 - In-built WebSocket support (Express-like API and Events)
+- In-built Schema validator via `Ajv`
 - Out-of-the-box `fast-json-stringify` support via `{schema}` middleware
 
 ## Built-in Middlewares
@@ -57,6 +58,7 @@ app.use(middlewares.bodyParser); // or app.use(bodyParser);
 - [uWebSockets.js](https://github.com/uNetworking/uWebSockets.js)
 - [Siffr Server](https://github.com/sifrr/sifrr/tree/master/packages/server/sifrr-server)
 - [fast-json-stringify](https://github.com/fastify/fast-json-stringify)
+- [ajv](https://ajv.js.org)
 - [cookie](https://github.com/jshttp/cookie#readme)
 
 And to other libraries which used to create this library and without these libraries wouldn't be possible to create this library

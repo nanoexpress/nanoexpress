@@ -1,9 +1,14 @@
-export default (wsEvents, ws) => {
-  ws.___events = wsEvents.___events;
-  ws.on = wsEvents.on;
-  ws.once = wsEvents.once;
-  ws.off = wsEvents.off;
-  ws.emit = wsEvents.emit;
+import Events from '@dalisoft/events';
+
+const proto = Events.prototype;
+
+export default (ws) => {
+  ws.on = proto.on;
+  ws.once = proto.once;
+  ws.off = proto.off;
+  ws.emit = proto.emit;
+
+  ws.___events = [];
 
   return ws;
 };

@@ -1,7 +1,7 @@
 import { http } from '../handler';
 import { prepareRouteFunctions } from '../helpers';
 
-export default (path = '/*', fns, config) => {
+export default (path = '/*', fns, config, ajv) => {
   if (typeof path === 'function') {
     fns.unshift(path);
     path = '/*';
@@ -27,6 +27,7 @@ export default (path = '/*', fns, config) => {
           : route.fn(req, res, config);
       },
     config,
-    schema
+    schema,
+    ajv
   );
 };

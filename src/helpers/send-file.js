@@ -10,7 +10,7 @@ const compressions = {
 };
 const bytes = 'bytes=';
 
-export default (req, res) => (
+export default (res) => (
   path,
   {
     lastModified = true,
@@ -28,7 +28,7 @@ export default (req, res) => (
   mtime.setMilliseconds(0);
   const mtimeutc = mtime.toUTCString();
 
-  const { headers } = req;
+  const { headers } = res.__request;
   // handling last modified
   if (lastModified) {
     // Return 304 if last-modified

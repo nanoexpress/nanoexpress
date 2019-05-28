@@ -9,5 +9,10 @@ export default (req, queries = {}) => {
   if (query.length < 4) {
     return queries;
   }
-  return Object.assign(queries, parse(query.substr(1)));
+  const parsedQueries = parse(query.substr(1));
+
+  for (const query in parsedQueries) {
+    queries[query] = parsedQueries[query];
+  }
+  return queries;
 };
