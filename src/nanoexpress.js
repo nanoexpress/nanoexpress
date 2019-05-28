@@ -23,7 +23,7 @@ const nanoexpress = (options = {}) => {
     'post',
     'put',
     'patch',
-    'delete',
+    'del',
     'any',
     'head',
     'options',

@@ -87,7 +87,7 @@ interface nanoexpressApp extends BasicApp {
   post(path: string, ...fns: Function<HttpRequest, HttpResponse>[]): nanoexpressApp;
   put(path: string, ...fns: Function<HttpRequest, HttpResponse>[]): nanoexpressApp;
   patch(path: string, ...fns: Function<HttpRequest, HttpResponse>[]): nanoexpressApp;
-  delete(path: string, ...fns: Function<HttpRequest, HttpResponse>[]): nanoexpressApp;
+  del(path: string, ...fns: Function<HttpRequest, HttpResponse>[]): nanoexpressApp;
   options(path: string, ...fns: Function<HttpRequest, HttpResponse>[]): nanoexpressApp;
   head(path: string, ...fns: Function<HttpRequest, HttpResponse>[]): nanoexpressApp;
   trace(path: string, ...fns: Function<HttpRequest, HttpResponse>[]): nanoexpressApp;
