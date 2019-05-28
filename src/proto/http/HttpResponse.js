@@ -1,5 +1,6 @@
 import http from 'http';
 import { sendFile } from '../../helpers';
+import jsonStrify from 'json-strify';
 
 const HttpResponse = {
   // Normalize status method
@@ -85,7 +86,7 @@ const HttpResponse = {
       if (schema) {
         result = schema(result);
       } else {
-        result = JSON.stringify(result);
+        result = jsonStrify(result);
       }
     }
     this.applyHeaders();
