@@ -6,7 +6,8 @@ import {
   WebSocket as WebSocketBasic
 } from 'uWebSockets.js';
 
-interface AppOptions extends AppOptionsBasic {
+declare namespace nanoexpress {
+  export interface AppOptions extends AppOptionsBasic {
   https?: {
     key_file_name: string;
     cert_file_name: string;
@@ -14,26 +15,26 @@ interface AppOptions extends AppOptionsBasic {
   };
 }
 
-interface HttpRequestHeaders {
+export interface HttpRequestHeaders {
   [key: string]: string;
 }
-interface HttpRequestQueries {
+export interface HttpRequestQueries {
   [key: string]: string;
 }
-interface HttpRequestParams {
+export interface HttpRequestParams {
   [key: string]: string;
 }
-interface HttpRequestBody {
+export interface HttpRequestBody {
   [key: string]: string;
 }
 
-interface WebSocket extends WebSocketBasic {
+export interface WebSocket extends WebSocketBasic {
   on(name: string, listener: Function);
   once(name: string, listener: Function);
   off(name: string, listener?: Function);
   emit(name: string, ...args: any[])
 }
-interface HttpRequest extends HttpRequestBasic {
+export interface HttpRequest extends HttpRequestBasic {
   path: string;
   url: string;
   headers: HttpRequestHeaders;
@@ -43,7 +44,7 @@ interface HttpRequest extends HttpRequestBasic {
   private __response: HttpResponse;
 }
 
-interface HttpResponse extends HttpResponseBasic {
+export interface HttpResponse extends HttpResponseBasic {
   status(code: number): HttpResponse;
   setHeader(key: string, value: string | number): HttpResponse;
   hasHeader(key: string): HttpResponse;
@@ -60,7 +61,7 @@ interface HttpResponse extends HttpResponseBasic {
   __request?: HttpRequest
 }
 
-interface AppRoute {
+export interface AppRoute {
   get(req: HttpRequest, res: HttpResponse): any
   post(req: HttpRequest, res: HttpResponse): any
   put(req: HttpRequest, res: HttpResponse): any
@@ -70,18 +71,18 @@ interface AppRoute {
   trace(req: HttpRequest, res: HttpResponse): any
   ws(req: HttpRequest, ws: WebSocket): any
 }
-interface AppRoutes {
+export interface AppRoutes {
   [key: string]: AppRoute | object;
 }
 
-interface AppConfig {
+export interface AppConfig {
   config: {
     set(key: string, value: any): void,
     get(key: string): any;
   }
 }
 
-interface nanoexpressApp extends BasicApp {
+export interface nanoexpressApp extends BasicApp {
   use(path: string | Function, ...fns?: Function<HttpRequest, HttpResponse>): nanoexpressApp;
   get(path: string, ...fns: Function<HttpRequest, HttpResponse>[]): nanoexpressApp;
   post(path: string, ...fns: Function<HttpRequest, HttpResponse>[]): nanoexpressApp;
@@ -97,5 +98,8 @@ interface nanoexpressApp extends BasicApp {
   define(routes: AppRoutes): nanoexpressApp;
   config: AppConfig
 }
+}
 
-export default function nanoexpress(options: AppOptions): nanoexpressApp
+declare function nanoexpress(options?: nanoexpress.AppOptions): nanoexpress.nanoexpressApp;
+
+export = nanoexpress;
