@@ -2,3 +2,4 @@ examples/
 .git/
 .gitignore
 .gitattributes
+.vscode

@@ -1,0 +1,7 @@
+{
+  "eslint.validate": ["javascript"],
+  "files.associations": {
+    "*.js": "javascript",
+    "*.d.ts": "typescript"
+  }
+}

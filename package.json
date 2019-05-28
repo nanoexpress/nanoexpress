@@ -1,9 +1,10 @@
 {
   "name": "nanoexpress",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Nano-framework for Node.js powered by uWebSockets.js",
   "main": "build/nanoexpress.js",
   "module": "src/nanoexpress.js",
+  "typings": "nanoexpress.d.ts",
   "scripts": {
     "dev": "rollup -c -w",
     "watch": "nodemon build/server.js",

@@ -10,6 +10,8 @@ const HttpResponse = {
     } else {
       console.error('[Server]: Invalid Code ' + code);
     }
+
+    return this;
   },
 
   // Normalize setHeader method
@@ -20,6 +22,8 @@ const HttpResponse = {
     }
     this._headersCount++;
     this._headers[key] = value;
+
+    return this;
   },
 
   // Normalize hasHeader method
@@ -38,6 +42,8 @@ const HttpResponse = {
     if (this._headersCount === 0) {
       this._headers = null;
     }
+
+    return this;
   },
 
   // For rare some cases
@@ -49,16 +55,22 @@ const HttpResponse = {
         this.removeHeader(header);
       }
     }
+
+    return this;
   },
   setHeaders(headers) {
     for (const header in headers) {
       this.writeHeader(header, headers[header]);
     }
+
+    return this;
   },
   writeHead(code, headers) {
     this.status(code);
     this.applyHeaders();
     this.setHeaders(headers);
+
+    return this;
   },
 
   // Normalise send method
@@ -90,18 +102,22 @@ const HttpResponse = {
       }
     }
     this.applyHeaders();
-    return this.end(result);
+    this.end(result);
+
+    return this;
   },
 
   // It boosts performance by large-margin
   // if you use it right :)
   cork(result) {
-    return this.experimental_cork
+    this.experimental_cork
       ? (result) =>
         this.experimental_cork(() => {
           this.send(result);
         })
       : this.send(result);
+
+    return this;
   }
 };
 

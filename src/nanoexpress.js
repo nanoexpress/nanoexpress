@@ -53,7 +53,7 @@ const nanoexpress = (options = {}) => {
               `[Server]: started successfully at [localhost:${port}] in [${Date.now() -
                 time}ms]`
             );
-            resolve();
+            resolve(_app);
           } else {
             console.log(`[Server]: failed to host at [localhost:${port}]`);
             reject();
@@ -80,12 +80,16 @@ const nanoexpress = (options = {}) => {
           (item, i, self) => self.indexOf(item) === i
         );
       }
+      return _app;
     },
-    ws: (path, options, fn) => app.ws(path, ws(path, options, fn))
+    ws: (path, options, fn) => {
+      app.ws(path, ws(path, options, fn));
+      return _app;
+    }
   };
 
   httpMethods.forEach((method) => {
-    _app[method] = (path, ...fns) =>
+    _app[method] = (path, ...fns) => {
       app[method](
         path,
         http(
@@ -95,6 +99,8 @@ const nanoexpress = (options = {}) => {
           ajv
         )
       );
+      return _app;
+    };
   });
 
   _app.define = routeMapper(_app);

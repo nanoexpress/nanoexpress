@@ -92,4 +92,5 @@ export default (app) => async (routes) => {
       }
     }
   }
+  return app;
 };
