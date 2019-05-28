@@ -31,6 +31,8 @@ This library makes very thin layer between uWebSockets.js and your code. But, gi
 - In-built WebSocket support (Express-like API and Events)
 - In-built Schema validator via `Ajv`
 - Out-of-the-box `fast-json-stringify` support via `{schema}` middleware
+- TypeScript declaration
+- Testing and CI checked code
 
 ## Built-in Middlewares
 

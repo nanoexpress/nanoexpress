@@ -6,32 +6,36 @@ export default (req, res) => {
   req.pipe = stream.pipe.bind(stream);
   req.stream = stream;
 
-  return new Promise((resolve, reject) => {
-    let buffer;
-    res.onData((chunkPart, isLast) => {
-      const chunk = Buffer.from(chunkPart);
-      stream.push(
-        new Uint8Array(
-          chunkPart.slice(chunkPart.byteOffset, chunkPart.byteLength)
-        )
-      );
-      if (isLast) {
-        stream.push(null);
-        if (buffer) {
-          resolve(Buffer.concat([buffer, chunk]).toString('utf8'));
+  return (
+    res &&
+    res.onData &&
+    new Promise((resolve, reject) => {
+      let buffer;
+      res.onData((chunkPart, isLast) => {
+        const chunk = Buffer.from(chunkPart);
+        stream.push(
+          new Uint8Array(
+            chunkPart.slice(chunkPart.byteOffset, chunkPart.byteLength)
+          )
+        );
+        if (isLast) {
+          stream.push(null);
+          if (buffer) {
+            resolve(Buffer.concat([buffer, chunk]).toString('utf8'));
+          } else {
+            resolve(chunk.toString('utf8'));
+          }
         } else {
-          resolve(chunk.toString('utf8'));
+          if (buffer) {
+            buffer = Buffer.concat([buffer, chunk]);
+          } else {
+            buffer = Buffer.concat([chunk]);
+          }
         }
-      } else {
-        if (buffer) {
-          buffer = Buffer.concat([buffer, chunk]);
-        } else {
-          buffer = Buffer.concat([chunk]);
-        }
-      }
-    });
+      });
 
-    /* Register error cb */
-    res.onAborted(reject);
-  });
+      /* Register error cb */
+      res.onAborted(reject);
+    })
+  );
 };

@@ -1,6 +1,6 @@
 {
   "name": "nanoexpress",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "Nano-framework for Node.js powered by uWebSockets.js",
   "main": "build/nanoexpress.js",
   "module": "src/nanoexpress.js",
@@ -11,7 +11,8 @@
     "watch-dev": "NODE_ENV=development rollup -c -w",
     "build": "rollup -c",
     "lint": "eslint ./src",
-    "test": "exit 0"
+    "test": "jest",
+    "prepublishOnly": "npm run lint && npm run test && npm run build"
   },
   "repository": {
     "type": "git",
@@ -47,6 +48,7 @@
     "ava": "^1.4.1",
     "eslint": "^5.16.0",
     "husky": "^2.3.0",
+    "jest": "^24.8.0",
     "lint-staged": "^8.1.7",
     "nodemon": "^1.19.1",
     "prettier": "^1.17.1",

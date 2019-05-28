@@ -1,4 +1,4 @@
-const PARAMS_REGEX = /:([A-Za-z]+)/g;
+const PARAMS_REGEX = /:([A-Za-z0-9_-]+)/g;
 
 export default (req, params = {}) => {
   const { rawPath } = req;

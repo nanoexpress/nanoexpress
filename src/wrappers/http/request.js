@@ -15,9 +15,7 @@ export default async (req, res) => {
   req.params = params(req, req.params);
   req.query = queries(req, req.query);
   req.body =
-    bodyDisallowedMethods.indexOf(req.method) === -1 &&
-    res.onData &&
-    (await body(req, res));
+    bodyDisallowedMethods.indexOf(req.method) === -1 && (await body(req, res));
 
   // Clean Request
   if (!req.body) {
