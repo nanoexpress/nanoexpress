@@ -68,4 +68,5 @@ yarn.lock
 build/
 tmp/
 dist/
-tests/coverage
+tests/coverage/
+coverage/
