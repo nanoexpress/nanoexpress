@@ -1,5 +1,5 @@
 /* globals describe, it, expect */
-import { headers, params, queries, body } from '../src/normalizers';
+import { headers, cookies, params, queries, body } from '../src/normalizers';
 
 describe('headers normalize', () => {
   it('header normalize non-empty', () => {
@@ -88,9 +88,26 @@ describe('body normalize', () => {
 
     expect(await body(fakeReq, fakeRes)).toBe('fake body');
   });
-  it('body normalize empty', () => {
+  it('body normalize empty', async () => {
     const fakeReq = {};
 
-    expect(body(fakeReq)).toBe(undefined);
+    expect(await body(fakeReq)).toBe(undefined);
+  });
+});
+
+describe('cookie normalize', () => {
+  it('cookie normalize non-empty', async () => {
+    const fakeReq = {
+      headers: {
+        cookie: 'foo=bar'
+      }
+    };
+
+    expect(cookies(fakeReq)).toStrictEqual({ foo: 'bar' });
+  });
+  it('cookie normalize empty', async () => {
+    const fakeReq = {};
+
+    expect(cookies(fakeReq)).toStrictEqual({});
   });
 });

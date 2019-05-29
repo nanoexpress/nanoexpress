@@ -1,6 +1,7 @@
 import http from 'http';
 import { sendFile } from '../../helpers';
 import jsonStrify from 'json-strify';
+import HttpCookieResponse from './HttpCookieResponse';
 
 const HttpResponse = {
   // Normalize status method
@@ -20,16 +21,14 @@ const HttpResponse = {
       this._headers = {};
       this._headersCount = 0;
     }
-    key = key.toLowerCase();
     this._headersCount++;
     this._headers[key] = value;
-
     return this;
   },
 
   // Normalize getHeader method
   getHeader(key) {
-    return !!this._headers && !!key && this._headers[key.toLowerCase()];
+    return !!this._headers && !!key && this._headers[key];
   },
 
   // Normalize hasHeader method
@@ -39,7 +38,6 @@ const HttpResponse = {
 
   // Normalize removeHeader
   removeHeader(key) {
-    key = key.toLowerCase();
     if (!this._headers || this._headers[key] === undefined) {
       return;
     }
@@ -59,7 +57,15 @@ const HttpResponse = {
     const { _headers, _headersCount } = this;
     if (_headersCount) {
       for (const header in _headers) {
-        this.writeHeader(header, _headers[header]);
+        const value = _headers[header];
+
+        if (value && value.splice && value.length) {
+          for (let i = 0, len = value.length; i < len; i++) {
+            this.writeHeader(header, value[i]);
+          }
+        } else {
+          this.writeHeader(header, _headers[header]);
+        }
         this.removeHeader(header);
       }
     }
@@ -74,9 +80,41 @@ const HttpResponse = {
     return this;
   },
   writeHead(code, headers) {
+    if (typeof code === 'object' && !headers) {
+      headers = code;
+      code = this.statusCode || 200;
+    }
+
     this.status(code);
     this.applyHeaders();
     this.setHeaders(headers);
+
+    return this;
+  },
+
+  // Redirect method
+  redirect(code = 301, path) {
+    const { __request, config } = this;
+    const { headers } = __request;
+    const { host } = headers;
+
+    const httpHost = (config && config.host) || host;
+
+    if (typeof code === 'string') {
+      path = code;
+      code = 301;
+    }
+
+    if (!path.startsWith('http')) {
+      if (!path.startsWith('/')) {
+        path = '/' + path;
+      }
+      path = config && config.https ? 'https://' : 'http://' + httpHost + path;
+    }
+
+    this.writeHead(code, { Location: path });
+    this.end();
+    this.aborted = true;
 
     return this;
   },
@@ -89,10 +127,12 @@ const HttpResponse = {
     const { schema } = this;
 
     /* If we were aborted, you cannot respond */
+    if (this.aborted) {
+      console.error('[Server]: Error, Response was aborted before responsing');
+      return;
+    }
     if (!result || this.aborted) {
-      console.error(
-        '[Server]: Error, Response was aborted before responsing or result is marlformed'
-      );
+      console.error('[Server]: Error, Response result is marlformed');
       return;
     }
     if (typeof result === 'string') {
@@ -138,5 +178,8 @@ HttpResponse.plain = HttpResponse.send;
 // Add stream feature by just method
 // for easy and clean code
 HttpResponse.sendFile = sendFile;
+
+// Extending the cookie
+Object.assign(HttpResponse, HttpCookieResponse);
 
 export default HttpResponse;

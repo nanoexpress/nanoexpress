@@ -1,4 +1,3 @@
-const bodyParser = require('./body-parser');
-const cookie = require('./cookie');
+const passportInitialize = require('./passport');
 
-module.exports = { bodyParser, cookie };
+module.exports = { passportInitialize };

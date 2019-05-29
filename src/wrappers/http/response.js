@@ -1,6 +1,9 @@
 import { HttpResponse } from '../../proto';
 
 export default (res, req, config, schema) => {
+  // Attach request
+  res.__request = req;
+
   // Extending proto
   const { __proto__ } = res;
   for (const newMethod in HttpResponse) {
@@ -12,9 +15,6 @@ export default (res, req, config, schema) => {
 
   // Attach Config
   res.config = config;
-
-  // Attach request
-  res.__request = req;
 
   return res;
 };

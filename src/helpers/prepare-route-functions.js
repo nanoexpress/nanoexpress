@@ -13,34 +13,23 @@ export default (fns) => {
   const prepared = fns
     .map((fn) => {
       let result;
-      if (typeof fn === 'object' && fn.schema) {
+      if (!fn || (typeof fn === 'object' && fn.schema)) {
         return null;
       }
-      if (typeof fn === 'function') {
-        if (fn.then || fn.constructor.name === 'AsyncFunction') {
-          if (fn.catch) {
-            fn.catch((err) =>
-              console.error(
-                '[Server]: Error - Middleware crashed or failed',
-                err
-              )
-            );
-          }
-          result = fn;
-        } else {
-          result = (req, res, config) =>
-            new Promise((resolve) => {
-              const next = (err, done) => {
-                if (err) {
-                  res.end(err.message);
-                  resolve();
-                } else {
-                  resolve(done);
-                }
-              };
-              fn(req, res, next, config);
-            });
-        }
+      if (fn.then || fn.constructor.name === 'AsyncFunction') {
+        result = fn;
+      } else {
+        result = (req, res, config) =>
+          new Promise((resolve, reject) => {
+            const next = (err, done) => {
+              if (err) {
+                return reject(err);
+              } else {
+                resolve(done);
+              }
+            };
+            fn(req, res, next, config);
+          });
       }
       return result;
     })

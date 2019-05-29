@@ -1,6 +1,6 @@
 {
   "name": "nanoexpress",
-  "version": "0.5.8",
+  "version": "0.6.0",
   "description": "Nano-framework for Node.js powered by uWebSockets.js",
   "main": "build/nanoexpress.js",
   "module": "src/nanoexpress.js",
@@ -64,6 +64,10 @@
   },
   "optionalDependencies": {
     "cors": "^2.8.5",
-    "express-fileupload": "^1.1.4"
+    "express-fileupload": "^1.1.4",
+    "express-jwt": "^5.3.1",
+    "express-session": "^1.16.1",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0"
   }
 }

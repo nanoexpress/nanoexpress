@@ -81,3 +81,29 @@ describe('http response status', () => {
     expect(fakeRes.code).toBe('200 OK');
   });
 });
+
+describe('http response writeHead', () => {
+  const fakeRes = new Response();
+
+  it('res.status', () => {
+    fakeRes.writeHead(201, { foo: 'bar' });
+    expect(fakeRes.code).toBe('201 Created');
+    expect(fakeRes.headers).toStrictEqual({ foo: 'bar' });
+  });
+});
+
+describe('http response redirect', () => {
+  const fakeRes = new Response();
+  fakeRes.__request = {
+    headers: {
+      host: 'localhost'
+    }
+  };
+
+  it('res.status', () => {
+    fakeRes.redirect('/another');
+    expect(fakeRes.headers).toStrictEqual({
+      Location: 'http://localhost/another'
+    });
+  });
+});

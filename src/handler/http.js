@@ -14,14 +14,7 @@ export default (path, fn, config, { schema } = {}, ajv) => {
     // For future usage
     req.rawPath = path;
 
-    let request;
-
-    // Don't run `await` immediately for small performance gain
-    if (res.onData) {
-      request = await http.request(req, res, config);
-    } else {
-      request = http.request(req, res, config);
-    }
+    const request = await http.request(req, res, config);
 
     if (validationStringify) {
       let errors;
@@ -53,7 +46,12 @@ export default (path, fn, config, { schema } = {}, ajv) => {
 
     const result = await fn(request, response, config);
 
-    if (result && !result.stream && !res.aborted) {
+    if (!result) {
+      return res.end(
+        '{"error":"The route you visited does not returned response"}'
+      );
+    }
+    if (!result.stream && !res.aborted) {
       res.send(result);
     }
   };

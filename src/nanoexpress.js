@@ -34,6 +34,8 @@ const nanoexpress = (options = {}) => {
   const pathMiddlewares = {};
   const config = {};
 
+  config.https = !!options.https;
+
   const _app = {
     config: {
       set: (key, value) => {
@@ -47,8 +49,12 @@ const nanoexpress = (options = {}) => {
           console.log('[Server]: PORT is required');
           return;
         }
+        if (typeof host === 'string') {
+          config.host = host;
+        }
         app.listen(port, host, (token) => {
           if (token) {
+            _app._instance = token;
             console.log(
               `[Server]: started successfully at [localhost:${port}] in [${Date.now() -
                 time}ms]`
@@ -60,6 +66,15 @@ const nanoexpress = (options = {}) => {
           }
         });
       }),
+    close: () => {
+      if (_app._instance) {
+        console.log('[Server]: stopped successfully');
+        return true;
+      } else {
+        console.log('[Server]: Error, failed while stopping');
+        return false;
+      }
+    },
     use: async (path, ...fns) => {
       if (typeof path === 'function') {
         fns.unshift(path);

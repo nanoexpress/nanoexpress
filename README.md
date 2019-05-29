@@ -18,7 +18,7 @@ _See [**Credits**](#credits) if you want which libraries i've used_
 
 ## NOTE
 
-This application isn't production ready and use at your own risk
+This library reached the `Alpha` status and works good, see `/examples` folder
 
 ## Motiviation
 
@@ -37,14 +37,15 @@ This library makes very thin layer between uWebSockets.js and your code. But, gi
 - Normalised API
 - Can define routes Declaratively
 - Express-compatible middleware
-- In-box `body-parser` middleware (JSON, FormEncoded, Plain, XML)
-- In-box `cookie` middleware
+- In-built `Body-Parser` middleware (JSON, FormEncoded)
+- In-built `Cookie` middleware
 - In-built Stream (Video stream, yay!) support
 - In-built WebSocket support (Express-like API and Events)
 - In-built Schema validator via `Ajv`
 - Out-of-the-box `fast-json-stringify` support via `{schema}` middleware
+- Small working examples
 - TypeScript declaration
-- Testing and CI checked code
+- Tests and CI checked code
 
 ## Built-in Middlewares
 
@@ -54,19 +55,22 @@ I'm excluded built-ins modules from initialization for performance reason
 
 ```js
 import { middlewares } from 'nanoexpress/builtins';
-// or import { bodyParser, cookie } from 'nanoexpress/builtins/middlewares';
+// or import { passport } from 'nanoexpress/builtins/middlewares';
 
 const app = nanoexpress();
-app.use(middlewares.bodyParser); // or app.use(bodyParser);
+app.use(middlewares.passport); // or app.use(passport);
 ```
 
-- `body-parser`
-- `cookie`
+- `passport`
 
 ## Working Middlewares
 
+- `body-parser` (yes, if you don't want built-in)
 - `express-fileupload`
 - `cors` (yes, `express` `cors` middleware)
+- `express-jwt`
+- `express-session` (partially works, see examples, we looking to fix)
+- `passport` (partially works, issue relates to `express-session`)
 
 ## Credits
 

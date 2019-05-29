@@ -18,7 +18,23 @@ export default (path = '/*', fns, config, ajv) => {
           if (fn.sync) {
             fn(req, res, config);
           } else {
-            await fn(req, res, config);
+            const middleware = await fn(req, res, config).catch((err) => {
+              if (err) {
+                if (err.message) {
+                  res.end(
+                    '{"error":"' + err.message.replace(/"/g, '\\"') + '"}'
+                  );
+                  return { error: true };
+                } else {
+                  console.log('[Server]: Error', err);
+                  console.log('[Server]: At Middleware', fn.toString());
+                }
+              }
+            });
+
+            if (middleware && middleware.error) {
+              return;
+            }
           }
         }
 

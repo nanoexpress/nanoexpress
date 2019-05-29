@@ -28,6 +28,9 @@ export interface HttpRequestParams {
   [key: string]: string;
 }
 export interface HttpRequestBody {
+  [key: string]: string | object | any[];
+}
+export interface HttpRequestCookies {
   [key: string]: string;
 }
 
@@ -41,12 +44,22 @@ export interface HttpRequest extends HttpRequestBasic {
   path: string;
   url: string;
   headers: HttpRequestHeaders;
+  cookies: HttpRequestCookies;
   query: HttpRequestQueries;
   params: HttpRequestParams;
   body?: HttpRequestBody;
   private __response: HttpResponse;
 }
 
+export interface CookieOptions {
+  httpOnly?: boolean;
+  secure?: boolean;
+  maxAge?: number;
+  path?: string;
+  domain?: string;
+  signed?: boolean;
+  expires?: number | string;
+}
 export interface HttpResponse extends HttpResponseBasic {
   status(code: number): HttpResponse;
   setHeader(key: string, value: string | number): HttpResponse;
@@ -55,12 +68,17 @@ export interface HttpResponse extends HttpResponseBasic {
   applyHeaders(): HttpResponse;
   setHeaders(headers: HttpRequestHeaders): HttpResponse;
   writeHead(code: number; headers: HttpRequestHeaders): HttpResponse;
+  redirect(code: number | string, path?: string): HttpResponse;
   send(result: string | object | array): HttpResponse;
   json(result: object | array): HttpResponse;
   xml(result: string): HttpResponse;
   html(result: string): HttpResponse;
   plain(result: string): HttpResponse;
   cork(result: string | object | array): HttpResponse;
+  setCookie(key: string, value: string, options?: CookieOptions): HttpResponse;
+  cookie(key: string, value: string, options?: CookieOptions): HttpResponse;
+  hasCookie(key: string): HttpResponse;
+  removeCookie(key: string, options?: CookieOptions): HttpResponse;
   __request?: HttpRequest
 }
 
@@ -98,6 +116,7 @@ export interface nanoexpressApp extends BasicApp {
   any(path: string, ...fns: Function<HttpRequest, HttpResponse>[]): nanoexpressApp;
   ws(path: string, ...fns: Function<HttpRequest, HttpResponse>[]): nanoexpressApp;
   listen(port: number, host?: string): Promise<nanoexpressApp>;
+  close(): boolean;
   define(routes: AppRoutes): nanoexpressApp;
   config: AppConfig
 }
