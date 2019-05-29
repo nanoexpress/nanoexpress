@@ -5,6 +5,7 @@ import {
   HttpResponse as HttpResponseBasic,
   WebSocket as WebSocketBasic
 } from 'uWebSockets.js';
+import { Ajv, Options as AjvOptions } from 'ajv';
 
 declare namespace nanoexpress {
   export interface AppOptions extends AppOptionsBasic {
@@ -13,6 +14,8 @@ declare namespace nanoexpress {
     cert_file_name: string;
     passphare: string;
   };
+  ajv?: AjvOptions,
+  configureAjv(ajv: Ajv): Ajv
 }
 
 export interface HttpRequestHeaders {
