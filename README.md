@@ -1,8 +1,17 @@
 # nanoexpress
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/dalisoft/nanoexpress.svg)](https://greenkeeper.io/)
+[![Travis](https://img.shields.io/travis/dalisoft/nanoexpress.svg)](http://github.com/dalisoft/nanoexpress)
+[![NPM Downloads](https://img.shields.io/npm/dm/nanoexpress.svg)](https://npmjs.org/package/nanoexpress)
+[![NPM Version](https://img.shields.io/npm/v/nanoexpress.svg)](https://npmjs.org/package/nanoexpress)
+[![size](https://img.badgesize.io/https://unpkg.com/nanoexpress)](http://unpkg.com/nanoexpress)
+[![gzipsize](https://img.badgesize.io/https://unpkg.com/nanoexpress?compression=gzip)](http://unpkg.com/nanoexpress)
 
 Nano-framework for Node.js powered by uWebSockets.js
+
+_If you want **Suport** me, please see [Support](#support) section_
+
+_See [**Credits**](#credits) if you want which libraries i've used_
 
 ## NOTE
 
@@ -67,4 +76,16 @@ And to other libraries which used to create this library and without these libra
 
 ## License
 
-Apache-2.0
+[![license](https://img.shields.io/github/license/dalisoft/nanoexpress.svg)](https://github.com/dalisoft/nanoexpress/blob/master/LICENSE)
+
+## Support
+
+[![Beerpay](https://img.shields.io/beerpay/dalisoft/nanoexpress.svg)](https://beerpay.io/dalisoft/nanoexpress/)
+[![GitHub issues](https://img.shields.io/github/issues/dalisoft/nanoexpress.svg)](http://github.com/dalisoft/nanoexpress/issues)
+
+- Star project
+- Fork project
+- Watch project
+- Report bugs
+- Fix issue
+- Make PR
