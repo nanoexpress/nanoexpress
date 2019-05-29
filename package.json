@@ -12,6 +12,7 @@
     "build": "rollup -c",
     "lint": "eslint ./src",
     "test": "jest",
+    "coverage": "jest --coverage",
     "prepublishOnly": "npm run lint && npm run test && npm run build"
   },
   "repository": {
