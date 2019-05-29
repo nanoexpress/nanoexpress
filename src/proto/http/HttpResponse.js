@@ -28,7 +28,7 @@ const HttpResponse = {
 
   // Normalize hasHeader method
   hasHeader(key) {
-    return this._headers && this._headers[key] !== undefined;
+    return !!this._headers && this._headers[key] !== undefined;
   },
 
   // Normalize removeHeader
@@ -41,6 +41,7 @@ const HttpResponse = {
 
     if (this._headersCount === 0) {
       this._headers = null;
+      delete this._headers;
     }
 
     return this;
