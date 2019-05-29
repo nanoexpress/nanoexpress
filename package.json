@@ -13,6 +13,7 @@
     "lint": "eslint ./src",
     "test": "jest",
     "coverage": "jest --coverage",
+    "coveralls": "npm run coverage && cat ./tests/coverage/lcov.info | coveralls",
     "prepublishOnly": "npm run lint && npm run test && npm run build"
   },
   "repository": {
@@ -47,6 +48,7 @@
     "@babel/core": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
     "ava": "^1.4.1",
+    "coveralls": "^3.0.3",
     "eslint": "^5.16.0",
     "husky": "^2.3.0",
     "jest": "^24.8.0",

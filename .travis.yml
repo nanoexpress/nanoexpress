@@ -8,9 +8,10 @@ notifications:
 node_js:
   - '10'
 before_install:
-  - npm i -g npm@^6.5.0
-before_script:
-  - npm prune
+  - npm update
+install:
+  - npm i
 script:
   - npm run lint
   - npm test
+  - npm run coveralls
