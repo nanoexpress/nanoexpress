@@ -89,16 +89,17 @@ const nanoexpress = (options = {}) => {
   };
 
   httpMethods.forEach((method) => {
-    _app[method] = (path, ...fns) => {
-      app[method](
+    _app[method] = async (path, ...fns) => {
+      const handler = await http(
         path,
-        http(
-          path,
-          middlewares.concat(pathMiddlewares[path] || []).concat(fns),
-          config,
-          ajv
-        )
+        middlewares.concat(pathMiddlewares[path] || []).concat(fns),
+        config,
+        ajv
       );
+      if (method !== 'options' || method !== 'any' || method !== 'ws') {
+        app.options(path, handler);
+      }
+      app[method](path, handler);
       return _app;
     };
   });

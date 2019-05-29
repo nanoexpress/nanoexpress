@@ -20,10 +20,16 @@ const HttpResponse = {
       this._headers = {};
       this._headersCount = 0;
     }
+    key = key.toLowerCase();
     this._headersCount++;
     this._headers[key] = value;
 
     return this;
+  },
+
+  // Normalize getHeader method
+  getHeader(key) {
+    return !!this._headers && !!key && this._headers[key.toLowerCase()];
   },
 
   // Normalize hasHeader method
@@ -33,7 +39,8 @@ const HttpResponse = {
 
   // Normalize removeHeader
   removeHeader(key) {
-    if (!this._headers) {
+    key = key.toLowerCase();
+    if (!this._headers || this._headers[key] === undefined) {
       return;
     }
     delete this._headers[key];

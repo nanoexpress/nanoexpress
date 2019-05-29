@@ -66,6 +66,7 @@ app.use(middlewares.bodyParser); // or app.use(bodyParser);
 ## Working Middlewares
 
 - `express-fileupload`
+- `cors` (yes, `express` `cors` middleware)
 
 ## Credits
 

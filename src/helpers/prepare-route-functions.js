@@ -29,14 +29,11 @@ export default (fns) => {
           result = fn;
         } else {
           result = (req, res, config) =>
-            new Promise((resolve, reject) => {
+            new Promise((resolve) => {
               const next = (err, done) => {
                 if (err) {
-                  console.error(
-                    '[Server]: Error - Middleware crashed or failed',
-                    err
-                  );
-                  reject(err);
+                  res.end(err.message);
+                  resolve();
                 } else {
                   resolve(done);
                 }

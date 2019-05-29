@@ -22,6 +22,10 @@ export default (path = '/*', fns, config, ajv) => {
           }
         }
 
+        if (req.method === 'options') {
+          return;
+        }
+
         return route.isAsync
           ? await route.fn(req, res, config)
           : route.fn(req, res, config);

@@ -53,6 +53,10 @@ describe('http response header', () => {
     expect(fakeRes._headers.foo).toBe('bar');
     expect(fakeRes._headers).toStrictEqual({ foo: 'bar', bar: 'baz' });
   });
+  it('res.getHeader', () => {
+    expect(fakeRes.getHeader('foo')).toBe('bar');
+    expect(fakeRes.getHeader('bar')).toBe('baz');
+  });
   it('res.hasHeader', () => {
     expect(fakeRes.hasHeader('foo')).toBe(true);
     expect(fakeRes.hasHeader('bar')).toBe(true);

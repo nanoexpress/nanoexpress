@@ -1,5 +1,5 @@
 const nanoexpress = require('../build/nanoexpress');
-const fileUpload = require('express-fileupload');
+const fileUpload = require('../node_modules/express-fileupload');
 
 const app = nanoexpress();
 
