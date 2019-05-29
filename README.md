@@ -2,8 +2,9 @@
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/dalisoft/nanoexpress.svg)](https://greenkeeper.io/)
 [![Travis](https://img.shields.io/travis/dalisoft/nanoexpress.svg)](http://github.com/dalisoft/nanoexpress)
+[![Code Climate](https://codeclimate.com/github/dalisoft/nanoexpress/badges/gpa.svg)](https://codeclimate.com/github/dalisoft/nanoexpress)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/dalisoft/nanoexpress/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/dalisoft/nanoexpress/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/dalisoft/nanoexpress/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/dalisoft/nanoexpress/?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/dalisoft/nanoexpress/badge.svg?branch=master)](https://coveralls.io/github/dalisoft/nanoexpress?branch=master)
 [![NPM Downloads](https://img.shields.io/npm/dm/nanoexpress.svg)](https://npmjs.org/package/nanoexpress)
 [![NPM Version](https://img.shields.io/npm/v/nanoexpress.svg)](https://npmjs.org/package/nanoexpress)
 [![size](https://img.badgesize.io/https://unpkg.com/nanoexpress)](http://unpkg.com/nanoexpress)

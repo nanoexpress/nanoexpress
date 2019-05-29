@@ -3,3 +3,4 @@ examples/
 .gitignore
 .gitattributes
 .vscode
+tests/coverage

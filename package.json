@@ -11,8 +11,8 @@
     "watch-dev": "NODE_ENV=development rollup -c -w",
     "build": "rollup -c",
     "lint": "eslint ./src",
-    "test": "jest",
-    "coverage": "jest --coverage",
+    "test": "jest --config jest.config.js",
+    "coverage": "npm run test --coverage",
     "coveralls": "npm run coverage && cat ./tests/coverage/lcov.info | coveralls",
     "prepublishOnly": "npm run lint && npm run test && npm run build"
   },
