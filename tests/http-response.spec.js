@@ -31,15 +31,15 @@ describe('http response send', () => {
     expect(fakeRes.buffer).toBe('{"status":"ok"}');
   });
   it('res.xml', () => {
-    fakeRes.xml('<xml />');
+    fakeRes.send('<xml />');
     expect(fakeRes.buffer).toBe('<xml />');
   });
   it('res.html', () => {
-    fakeRes.xml('<!DOCTYPE />');
+    fakeRes.send('<!DOCTYPE />');
     expect(fakeRes.buffer).toBe('<!DOCTYPE />');
   });
   it('res.plain', () => {
-    fakeRes.xml('Text works');
+    fakeRes.send('Text works');
     expect(fakeRes.buffer).toBe('Text works');
   });
 });

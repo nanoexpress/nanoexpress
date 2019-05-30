@@ -67,13 +67,11 @@ export interface HttpResponse extends HttpResponseBasic {
   removeHeader(key: string): HttpResponse;
   applyHeaders(): HttpResponse;
   setHeaders(headers: HttpRequestHeaders): HttpResponse;
+  writeHeaders(name: string, value: string[]): HttpResponse;
   writeHead(code: number; headers: HttpRequestHeaders): HttpResponse;
   redirect(code: number | string, path?: string): HttpResponse;
   send(result: string | object | array): HttpResponse;
   json(result: object | array): HttpResponse;
-  xml(result: string): HttpResponse;
-  html(result: string): HttpResponse;
-  plain(result: string): HttpResponse;
   cork(result: string | object | array): HttpResponse;
   setCookie(key: string, value: string, options?: CookieOptions): HttpResponse;
   cookie(key: string, value: string, options?: CookieOptions): HttpResponse;

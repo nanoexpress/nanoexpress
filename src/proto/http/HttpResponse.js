@@ -59,9 +59,6 @@ const HttpResponse = {
 
 // Aliases for beginners and/or users from Express!
 HttpResponse.json = HttpResponse.send;
-HttpResponse.xml = HttpResponse.send;
-HttpResponse.html = HttpResponse.send;
-HttpResponse.plain = HttpResponse.send;
 
 // Add stream feature by just method
 // for easy and clean code
