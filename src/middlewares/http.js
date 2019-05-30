@@ -18,7 +18,14 @@ export default (path = '/*', fns, config, ajv) => {
           if (fn.sync) {
             fn(req, res, config);
           } else {
-            await fn(req, res, config);
+            const middleware = await fn(req, res, config);
+
+            if (middleware && middleware.error) {
+              if (!res.aborted) {
+                return res.end('{"error":"' + middleware.message + '"}');
+              }
+              return undefined;
+            }
           }
         }
 

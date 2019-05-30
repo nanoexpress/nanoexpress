@@ -20,10 +20,11 @@ export default (fns) => {
         result.async = false;
       } else {
         result = (req, res, config) =>
-          new Promise((resolve, reject) => {
+          new Promise((resolve) => {
             const next = (err, done) => {
               if (err) {
-                return reject(err);
+                err.error = true;
+                return resolve(err);
               } else {
                 resolve(done);
               }
