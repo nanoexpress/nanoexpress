@@ -1,6 +1,20 @@
 import fastJson from 'fast-json-stringify';
 
 const validationMethods = ['query', 'params', 'headers', 'body'];
+const validationSchema = {
+  type: 'array',
+  items: {
+    type: 'object',
+    properties: {
+      type: { type: 'string' },
+      messages: {
+        type: 'array',
+        items: { type: 'string' }
+      }
+    }
+  }
+};
+
 export default (ajv, schema) => {
   const validation = [];
   let validationStringify;
@@ -18,19 +32,7 @@ export default (ajv, schema) => {
         }
       });
       if (validation.length > 0) {
-        validationStringify = fastJson({
-          type: 'array',
-          items: {
-            type: 'object',
-            properties: {
-              type: { type: 'string' },
-              messages: {
-                type: 'array',
-                items: { type: 'string' }
-              }
-            }
-          }
-        });
+        validationStringify = fastJson(validationSchema);
       }
     }
   }
