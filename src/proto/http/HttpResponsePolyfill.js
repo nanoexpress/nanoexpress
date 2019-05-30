@@ -28,14 +28,13 @@ const HttpResponsePolyfill = {
   },
 
   // Redirect method
-  redirect(code = 301, path) {
+  redirect(code, path) {
     const { __request, config } = this;
-    const { headers } = __request;
-    const { host } = headers;
+    const host = __request && __request.headers && __request.headers.host;
 
     const httpHost = (config && config.host) || host;
 
-    if (typeof code === 'string') {
+    if (!path) {
       path = code;
       code = 301;
     }
