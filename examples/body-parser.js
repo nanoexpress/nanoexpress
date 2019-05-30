@@ -1,9 +1,6 @@
 const nanoexpress = require('../build/nanoexpress');
-const { bodyParser } = require('../src/builtins/middlewares');
 
 const app = nanoexpress();
-
-app.use(bodyParser);
 
 app.get('/', () => 'ok');
 

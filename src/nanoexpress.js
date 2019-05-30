@@ -75,7 +75,7 @@ const nanoexpress = (options = {}) => {
         return false;
       }
     },
-    use: async (path, ...fns) => {
+    use: (path, ...fns) => {
       if (typeof path === 'function') {
         fns.unshift(path);
         middlewares.push(...fns);
@@ -104,8 +104,8 @@ const nanoexpress = (options = {}) => {
   };
 
   httpMethods.forEach((method) => {
-    _app[method] = async (path, ...fns) => {
-      const handler = await http(
+    _app[method] = (path, ...fns) => {
+      const handler = http(
         path,
         middlewares.concat(pathMiddlewares[path] || []).concat(fns),
         config,

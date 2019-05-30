@@ -1,6 +1,6 @@
 import { headers, cookies, queries, params, body } from '../../normalizers';
 
-export default async (req, res, bodyCall) => {
+export default (req, res, bodyCall) => {
   req.path = req.getUrl();
   req.method = req.method || req.getMethod();
 
@@ -18,7 +18,10 @@ export default async (req, res, bodyCall) => {
   req.query = queries(req, req.query);
 
   if (bodyCall) {
-    req.body = await body(req, res);
+    return body(req, res).then((body) => {
+      req.body = body;
+      return req;
+    });
   }
 
   return req;
