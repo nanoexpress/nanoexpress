@@ -13,16 +13,9 @@ export default (path, fn, config, { schema } = {}, ajv) => {
 
     const bodyCall =
       bodyDisallowedMethods.indexOf(req.method) === -1 && res.onData;
-    let request;
-    if (bodyCall) {
-      // Crash handling
-      res.onAborted(() => {
-        res.aborted = true;
-      });
-      request = await http.request(req, res, bodyCall);
-    } else {
-      request = http.request(req, res);
-    }
+    const request = bodyCall
+      ? await http.request(req, res, bodyCall)
+      : http.request(req, res);
 
     if (validationStringify) {
       let errors;

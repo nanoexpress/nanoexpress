@@ -11,7 +11,7 @@ export default async (req, res) => {
     return undefined;
   }
 
-  let body = await new Promise((resolve, reject) => {
+  let body = await new Promise((resolve) => {
     let buffer;
     res.onData((chunkPart, isLast) => {
       const chunk = Buffer.from(chunkPart);
@@ -37,7 +37,10 @@ export default async (req, res) => {
     });
 
     /* Register error cb */
-    res.onAborted(reject);
+    res.onAborted(() => {
+      res.aborted = true;
+      resolve();
+    });
   });
 
   if (!body) {
