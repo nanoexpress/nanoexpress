@@ -76,22 +76,20 @@ const HttpResponse = {
   // For rare some cases
   applyHeaders() {
     const { _headers, _headersCount } = this;
-    if (_headersCount) {
+    if (_headersCount > 0) {
       for (const header in _headers) {
         const value = _headers[header];
 
-        if (value === undefined || value === null) {
-          continue;
-        }
-
-        if (value && value.splice && value.length) {
-          for (let i = 0, len = value.length; i < len; i++) {
-            this.writeHeader(header, value[i]);
+        if (value !== undefined && value !== null) {
+          if (value.splice && value.length) {
+            for (let i = 0, len = value.length; i < len; i++) {
+              this.writeHeader(header, value[i]);
+            }
+          } else {
+            this.writeHeader(header, _headers[header]);
           }
-        } else {
-          this.writeHeader(header, _headers[header]);
+          this.removeHeader(header);
         }
-        this.removeHeader(header);
       }
     }
 
