@@ -18,10 +18,10 @@ const validationSchema = {
 export default (ajv, schema) => {
   const validation = [];
   let validationStringify;
-  if (ajv) {
+  if (ajv && schema) {
     validationMethods.forEach((type) => {
       const _schema = schema[type];
-      if (typeof _schema === 'object') {
+      if (typeof _schema === 'object' && _schema) {
         if (type === 'response') {
           schema[type] = fastJson(_schema);
         } else {
