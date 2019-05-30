@@ -55,10 +55,10 @@ I'm excluded built-ins modules from initialization for performance reason
 
 ```js
 import { middlewares } from 'nanoexpress/builtins';
-// or import { passport } from 'nanoexpress/builtins/middlewares';
+// or import { passportInitialize } from 'nanoexpress/builtins/middlewares';
 
 const app = nanoexpress();
-app.use(middlewares.passport); // or app.use(passport);
+app.use(middlewares.passportInitialize()); // or app.use(passportInitialize());
 ```
 
 - `passport`
