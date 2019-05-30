@@ -1,5 +1,6 @@
 import fastJson from 'fast-json-stringify';
 
+const validationMethods = ['query', 'params', 'headers', 'body'];
 export default (ajv, schema) => {
   const validation = [];
   let validationStringify;
@@ -8,22 +9,14 @@ export default (ajv, schema) => {
       schema.response = fastJson(schema.response);
     }
     if (ajv) {
-      if (typeof schema.query === 'object') {
-        schema.query = ajv.compile(schema.query);
-        validation.push({ type: 'query', validator: schema.query });
-      }
-      if (typeof schema.params === 'object') {
-        schema.params = ajv.compile(schema.params);
-        validation.push({ type: 'params', validator: schema.params });
-      }
-      if (typeof schema.headers === 'object') {
-        schema.headers = ajv.compile(schema.headers);
-        validation.push({ type: 'headers', validator: schema.headers });
-      }
-      if (typeof schema.body === 'object') {
-        schema.body = ajv.compile(schema.body);
-        validation.push({ type: 'body', validator: schema.body });
-      }
+      validationMethods.forEach((type) => {
+        const _schema = schema[type];
+        if (typeof _schema === 'object') {
+          const validator = ajv.compile(_schema);
+          schema[type] = validator;
+          validation.push({ type, validator });
+        }
+      });
       if (validation.length > 0) {
         validationStringify = fastJson({
           type: 'array',
