@@ -90,8 +90,13 @@ export interface AppRoute {
   trace(req: HttpRequest, res: HttpResponse): any
   ws(req: HttpRequest, ws: WebSocket): any
 }
+export interface AppRoute {
+  callback: Function<HttpRequest, HttpResponse>;
+  middlewares?: Function<HttpRequest, HttpResponse, Function>[];
+  schema?: object;
+}
 export interface AppRoutes {
-  [key: string]: AppRoute | object;
+  [key: string]: AppRoute | AppRoute | object;
 }
 
 export interface AppConfig {
@@ -115,7 +120,7 @@ export interface nanoexpressApp extends BasicApp {
   ws(path: string, ...fns: Function<HttpRequest, HttpResponse>[]): nanoexpressApp;
   listen(port: number, host?: string): Promise<nanoexpressApp>;
   close(): boolean;
-  define(routes: AppRoutes): nanoexpressApp;
+  define(prefix: string, routes: AppRoutes?): nanoexpressApp;
   config: AppConfig
 }
 }

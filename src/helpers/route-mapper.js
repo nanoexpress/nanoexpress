@@ -16,7 +16,11 @@ const appMethods = [
 const pathKeyNormalizer = (path) =>
   path.includes('{') ? path.replace(/\{(.*)\}/g, ':$1') : path;
 
-export default (app) => async (routes) => {
+export default (app) => async (prefix, routes) => {
+  if (typeof prefix !== 'string' && !routes) {
+    routes = prefix;
+    prefix = '';
+  }
   (function normalizeRoutes(path, appRoutes, route = false) {
     if (appRoutes.normalized) {
       return undefined;
@@ -98,7 +102,7 @@ export default (app) => async (routes) => {
         );
       }
     }
-  })('/', routes, false);
+  })('/' + prefix, routes, false);
 
   // This prevents from N+1 normalize
   routes.normalized = true;
@@ -109,8 +113,11 @@ export default (app) => async (routes) => {
 
     if (route) {
       for await (const method of methods) {
-        const { callback, middlewares = [] } = route[method];
+        const { callback, middlewares, schema } = route[method];
 
+        if (schema) {
+          middlewares.unshift({ schema });
+        }
         middlewares.push(callback);
 
         await app[method](path, ...middlewares);
