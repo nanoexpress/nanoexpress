@@ -9,6 +9,8 @@ export default (path = '/*', fns, config, ajv) => {
 
   const { route, prepared, empty, schema } = prepareRouteFunctions(fns);
 
+  route.fn.async = route.isAsync;
+
   return http(
     path,
     empty

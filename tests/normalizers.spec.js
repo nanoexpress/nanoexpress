@@ -22,7 +22,7 @@ describe('headers normalize', () => {
       forEach() {}
     };
 
-    expect(headers(fakeReq)).toStrictEqual({});
+    expect(headers(fakeReq)).toStrictEqual(undefined);
   });
 });
 
@@ -49,7 +49,7 @@ describe('params normalize', () => {
       getParameter() {}
     };
 
-    expect(params(fakeReq)).toStrictEqual({});
+    expect(params(fakeReq)).toBe(undefined);
   });
 });
 
@@ -73,7 +73,7 @@ describe('queries normalize', () => {
       }
     };
 
-    expect(queries(fakeReq)).toStrictEqual({});
+    expect(queries(fakeReq)).toBe(undefined);
   });
 });
 
@@ -108,6 +108,6 @@ describe('cookie normalize', () => {
   it('cookie normalize empty', async () => {
     const fakeReq = {};
 
-    expect(cookies(fakeReq)).toStrictEqual({});
+    expect(cookies(fakeReq)).toBe(undefined);
   });
 });

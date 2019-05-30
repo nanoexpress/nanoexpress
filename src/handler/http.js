@@ -1,6 +1,7 @@
 import { http } from '../wrappers';
 import { prepareValidation } from '../helpers';
 
+const bodyDisallowedMethods = ['get', 'options', 'head', 'trace', 'ws'];
 export default (path, fn, config, { schema } = {}, ajv) => {
   // For easier aliasing
   const { validation, validationStringify } = prepareValidation(ajv, schema);
@@ -13,8 +14,13 @@ export default (path, fn, config, { schema } = {}, ajv) => {
 
     // For future usage
     req.rawPath = path;
+    req.method = req.getMethod();
 
-    const request = await http.request(req, res, config);
+    const bodyCall =
+      bodyDisallowedMethods.indexOf(req.method) === -1 && res.onData;
+    const request = bodyCall
+      ? await http.request(req, res, bodyCall)
+      : http.request(req, res);
 
     if (validationStringify) {
       let errors;
@@ -44,15 +50,23 @@ export default (path, fn, config, { schema } = {}, ajv) => {
 
     const response = http.response(res, req, config, schema && schema.response);
 
-    const result = await fn(request, response, config);
+    const result = fn.async
+      ? await fn(request, response, config)
+      : fn(request, response, config);
 
     if (!result) {
       return res.end(
         '{"error":"The route you visited does not returned response"}'
       );
     }
-    if (!result.stream && !res.aborted) {
-      res.send(result);
+    if (!res.aborted) {
+      if (!result.stream) {
+        if (typeof result === 'string' && !res.statusCode) {
+          res.end(result);
+        } else {
+          res.send(result);
+        }
+      }
     }
   };
 };

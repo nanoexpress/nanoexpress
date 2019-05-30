@@ -1,10 +1,8 @@
 import { headers, cookies, queries, params, body } from '../../normalizers';
 
-const bodyDisallowedMethods = ['get', 'options', 'head', 'trace', 'ws'];
-
-export default async (req, res) => {
+export default async (req, res, bodyCall) => {
   req.path = req.getUrl();
-  req.method = req.getMethod();
+  req.method = req.method || req.getMethod();
 
   // Alias for Express-module
   req.url = req.path;
@@ -19,7 +17,7 @@ export default async (req, res) => {
   req.params = params(req, req.params);
   req.query = queries(req, req.query);
 
-  if (bodyDisallowedMethods.indexOf(req.method) === -1) {
+  if (bodyCall) {
     req.body = await body(req, res);
   }
 
