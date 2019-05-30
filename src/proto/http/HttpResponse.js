@@ -153,30 +153,17 @@ const HttpResponse = {
   // HTML, JSON, XML and Plain
   // parsing out-of-the-box
   send(result) {
-    const { schema } = this;
-
     /* If we were aborted, you cannot respond */
-    if (this.aborted) {
-      console.error('[Server]: Error, Response was aborted before responsing');
+    if (!result || this.aborted) {
+      console.error(
+        '[Server]: Error, Response was ' +
+          (!result ? 'marlformed' : 'aborted before responsing')
+      );
       return undefined;
     }
-    if (!result) {
-      console.error('[Server]: Error, Response result is marlformed');
-      return undefined;
-    }
-    if (typeof result === 'string') {
-      if (result.indexOf('<!DOCTYPE') === 0) {
-        this.setHeader('Content-Type', 'text/html');
-      } else if (result.indexOf('<xml') === 0) {
-        this.setHeader('Content-Type', 'application/xml');
-      }
-    } else if (typeof result === 'object') {
+    if (typeof result === 'object') {
       this.setHeader('Content-Type', 'application/json');
-      if (schema) {
-        result = schema(result);
-      } else {
-        result = jsonStrify(result);
-      }
+      result = this.schema ? this.schema(result) : jsonStrify(result);
     }
     if (this.statusCode) {
       this.modifyEnd();
