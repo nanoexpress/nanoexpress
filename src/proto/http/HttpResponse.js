@@ -64,7 +64,7 @@ const HttpResponse = {
   // Normalize removeHeader
   removeHeader(key) {
     if (!this._headers || !this._headers[key]) {
-      return;
+      return undefined;
     }
     this.modifyEnd();
     this._headers[key] = null;
@@ -160,11 +160,11 @@ const HttpResponse = {
     /* If we were aborted, you cannot respond */
     if (this.aborted) {
       console.error('[Server]: Error, Response was aborted before responsing');
-      return;
+      return undefined;
     }
     if (!result || this.aborted) {
       console.error('[Server]: Error, Response result is marlformed');
-      return;
+      return undefined;
     }
     if (typeof result === 'string') {
       if (result.indexOf('<!DOCTYPE') === 0) {

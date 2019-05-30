@@ -47,7 +47,7 @@ const nanoexpress = (options = {}) => {
       new Promise((resolve, reject) => {
         if (port === undefined) {
           console.log('[Server]: PORT is required');
-          return;
+          return undefined;
         }
         if (typeof host === 'string') {
           config.host = host;

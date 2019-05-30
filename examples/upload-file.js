@@ -15,7 +15,7 @@ app.post('/', (req, res) => {
     if (err) {
       res.status(500);
       res.send(err);
-      return;
+      return undefined;
     }
 
     res.send('File uploaded!');

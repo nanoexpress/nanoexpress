@@ -11,7 +11,7 @@ const HttpCookieResponse = {
 
     if (!setCookie) {
       this.setHeader('Set-Cookie', serialized);
-      return;
+      return undefined;
     }
 
     if (typeof setCookie === 'string') {

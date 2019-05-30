@@ -33,13 +33,13 @@ export default (path = '/*', fns, config, ajv) => {
             });
 
             if (middleware && middleware.error) {
-              return;
+              return undefined;
             }
           }
         }
 
         if (req.method === 'options') {
-          return;
+          return undefined;
         }
 
         return route.isAsync

@@ -19,11 +19,11 @@ const pathKeyNormalizer = (path) =>
 export default (app) => async (routes) => {
   (function normalizeRoutes(path, appRoutes, route = false) {
     if (appRoutes.normalized) {
-      return;
+      return undefined;
     }
     if (route && path) {
       routes[path] = appRoutes;
-      return;
+      return undefined;
     }
     for (const key in appRoutes) {
       const value = appRoutes[key];
