@@ -14,11 +14,10 @@ app.post('/', (req, res) => {
   req.files.file.mv(__dirname + '/uploads/file.jpg', function(err) {
     if (err) {
       res.status(500);
-      res.send(err);
-      return undefined;
+      return res.send(err);
     }
 
-    res.send('File uploaded!');
+    return res.send('File uploaded!');
   });
 });
 
