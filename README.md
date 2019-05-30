@@ -69,8 +69,8 @@ app.use(middlewares.passport); // or app.use(passport);
 - `express-fileupload`
 - `cors` (yes, `express` `cors` middleware)
 - `express-jwt`
-- `express-session` (partially works, see examples, we looking to fix)
-- `passport` (partially works, issue relates to `express-session`)
+- `express-session`
+- `passport`
 
 ## Credits
 

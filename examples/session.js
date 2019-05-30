@@ -1,5 +1,5 @@
 const nanoexpress = require('../build/nanoexpress');
-const expressSession = require('express-session');
+const expressSession = require('../node_modules/express-session');
 
 const app = nanoexpress();
 
@@ -21,30 +21,13 @@ app.use(
 );
 
 // Our routes list
-app.get(
-  '/',
-  (req) =>
-    new Promise((resolve) => {
-      req.sessionStore.load(req.cookies['my.sid'], (err, sess) => {
-        console.log({ err, sess });
-        if (!sess) {
-          return resolve('session not found');
-        }
-        req.session = sess;
-        return resolve({ foo: sess.foo });
-      });
-    })
-);
+app.get('/', (req) => {
+  return { foo: req.session.foo || 'undefined' };
+});
 
-app.post(
-  '/set',
-  async (req) => {
-    req.session.foo = 'bar';
-  },
-  async (req, res) => {
-    res.cookie('my.sid', req.sessionID, { httpOnly: true, sameSite: true });
-    return { foo: req.session.foo };
-  }
-);
+app.post('/set', async (req) => {
+  req.session.foo = 'bar';
+  return { foo: req.session.foo };
+});
 
 app.listen(4000);

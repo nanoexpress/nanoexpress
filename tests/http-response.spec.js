@@ -63,12 +63,12 @@ describe('http response header', () => {
   });
   it('res.removeHeader', () => {
     fakeRes.removeHeader('foo');
-    expect(fakeRes._headers).toStrictEqual({ bar: 'baz' });
+    expect(fakeRes._headers).toStrictEqual({ foo: null, bar: 'baz' });
     expect(fakeRes.hasHeader('foo')).toBe(false);
   });
   it('res.removeHeader - last item delete', () => {
     fakeRes.removeHeader('bar');
-    expect(fakeRes._headers).toBe(undefined);
+    expect(fakeRes._headers).toStrictEqual({ foo: null, bar: null });
     expect(fakeRes.hasHeader('bar')).toBe(false);
   });
 });
@@ -78,7 +78,7 @@ describe('http response status', () => {
 
   it('res.status', () => {
     fakeRes.status(200);
-    expect(fakeRes.code).toBe('200 OK');
+    expect(fakeRes.statusCode).toBe('200 OK');
   });
 });
 
@@ -87,8 +87,8 @@ describe('http response writeHead', () => {
 
   it('res.status', () => {
     fakeRes.writeHead(201, { foo: 'bar' });
-    expect(fakeRes.code).toBe('201 Created');
-    expect(fakeRes.headers).toStrictEqual({ foo: 'bar' });
+    expect(fakeRes.statusCode).toBe('201 Created');
+    expect(fakeRes._headers).toStrictEqual({ foo: 'bar' });
   });
 });
 

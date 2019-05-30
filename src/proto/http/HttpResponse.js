@@ -4,10 +4,29 @@ import jsonStrify from 'json-strify';
 import HttpCookieResponse from './HttpCookieResponse';
 
 const HttpResponse = {
+  modifyEnd() {
+    if (!this._modifiedEnd) {
+      const _oldEnd = this.end;
+
+      this.end = function(chunk, encoding) {
+        this.writeHead(this.statusCode || 200, this._headers);
+        this.applyHeaders();
+        return _oldEnd.call(this, chunk, encoding);
+      };
+
+      this._modifiedEnd = true;
+    }
+    return this;
+  },
+
   // Normalize status method
   status(code) {
+    this.modifyEnd();
+    if (typeof this.statusCode === 'string') {
+      return this;
+    }
     if (http.STATUS_CODES[code] !== undefined) {
-      this.writeStatus(code + ' ' + http.STATUS_CODES[code]);
+      this.statusCode = code + ' ' + http.STATUS_CODES[code];
     } else {
       console.error('[Server]: Invalid Code ' + code);
     }
@@ -17,6 +36,8 @@ const HttpResponse = {
 
   // Normalize setHeader method
   setHeader(key, value) {
+    this.modifyEnd();
+
     if (!this._headers) {
       this._headers = {};
       this._headersCount = 0;
@@ -33,21 +54,21 @@ const HttpResponse = {
 
   // Normalize hasHeader method
   hasHeader(key) {
-    return !!this._headers && this._headers[key] !== undefined;
+    return (
+      !!this._headers &&
+      this._headers[key] !== undefined &&
+      this._headers[key] !== null
+    );
   },
 
   // Normalize removeHeader
   removeHeader(key) {
-    if (!this._headers || this._headers[key] === undefined) {
+    if (!this._headers || !this._headers[key]) {
       return;
     }
-    delete this._headers[key];
+    this.modifyEnd();
+    this._headers[key] = null;
     this._headersCount--;
-
-    if (this._headersCount === 0) {
-      this._headers = null;
-      delete this._headers;
-    }
 
     return this;
   },
@@ -58,6 +79,10 @@ const HttpResponse = {
     if (_headersCount) {
       for (const header in _headers) {
         const value = _headers[header];
+
+        if (value === undefined || value === null) {
+          continue;
+        }
 
         if (value && value.splice && value.length) {
           for (let i = 0, len = value.length; i < len; i++) {
@@ -74,7 +99,13 @@ const HttpResponse = {
   },
   setHeaders(headers) {
     for (const header in headers) {
-      this.writeHeader(header, headers[header]);
+      if (this._headers) {
+        const currentHeader = this._headers[header];
+        if (currentHeader !== undefined || currentHeader !== null) {
+          continue;
+        }
+      }
+      this.setHeader(header, headers[header]);
     }
 
     return this;
@@ -86,7 +117,6 @@ const HttpResponse = {
     }
 
     this.status(code);
-    this.applyHeaders();
     this.setHeaders(headers);
 
     return this;
@@ -112,7 +142,8 @@ const HttpResponse = {
       path = config && config.https ? 'https://' : 'http://' + httpHost + path;
     }
 
-    this.writeHead(code, { Location: path });
+    this.statusCode = code;
+    this.writeHead({ Location: path });
     this.end();
     this.aborted = true;
 
@@ -149,7 +180,9 @@ const HttpResponse = {
         result = jsonStrify(result);
       }
     }
-    this.applyHeaders();
+    if (this.statusCode) {
+      this.modifyEnd();
+    }
     this.end(result);
 
     return this;

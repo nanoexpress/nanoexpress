@@ -1,6 +1,6 @@
 const nanoexpress = require('../build/nanoexpress');
 const { passportInitialize } = require('../src/builtins/middlewares');
-const expressSession = require('express-session');
+const expressSession = require('../node_modules/express-session');
 const passport = require('../node_modules/passport');
 const LocalStrategy = require('../node_modules/passport-local').Strategy;
 
@@ -51,23 +51,11 @@ passport.deserializeUser(function(user, done) {
 });
 
 // Our routes list
-app.get(
-  '/',
-  (req) =>
-    new Promise((resolve) => {
-      req.sessionStore.load(req.cookies['passport.sid'], (err, sess) => {
-        console.log({ err, sess });
-        if (!sess) {
-          return resolve('session not found');
-        }
-        req.session = sess;
-        return resolve(sess.passport.user);
-      });
-    })
-);
+app.get('/', (req) => {
+  return { user: req.user || 'Unauthorized' };
+});
 
-app.post('/login', passport.authenticate('local'), async (req, res) => {
-  res.cookie('passport.sid', req.sessionID, { httpOnly: true, sameSite: true });
+app.post('/login', passport.authenticate('local'), async (req) => {
   return req.user;
 });
 
