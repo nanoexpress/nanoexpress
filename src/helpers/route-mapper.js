@@ -43,13 +43,20 @@ export default (app) => async (routes) => {
         }
 
         normalizeRoutes(path, value, true);
-      } else if (!path || path === '/' || key.startsWith('/')) {
+      } else if (
+        keysOfValue.every((key) => !appMethods.includes(key)) &&
+        (!path || path === '/' || key.startsWith('/'))
+      ) {
         if (path === normalisedKey) {
           path = '';
         } else if ((path + normalisedKey).startsWith('//')) {
           path = '';
         }
-        normalizeRoutes(path + normalisedKey, value);
+
+        for (const route in value) {
+          normalizeRoutes(path + normalisedKey + route, value[route]);
+        }
+
         delete appRoutes[key];
       } else if (
         keysOfValue &&
@@ -65,6 +72,24 @@ export default (app) => async (routes) => {
           routes[path] = {
             [key]: normalisedValue
           };
+        }
+      } else if (
+        keysOfValue &&
+        keysOfValue.some((key) => appMethods.includes(key))
+      ) {
+        for (const method in value) {
+          if (appMethods.includes(method)) {
+            if (!value[method].callback) {
+              value[method] = { callback: value };
+            }
+          } else {
+            let normalisedPath = method;
+            if (method.startsWith('/') && path.endsWith('/')) {
+              normalisedPath = method.substr(1);
+            }
+            normalizeRoutes(path + normalisedPath, value[method]);
+            delete value[method];
+          }
         }
       } else {
         console.error(
