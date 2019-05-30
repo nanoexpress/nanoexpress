@@ -160,7 +160,7 @@ const HttpResponse = {
       console.error('[Server]: Error, Response was aborted before responsing');
       return undefined;
     }
-    if (!result || this.aborted) {
+    if (!result) {
       console.error('[Server]: Error, Response result is marlformed');
       return undefined;
     }
