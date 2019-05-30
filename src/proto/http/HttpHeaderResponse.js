@@ -39,6 +39,11 @@ const HttpHeaderResponse = {
   },
 
   // For rare some cases
+  writeHeaders(header, values) {
+    for (let i = 0, len = values.length; i < len; i++) {
+      this.writeHeader(header, values[i]);
+    }
+  },
   applyHeaders() {
     const { _headers, _headersCount } = this;
     if (_headersCount > 0) {
@@ -47,11 +52,9 @@ const HttpHeaderResponse = {
 
         if (value !== undefined && value !== null) {
           if (value.splice && value.length) {
-            for (let i = 0, len = value.length; i < len; i++) {
-              this.writeHeader(header, value[i]);
-            }
+            this.writeHeaders(header, value);
           } else {
-            this.writeHeader(header, _headers[header]);
+            this.writeHeader(header, value);
           }
           this.removeHeader(header);
         }
