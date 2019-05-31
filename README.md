@@ -29,6 +29,7 @@ This library makes very thin layer between uWebSockets.js and your code. But, gi
 ## Features
 
 - Async/Await out-of-the-box
+- No async mode supported
 - Easy to use (for Express users especially)
 - Blazing fast performance
 - Ultra lightweight size
@@ -37,8 +38,7 @@ This library makes very thin layer between uWebSockets.js and your code. But, gi
 - Normalised API
 - Can define routes Declaratively
 - Express-compatible middleware
-- In-built `Body-Parser` middleware (JSON, FormEncoded)
-- In-built `Cookie` middleware
+- In-built middlewares
 - In-built Stream (Video stream, yay!) support
 - In-built WebSocket support (Express-like API and Events)
 - In-built Schema validator via `Ajv`
@@ -49,13 +49,24 @@ This library makes very thin layer between uWebSockets.js and your code. But, gi
 
 ## Built-in Middlewares
 
-I'm excluded built-ins modules from initialization for performance reason
+Built-in middlewares implemented at layer-level for performance reason and enables automacilly when needed, not always
+
+- `cookie`
+- `body-parser`
+- `express-ws` (for comparing, uWS has built-in support at core-level)
+- `fast-json-stringify` (for validation)
+- `express-ajv` (for comparing, i did it at layer-level)
+- `express-declarative-routing` (for comparing, i did it at layer-level)
+
+## In-box Middlewares
+
+I'm excluded in-box modules from initialization for performance reason
 
 ### How-to import
 
 ```js
-import { middlewares } from 'nanoexpress/builtins';
-// or import { passportInitialize } from 'nanoexpress/builtins/middlewares';
+import { middlewares } from 'nanoexpress/packed';
+// or import { passportInitialize } from 'nanoexpress/packed/middlewares';
 
 const app = nanoexpress();
 app.use(middlewares.passportInitialize()); // or app.use(passportInitialize());
