@@ -7,10 +7,12 @@ const HttpResponsePolyfill = {
     if (typeof this.statusCode === 'string') {
       return this;
     }
-    if (http.STATUS_CODES[code] !== undefined) {
+    if (typeof code === 'string') {
+      this.statusCode = code;
+    } else if (http.STATUS_CODES[code] !== undefined) {
       this.statusCode = code + ' ' + http.STATUS_CODES[code];
     } else {
-      console.error('[Server]: Invalid Code ' + code);
+      console.error('[Server]: Invalid Code', code);
     }
 
     return this;
@@ -18,11 +20,20 @@ const HttpResponsePolyfill = {
   writeHead(code, headers) {
     if (typeof code === 'object' && !headers) {
       headers = code;
+
+      if (typeof this.statusCode === 'object') {
+        this.statusCode = 200;
+      }
+
       code = this.statusCode || 200;
     }
 
-    this.status(code);
-    this.setHeaders(headers);
+    if (code !== undefined) {
+      this.status(code);
+    }
+    if (headers !== undefined) {
+      this.setHeaders(headers);
+    }
 
     return this;
   },
@@ -46,8 +57,7 @@ const HttpResponsePolyfill = {
       path = config && config.https ? 'https://' : 'http://' + httpHost + path;
     }
 
-    this.statusCode = code;
-    this.writeHead({ Location: path });
+    this.writeHead(code, { Location: path });
     this.end();
     this.aborted = true;
 

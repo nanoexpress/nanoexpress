@@ -9,38 +9,35 @@ export default (path = '/*', fns, config, ajv) => {
 
   const { route, prepared, empty, schema } = prepareRouteFunctions(fns);
 
-  return http(
-    path,
-    empty
-      ? route
-      : async (req, res) => {
-        for (const fn of prepared) {
-          if (fn.sync) {
-            fn(req, res, config);
-          } else {
-            const middleware = await fn(req, res, config);
+  const handler = empty
+    ? route
+    : async (req, res, config) => {
+      for (const fn of prepared) {
+        if (!fn.async) {
+          fn(req, res, config);
+        } else {
+          const middleware = await fn(req, res, config);
 
-            if (middleware && middleware.error) {
-              if (!res.aborted) {
-                return res.end('{"error":"' + middleware.message + '"}');
-              }
-              return undefined;
+          if (middleware && middleware.error) {
+            if (!res.aborted) {
+              return res.end('{"error":"' + middleware.message + '"}');
             }
+            return;
           }
         }
+      }
 
-        if (req.method === 'options') {
-          return undefined;
-        }
-        if (!route.async) {
-          route(req, res, config);
-          return undefined;
-        }
+      if (req.method === 'options') {
+        return undefined;
+      }
+      if (!route.async) {
+        route(req, res, config);
+        return;
+      }
 
-        return route(req, res, config);
-      },
-    config,
-    schema,
-    ajv
-  );
+      return route(req, res, config);
+    };
+  handler.async = empty ? route.async : true;
+
+  return http(path, handler, config, schema, ajv);
 };

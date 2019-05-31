@@ -80,10 +80,13 @@ export default (res) => (
     }
   }
 
-  res.onAborted(() => {
-    readStream.destroy();
-    res.aborted = true;
-  });
+  if (!res.abortHandler) {
+    res.onAborted(() => {
+      readStream.destroy();
+      res.aborted = true;
+    });
+    res.abortHandler = true;
+  }
   res.setHeaders(headers);
   // check cache
   if (cache && !compressed) {

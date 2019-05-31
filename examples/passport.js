@@ -36,6 +36,9 @@ const strategy = new LocalStrategy(
     passwordField: 'password'
   },
   function(req, username, password, done) {
+    if (password !== '12345678') {
+      return done(null, false);
+    }
     return done(null, { id: 'id_' + username, username, password });
   }
 );
@@ -51,12 +54,24 @@ passport.deserializeUser(function(user, done) {
 });
 
 // Our routes list
-app.get('/', (req) => {
+app.get('/', async (req) => {
   return { user: req.user || 'Unauthorized' };
 });
 
-app.post('/login', passport.authenticate('local'), async (req) => {
-  return req.user;
+app.get('/done', (req, res) => {
+  res.end('Auth success');
 });
+
+app.get('/error', (req, res) => {
+  res.end('Auth failed');
+});
+
+app.post(
+  '/login',
+  passport.authenticate('local', {
+    successRedirect: '/done',
+    failureRedirect: '/error'
+  })
+);
 
 app.listen(4000);

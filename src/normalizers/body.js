@@ -12,6 +12,15 @@ export default async (req, res) => {
   }
 
   let body = await new Promise((resolve) => {
+    /* Register error cb */
+    if (!res.abortHandler && res.onAborted) {
+      res.onAborted(() => {
+        res.aborted = true;
+        resolve();
+      });
+      res.abortHandler = true;
+    }
+
     let buffer;
     res.onData((chunkPart, isLast) => {
       const chunk = Buffer.from(chunkPart);
@@ -34,12 +43,6 @@ export default async (req, res) => {
           buffer = Buffer.concat([chunk]);
         }
       }
-    });
-
-    /* Register error cb */
-    res.onAborted(() => {
-      res.aborted = true;
-      resolve();
     });
   });
 
