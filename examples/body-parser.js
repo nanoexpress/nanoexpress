@@ -2,9 +2,9 @@ const nanoexpress = require('../build/nanoexpress');
 
 const app = nanoexpress();
 
-app.get('/', () => 'ok');
+app.get('/', async () => 'ok');
 
-app.post('/', (req) => {
+app.post('/', async (req) => {
   return { status: 'ok', body: req.body };
 });
 

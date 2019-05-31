@@ -8,13 +8,14 @@ app.get(
     schema: {
       headers: {
         type: 'object',
+        // required: ['origin'], // Uncomment this line
         properties: {
           origin: { type: 'string' }
         }
       }
     }
   },
-  () => '{"hello":"world"}'
+  async () => '{"hello":"world"}'
 );
 
 app.listen(4000);

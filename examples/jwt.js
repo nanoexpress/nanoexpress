@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 const nanoexpress = require('../build/nanoexpress');
 const expressJwt = require('../node_modules/express-jwt');
 const jwt = require('../node_modules/jsonwebtoken');
@@ -11,6 +12,11 @@ const jwtMiddleware = expressJwt({ secret }).unless({ path: ['/', '/token'] });
 
 // Or can be used like this
 // app.use(jwtMiddleware);
+
+// Type this into browser console
+/*!
+await fetch('http://localhost:4000/protected', { method: 'POST', body: JSON.stringify({foo:'bar'}), headers: { 'Content-Type': 'application/json', Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm90ZWN0ZWQiOnRydWUsImlhdCI6MTU1OTEyNTA2OX0.WzksMNEZs4gdyu0wb7_Pav-mOI17t3u8ox0y-HN3Fks' } }).then(res => res.json())
+*/
 
 app.get('/', async () => ({ protected: false }));
 app.post('/token', async () => {

@@ -2,6 +2,7 @@ const nanoexpress = require('../build/nanoexpress');
 
 const app = nanoexpress();
 
+app.get('/', async () => 'Connect at /ws');
 app.ws('/ws', (req, ws) => {
   console.log('Connected');
 

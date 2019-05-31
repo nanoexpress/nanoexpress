@@ -10,7 +10,7 @@ const compressions = {
 };
 const bytes = 'bytes=';
 
-export default (res) => (
+export default function(
   path,
   {
     lastModified = true,
@@ -20,7 +20,8 @@ export default (res) => (
     },
     cache = false
   } = {}
-) => {
+) {
+  const res = this;
   const stat = fs.statSync(path);
   const { mtime } = stat;
   let { size } = stat;
@@ -29,6 +30,7 @@ export default (res) => (
   const mtimeutc = mtime.toUTCString();
 
   const { headers } = res.__request;
+
   // handling last modified
   if (lastModified) {
     // Return 304 if last-modified
@@ -63,6 +65,7 @@ export default (res) => (
   }
 
   let readStream = fs.createReadStream(path, { start, end });
+  this.readStream = readStream;
   // Compression;
   let compressed = false;
   if (compress) {
@@ -82,12 +85,15 @@ export default (res) => (
 
   if (!res.abortHandler) {
     res.onAborted(() => {
-      readStream.destroy();
+      if (res.readStream) {
+        res.readStream.destroy();
+      }
       res.aborted = true;
     });
     res.abortHandler = true;
   }
-  res.setHeaders(headers);
+
+  res.writeHeaders(headers);
   // check cache
   if (cache && !compressed) {
     return cache.wrap(
@@ -162,4 +168,4 @@ export default (res) => (
     .on('end', () => {
       res.end();
     });
-};
+}

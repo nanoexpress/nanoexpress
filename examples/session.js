@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 const nanoexpress = require('../build/nanoexpress');
 const expressSession = require('../node_modules/express-session');
 
@@ -21,9 +22,14 @@ app.use(
 );
 
 // Our routes list
-app.get('/', (req) => {
+app.get('/', async (req) => {
   return { foo: req.session.foo || 'undefined' };
 });
+
+// Type below line into browser console
+/*
+await fetch('http://localhost:4000/set', { method: 'POST', body: JSON.stringify({username:'user', password: 'password'}), headers: { 'Content-Type': 'application/json' }, credentials: 'include' }).then(res => res.json())
+*/
 
 app.post('/set', async (req) => {
   req.session.foo = 'bar';

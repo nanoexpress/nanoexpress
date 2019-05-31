@@ -28,7 +28,7 @@ const HttpCookieResponse = {
     const req = this.__request;
     return !!req && !!req.cookies && req.cookies[name] !== undefined;
   },
-  removeCookie(name, options) {
+  removeCookie(name, options = {}) {
     const currTime = Date.now();
     if (!options.expires || options.expires >= currTime) {
       options.expires = currTime - 1000;

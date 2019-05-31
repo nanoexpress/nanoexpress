@@ -15,6 +15,9 @@ export default async (req, res) => {
     /* Register error cb */
     if (!res.abortHandler && res.onAborted) {
       res.onAborted(() => {
+        if (res.readStream) {
+          res.readStream.destroy();
+        }
         res.aborted = true;
         resolve();
       });

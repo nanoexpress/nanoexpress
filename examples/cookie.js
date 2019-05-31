@@ -4,11 +4,11 @@ const app = nanoexpress();
 
 app.get('/', async (req, res) => {
   res.setCookie('cookie', 'set', { httpOnly: true });
-  return { hello: 'world' };
+  return { msg: 'cookie was set' };
 });
 app.get('/unset', async (req, res) => {
   res.removeCookie('cookie');
-  return { hello: 'world' };
+  return { msg: 'cookie was unset' };
 });
 
 app.listen(4004);

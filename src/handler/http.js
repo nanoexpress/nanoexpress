@@ -47,9 +47,12 @@ export default (path, fn, config, { schema } = {}, ajv) => {
 
     if (!fn.async) {
       return fn(request, response, config);
-    } else if (!bodyCall) {
+    } else if (!bodyCall && !res.abortHandler) {
       // For async function requires onAborted handler
       res.onAborted(() => {
+        if (res.readStream) {
+          res.readStream.destroy();
+        }
         res.aborted = true;
       });
       res.abortHandler = true;

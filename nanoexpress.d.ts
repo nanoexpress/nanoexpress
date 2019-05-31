@@ -67,7 +67,8 @@ export interface HttpResponse extends HttpResponseBasic {
   removeHeader(key: string): HttpResponse;
   applyHeaders(): HttpResponse;
   setHeaders(headers: HttpRequestHeaders): HttpResponse;
-  writeHeaders(name: string, value: string[]): HttpResponse;
+  writeHeaderValues(name: string, value: string[]): HttpResponse;
+  writeHeaders(headers: HttpRequestHeaders): HttpResponse;
   writeHead(code: number; headers: HttpRequestHeaders): HttpResponse;
   redirect(code: number | string, path?: string): HttpResponse;
   send(result: string | object | array): HttpResponse;
