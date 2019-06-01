@@ -41,7 +41,6 @@
     "ajv": "^6.10.0",
     "cookie": "^0.4.0",
     "fast-json-stringify": "^1.15.3",
-    "json-strify": "0.0.1",
     "uWebSockets.js": "github:uNetworking/uWebSockets.js#binaries"
   },
   "devDependencies": {
