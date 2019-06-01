@@ -7,3 +7,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(4000);
+
+console.log('PID', process.pid);
