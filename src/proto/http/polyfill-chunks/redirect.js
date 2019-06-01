@@ -22,9 +22,9 @@ export default function redirect(code, path) {
     code = 301;
   }
 
-  path = normalizeLocation(path, config, host);
+  const Location = normalizeLocation(path, config, host);
 
-  this.writeHead(code, { Location: path });
+  this.writeHead(code, { Location });
   this.end();
   this.aborted = true;
 
