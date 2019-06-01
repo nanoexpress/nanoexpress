@@ -63,12 +63,12 @@ describe('http response header', () => {
   });
   it('res.removeHeader', () => {
     fakeRes.removeHeader('foo');
-    expect(fakeRes._headers).toStrictEqual({ foo: null, bar: 'baz' });
+    expect(fakeRes._headers).toStrictEqual({ bar: 'baz' });
     expect(fakeRes.hasHeader('foo')).toBe(false);
   });
   it('res.removeHeader - last item delete', () => {
     fakeRes.removeHeader('bar');
-    expect(fakeRes._headers).toStrictEqual({ foo: null, bar: null });
+    expect(fakeRes._headers).toStrictEqual({});
     expect(fakeRes.hasHeader('bar')).toBe(false);
   });
 });

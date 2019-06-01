@@ -3,9 +3,7 @@ export default function setHeader(key, value) {
 
   if (!this._headers) {
     this._headers = {};
-    this._headersCount = 0;
   }
-  this._headersCount++;
   this._headers[key] = value;
   return this;
 }

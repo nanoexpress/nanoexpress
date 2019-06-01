@@ -4,7 +4,7 @@ export default function removeHeader(key) {
   }
   this.modifyEnd();
   this._headers[key] = null;
-  this._headersCount--;
+  delete this._headers[key];
 
   return this;
 }
