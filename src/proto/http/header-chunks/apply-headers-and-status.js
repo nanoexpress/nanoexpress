@@ -10,7 +10,7 @@ export default function applyHeadersAndStatus() {
     const value = _headers[header];
 
     if (value) {
-      if (value.splice && value.length) {
+      if (value.splice) {
         this.writeHeaderValues(header, value);
       } else {
         this.writeHeader(header, value);
