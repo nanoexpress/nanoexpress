@@ -3,11 +3,19 @@ export default function modifyEnd() {
     const _oldEnd = this.end;
 
     this.end = function(chunk, encoding) {
-      this.writeHead(this.statusCode || 200, this._headers);
-      if (this.statusCode) {
-        this.writeStatus(this.statusCode);
+      const { _headers, statusCode } = this;
+
+      if (_headers) {
+        if (statusCode) {
+          this.writeHead(statusCode, _headers);
+        } else {
+          this.setHeaders(_headers);
+        }
+
+        this.applyHeadersAndStatus();
+      } else if (statusCode) {
+        this.writeStatus(statusCode);
       }
-      this.applyHeaders();
 
       return _oldEnd.call(this, chunk, encoding);
     };

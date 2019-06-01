@@ -1,12 +1,7 @@
 export default function writeHead(code, headers) {
   if (typeof code === 'object' && !headers) {
     headers = code;
-
-    if (typeof this.statusCode === 'object') {
-      this.statusCode = 200;
-    }
-
-    code = this.statusCode || 200;
+    code = 200;
   }
 
   if (code !== undefined) {

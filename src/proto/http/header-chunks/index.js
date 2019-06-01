@@ -5,7 +5,7 @@ import removeHeader from './remove-header';
 import setHeaders from './set-headers';
 import writeHeaderValues from './write-header-values';
 import writeHeaders from './write-headers';
-import applyHeaders from './apply-headers';
+import applyHeadersAndStatus from './apply-headers';
 
 export {
   setHeader,
@@ -15,5 +15,5 @@ export {
   setHeaders,
   writeHeaderValues,
   writeHeaders,
-  applyHeaders
+  applyHeadersAndStatus
 };
