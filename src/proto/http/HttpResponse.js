@@ -1,4 +1,4 @@
-import { sendFile } from '../../helpers';
+import sendFile from '../../helpers/send-file';
 
 import * as HttpResponseChunks from './response-chunks';
 
