@@ -20,7 +20,10 @@ export default (fns) => {
       if (fn.then || fn.constructor.name === 'AsyncFunction') {
         result = fn;
         result.async = true;
-      } else if (index === fns.length - 1) {
+      } else if (
+        index === fns.length - 1 &&
+        fn.toString().indexOf('next)') === -1
+      ) {
         result = fn;
         result.async = false;
       } else {

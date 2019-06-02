@@ -18,7 +18,9 @@ _See [**Credits**](#credits) if you want which libraries i've used_
 
 ## NOTE
 
-This library reached the `Alpha` status and works good, see `/examples` folder
+This library reached the `Alpha` status and works good, see `/examples` folder.
+
+This library 25% slower than `uWebSockets.js` because of method polyfilling layer. Basic usage/examples performance are same as `uWebSockets.js`, but not in all case gives you same performance.
 
 ## Motiviation
 

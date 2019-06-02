@@ -1,7 +1,7 @@
 import { http } from '../handler';
 import { prepareRouteFunctions } from '../helpers';
 
-export default (path = '/*', fns, config, ajv) => {
+export default (path = '/*', fns, config, ajv, method, app) => {
   if (typeof path === 'function') {
     if (Array.isArray(fns)) {
       fns.unshift(path);
@@ -11,7 +11,10 @@ export default (path = '/*', fns, config, ajv) => {
     path = '/*';
   }
 
-  const { route, prepared, empty, schema, error } = prepareRouteFunctions(fns);
+  const { route, prepared, empty, schema, error } = prepareRouteFunctions(
+    fns,
+    app
+  );
 
   if (error) {
     return (res) => {
@@ -24,9 +27,9 @@ export default (path = '/*', fns, config, ajv) => {
     : async (req, res, config) => {
       for (const fn of prepared) {
         if (!fn.async) {
-          fn(req, res, config);
+          fn.call(app, req, res, config);
         } else {
-          const middleware = await fn(req, res, config);
+          const middleware = await fn.call(app, req, res, config);
 
           if (middleware && middleware.error) {
             if (!res.aborted) {
@@ -37,7 +40,7 @@ export default (path = '/*', fns, config, ajv) => {
         }
       }
 
-      if (req.method === 'options') {
+      if (method === 'options') {
         return undefined;
       }
       if (!route.async) {
@@ -49,5 +52,5 @@ export default (path = '/*', fns, config, ajv) => {
     };
   handler.async = empty ? route.async : true;
 
-  return [path, http(path, handler, config, schema, ajv)];
+  return [path, http(path, handler, config, schema, ajv, method, app)];
 };

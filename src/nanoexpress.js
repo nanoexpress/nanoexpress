@@ -137,11 +137,10 @@ const nanoexpress = (options = {}) => {
         path,
         middlewares.concat(pathMiddlewares[path] || []).concat(fns),
         config,
-        ajv
+        ajv,
+        method,
+        app
       );
-      if (method !== 'options' && method !== 'any' && method !== 'ws') {
-        app.options(routePath, handler);
-      }
       app[method](routePath, handler);
       return _app;
     };

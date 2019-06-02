@@ -15,7 +15,7 @@ const corsConfigured = cors({
   optionsSuccessStatus: 200 // some legacy browsers (IE11, various SmartTVs) choke on 204
 });
 
-app.use(corsConfigured);
+app.options(corsConfigured);
 
 app.get('/', async () => ({ hello: 'world' }));
 app.post('/cors', async () => {
