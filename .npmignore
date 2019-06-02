@@ -5,5 +5,5 @@ examples/
 .vscode
 coverage/
 tests/
-tests/coverage
 src/**/*.test.js
+jest.config.js
