@@ -10,8 +10,8 @@ app.use(fileUpload({ useTempFiles: true }));
 app.get('/', () => 'ok');
 
 app.post('/', (req, res) => {
-  console.log('files', req.files);
-  console.log('body', req.body);
+  console.debug('files', req.files);
+  console.debug('body', req.body);
 
   req.files.file.mv(path.join(__dirname, '/uploads/file.jpg'), function(err) {
     if (err) {

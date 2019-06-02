@@ -8,5 +8,5 @@ app.get('/', (res) => {
 
 app.listen(
   4005,
-  (token) => token && console.log('server started at port', 4005)
+  (token) => token && console.debug('server started at port', 4005)
 );
