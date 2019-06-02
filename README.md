@@ -22,6 +22,15 @@ This library reached the `Alpha` status and works good, see `/examples` folder.
 
 This library 25% slower than `uWebSockets.js` because of method polyfilling layer. Basic usage/examples performance are same as `uWebSockets.js`, but not in all case gives you same performance.
 
+## Benchmarks
+
+![Benchmarks](/.github/images/benchmark.png)
+![Memory Usage](/.github/images/memory.png)
+
+Benchmarked on my macBook Pro 2012 13" (Core i5, 8Gb RAM) performance.
+
+**Note**: _Real-world app memory/rps may differs from these numbers and these numbers are in my macBook_
+
 ## Motiviation
 
 I've long-time planned somehow create own Express-like alternative Node.js framework, then seen uWebSockets.js. Almost 2 month i've think how do this right and decided to create Node.js framework with almost same as Express API.

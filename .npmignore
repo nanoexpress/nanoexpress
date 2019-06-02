@@ -1,5 +1,6 @@
 examples/
 .git/
+.github/
 .gitignore
 .gitattributes
 .vscode
