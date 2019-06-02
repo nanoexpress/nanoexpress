@@ -3,7 +3,7 @@ const uWS = require('../node_modules/uWebSockets.js');
 const app = uWS.App();
 
 app.get('/', (res) => {
-  res.end('{"hello":"world"}');
+  res.end('hello world');
 });
 
 app.listen(

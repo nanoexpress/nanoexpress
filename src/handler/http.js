@@ -1,85 +1,94 @@
 import { http } from '../wrappers';
-import { prepareValidation } from '../helpers';
+import { prepareValidation, isSimpleHandler } from '../helpers';
 
 const bodyDisallowedMethods = ['get', 'options', 'head', 'trace', 'ws'];
 export default (path, fn, config, { schema } = {}, ajv) => {
   // For easier aliasing
   const { validation, validationStringify } = prepareValidation(ajv, schema);
 
-  return async (res, req) => {
-    // For future usage
-    req.rawPath = path;
-    req.method = req.getMethod();
+  const isSimpleRequest = isSimpleHandler(fn);
 
-    const bodyCall =
-      bodyDisallowedMethods.indexOf(req.method) === -1 && res.onData;
-    const request = bodyCall
-      ? await http.request(req, res, bodyCall)
-      : http.request(req, res);
+  return isSimpleRequest.simple
+    ? isSimpleRequest.handler
+    : async (res, req) => {
+      // For future usage
+      req.rawPath = path;
+      req.method = req.getMethod();
 
-    if (validationStringify) {
-      let errors;
-      for (let i = 0, len = validation.length; i < len; i++) {
-        const { type, validator } = validation[i];
+      const bodyCall =
+          bodyDisallowedMethods.indexOf(req.method) === -1 && res.onData;
+      const request = bodyCall
+        ? await http.request(req, res, bodyCall)
+        : http.request(req, res);
 
-        const valid = validator(req[type]);
+      if (validationStringify) {
+        let errors;
+        for (let i = 0, len = validation.length; i < len; i++) {
+          const { type, validator } = validation[i];
 
-        if (!valid) {
-          if (!errors) {
-            errors = [
-              { type, messages: validator.errors.map((err) => err.message) }
-            ];
+          const valid = validator(req[type]);
+
+          if (!valid) {
+            if (!errors) {
+              errors = [
+                { type, messages: validator.errors.map((err) => err.message) }
+              ];
+            } else {
+              errors.push({
+                type,
+                messages: validator.errors.map((err) => err.message)
+              });
+            }
+          }
+        }
+
+        if (errors && !res.aborted) {
+          return res.end(validationStringify(errors));
+        }
+      }
+
+      const response = http.response(
+        res,
+        req,
+        config,
+        schema && schema.response
+      );
+
+      if (!fn.async) {
+        return fn(request, response, config);
+      } else if (!bodyCall && !res.abortHandler) {
+        // For async function requires onAborted handler
+        res.onAborted(() => {
+          if (res.readStream) {
+            res.readStream.destroy();
+          }
+          res.aborted = true;
+        });
+        res.abortHandler = true;
+      }
+
+      if (res.aborted) {
+        return undefined;
+      }
+
+      const result = await fn(request, response, config);
+
+      if (!result) {
+        if (!res.aborted) {
+          return undefined;
+        }
+        return res.end(
+          '{"error":"The route you visited does not returned response"}'
+        );
+      }
+      if (!res.aborted) {
+        if (!result.stream) {
+          if (typeof result === 'string' && !res.statusCode) {
+            res.end(result);
           } else {
-            errors.push({
-              type,
-              messages: validator.errors.map((err) => err.message)
-            });
+            res.send(result);
           }
         }
       }
-
-      if (errors && !res.aborted) {
-        return res.end(validationStringify(errors));
-      }
-    }
-
-    const response = http.response(res, req, config, schema && schema.response);
-
-    if (!fn.async) {
-      return fn(request, response, config);
-    } else if (!bodyCall && !res.abortHandler) {
-      // For async function requires onAborted handler
-      res.onAborted(() => {
-        if (res.readStream) {
-          res.readStream.destroy();
-        }
-        res.aborted = true;
-      });
-      res.abortHandler = true;
-    }
-
-    if (res.aborted) {
-      return undefined;
-    }
-
-    const result = await fn(request, response, config);
-
-    if (!result) {
-      if (!res.aborted) {
-        return undefined;
-      }
-      return res.end(
-        '{"error":"The route you visited does not returned response"}'
-      );
-    }
-    if (!res.aborted) {
-      if (!result.stream) {
-        if (typeof result === 'string' && !res.statusCode) {
-          res.end(result);
-        } else {
-          res.send(result);
-        }
-      }
-    }
-  };
+    };
 };
