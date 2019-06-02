@@ -1,1 +1,2 @@
-export { default as request } from '../http';
+import { request } from '../http';
+export default request;

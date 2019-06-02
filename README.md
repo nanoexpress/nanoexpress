@@ -104,6 +104,7 @@ And to other libraries which used to create this library and without these libra
 
 - Star project
 - Fork project
+- Add Tests to Project
 - Watch project
 - Report bugs
 - Fix issue

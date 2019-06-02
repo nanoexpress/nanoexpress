@@ -1,1 +1,2 @@
-export { default as ws } from '../handler';
+import { ws } from '../handler';
+export default ws;
