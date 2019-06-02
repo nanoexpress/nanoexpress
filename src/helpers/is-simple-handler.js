@@ -17,11 +17,18 @@ const lineGoHandle = (string, handler) =>
     .map(handler)
     .join('\n');
 
+const isMalicius = (string) =>
+  !string.startsWith('async') && !string.startsWith('(re');
+
 export default (fn) => {
   const fnString = fn.toString();
 
-  if (fnString.length > 256) {
-    // This takes a lot of time to parser
+  if (fnString.length > 1024) {
+    return {
+      simple: false
+    };
+  }
+  if (isMalicius(fnString)) {
     return {
       simple: false
     };
@@ -91,6 +98,12 @@ export default (fn) => {
 
     return line;
   });
+
+  if (!simple) {
+    return {
+      simple
+    };
+  }
 
   return {
     simple,
