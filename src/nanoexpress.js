@@ -32,7 +32,10 @@ const nanoexpress = (options = {}) => {
   // App configuration
   let middlewares = [];
   const pathMiddlewares = {};
-  const config = {};
+  const config = {
+    host: null,
+    port: null
+  };
 
   config.https = !!options.https;
 
@@ -43,24 +46,47 @@ const nanoexpress = (options = {}) => {
       },
       get: (key) => config[key]
     },
+    get host() {
+      return config.host;
+    },
+    get port() {
+      return config.port;
+    },
+    get address() {
+      let address = '';
+      if (config.host) {
+        address += config.https ? 'https://' : 'http://';
+        address += config.host;
+        address += ':' + config.port;
+      }
+
+      return address;
+    },
     listen: (port, host) =>
       new Promise((resolve, reject) => {
         if (port === undefined) {
           console.log('[Server]: PORT is required');
           return undefined;
         }
-        if (typeof host === 'string') {
-          config.host = host;
-        }
         app.listen(port, host, (token) => {
           if (token) {
             _app._instance = token;
+            if (typeof host === 'string') {
+              config.host = host;
+            } else {
+              config.host = 'localhost';
+            }
+            if (typeof port === 'number') {
+              config.port = port;
+            }
             console.log(
               `[Server]: started successfully at [localhost:${port}] in [${Date.now() -
                 time}ms]`
             );
             resolve(_app);
           } else {
+            config.host = null;
+            config.port = null;
             console.log(`[Server]: failed to host at [localhost:${port}]`);
             reject();
           }
@@ -68,6 +94,8 @@ const nanoexpress = (options = {}) => {
       }),
     close: () => {
       if (_app._instance) {
+        config.host = null;
+        config.port = null;
         console.log('[Server]: stopped successfully');
         return true;
       } else {
@@ -105,16 +133,16 @@ const nanoexpress = (options = {}) => {
 
   httpMethods.forEach((method) => {
     _app[method] = (path, ...fns) => {
-      const handler = http(
+      const [routePath, handler] = http(
         path,
         middlewares.concat(pathMiddlewares[path] || []).concat(fns),
         config,
         ajv
       );
-      if (method !== 'options' || method !== 'any' || method !== 'ws') {
-        app.options(path, handler);
+      if (method !== 'options' && method !== 'any' && method !== 'ws') {
+        app.options(routePath, handler);
       }
-      app[method](path, handler);
+      app[method](routePath, handler);
       return _app;
     };
   });

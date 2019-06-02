@@ -1,5 +1,5 @@
 /* globals describe, it, expect */
-import { headers, cookies, params, queries, body } from '../src/normalizers';
+import { headers, cookies, params, queries, body } from '../../src/normalizers';
 
 describe('headers normalize', () => {
   it('header normalize non-empty', () => {

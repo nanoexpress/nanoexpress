@@ -1,5 +1,5 @@
 /* globals describe, it, expect */
-import { HttpResponse } from '../src/proto';
+import { HttpResponse } from '../../src/proto';
 
 // Init Fake HttpResponse
 class Response {

@@ -3,11 +3,21 @@ import { prepareRouteFunctions } from '../helpers';
 
 export default (path = '/*', fns, config, ajv) => {
   if (typeof path === 'function') {
-    fns.unshift(path);
+    if (Array.isArray(fns)) {
+      fns.unshift(path);
+    } else if (!fns) {
+      fns = path;
+    }
     path = '/*';
   }
 
-  const { route, prepared, empty, schema } = prepareRouteFunctions(fns);
+  const { route, prepared, empty, schema, error } = prepareRouteFunctions(fns);
+
+  if (error) {
+    return (res) => {
+      res.end('{"error":"The route handler not found"}');
+    };
+  }
 
   const handler = empty
     ? route
@@ -39,5 +49,5 @@ export default (path = '/*', fns, config, ajv) => {
     };
   handler.async = empty ? route.async : true;
 
-  return http(path, handler, config, schema, ajv);
+  return [path, http(path, handler, config, schema, ajv)];
 };

@@ -108,6 +108,9 @@ export interface AppConfig {
 }
 
 export interface nanoexpressApp extends BasicApp {
+  host: string | null;
+  port: number | null;
+  address: string;
   use(path: string | Function, ...fns?: Function<HttpRequest, HttpResponse>): nanoexpressApp;
   get(path: string, ...fns: Function<HttpRequest, HttpResponse>[]): nanoexpressApp;
   post(path: string, ...fns: Function<HttpRequest, HttpResponse>[]): nanoexpressApp;
@@ -117,7 +120,7 @@ export interface nanoexpressApp extends BasicApp {
   options(path: string, ...fns: Function<HttpRequest, HttpResponse>[]): nanoexpressApp;
   head(path: string, ...fns: Function<HttpRequest, HttpResponse>[]): nanoexpressApp;
   trace(path: string, ...fns: Function<HttpRequest, HttpResponse>[]): nanoexpressApp;
-  any(path: string, ...fns: Function<HttpRequest, HttpResponse>[]): nanoexpressApp;
+  any(path: string | Function<HttpRequest, HttpResponse> | Function<HttpRequest, HttpResponse>[], ...fns?: Function<HttpRequest, HttpResponse>[]): nanoexpressApp;
   ws(path: string, ...fns: Function<HttpRequest, HttpResponse>[]): nanoexpressApp;
   listen(port: number, host?: string): Promise<nanoexpressApp>;
   close(): boolean;

@@ -1,9 +1,14 @@
 export default (fns) => {
-  if (fns.length === 0) {
-    return {};
-  }
-  // Fetch last function as Route
+  if (Array.isArray(fns)) {
+    if (fns.length === 0) {
+      return { empty: true, error: true };
+    }
+  } else if (typeof fns === 'function') {
+    const async = fns.then || fns.constructor.name === 'AsyncFunction';
+    fns.async = async;
 
+    return { route: fns, empty: true };
+  }
   const schema = fns.find((fn) => fn.schema);
 
   const prepared = fns
