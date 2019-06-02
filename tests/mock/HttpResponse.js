@@ -23,7 +23,7 @@ class HttpResponse {
     if (end === undefined) {
       this.___end = '';
     } else if (
-      typeof result !== 'string' &&
+      typeof end !== 'string' &&
       !Array.isArray(end) &&
       !end.toString
     ) {
