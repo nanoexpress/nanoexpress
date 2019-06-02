@@ -23,7 +23,12 @@ const isMalicius = (string) =>
 export default (fn) => {
   const fnString = fn.toString();
 
-  if (fnString.length > 1024) {
+  if (
+    fnString.length > 1024 ||
+    fnString.indexOf('res.end') === -1 ||
+    fnString.indexOf('middleware') !== -1 ||
+    fnString.indexOf('prepared') !== -1
+  ) {
     return {
       simple: false
     };
