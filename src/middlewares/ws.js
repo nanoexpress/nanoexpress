@@ -1,1 +1,1 @@
-export { ws as default } from '../handler';
+export { default as ws } from '../handler';

@@ -1,1 +1,1 @@
-export { request as default } from '../http';
+export { default as request } from '../http';
