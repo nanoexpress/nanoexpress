@@ -3,5 +3,7 @@ examples/
 .gitignore
 .gitattributes
 .vscode
-tests/coverage
 coverage/
+tests/
+tests/coverage
+src/**/*.test.js
