@@ -1,6 +1,8 @@
 const nanoexpress = require('../build/nanoexpress');
 const fileUpload = require('../node_modules/express-fileupload');
 
+const path = require('path');
+
 const app = nanoexpress();
 
 app.use(fileUpload({ useTempFiles: true }));
@@ -11,7 +13,7 @@ app.post('/', (req, res) => {
   console.log('files', req.files);
   console.log('body', req.body);
 
-  req.files.file.mv(__dirname + '/uploads/file.jpg', function(err) {
+  req.files.file.mv(path.join(__dirname, '/uploads/file.jpg'), function(err) {
     if (err) {
       res.status(500);
       return res.send(err);
