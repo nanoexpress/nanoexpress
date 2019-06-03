@@ -1,6 +1,6 @@
 {
   "name": "nanoexpress",
-  "version": "0.6.17",
+  "version": "0.7.0",
   "description": "Nano-framework for Node.js powered by uWebSockets.js",
   "main": "build/nanoexpress.js",
   "module": "src/nanoexpress.js",
@@ -68,6 +68,7 @@
     "express-jwt": "^5.3.1",
     "express-session": "^1.16.1",
     "passport": "^0.4.0",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "serve-static": "^1.14.1"
   }
 }

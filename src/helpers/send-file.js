@@ -16,7 +16,7 @@ export default function(
     lastModified = true,
     compress = false,
     compressionOptions = {
-      priority: ['gzip', 'br', 'deflate']
+      priority: ['br', 'gzip', 'deflate']
     },
     cache = false
   } = {}

@@ -1,6 +1,9 @@
 import uWS from 'uWebSockets.js';
 import Ajv from 'ajv';
 
+import fs from 'fs';
+import { resolve } from 'path';
+
 import { http, ws } from './middlewares';
 import { routeMapper } from './helpers';
 
@@ -131,13 +134,40 @@ const nanoexpress = (options = {}) => {
       return _app;
     },
     ws: (path, options, fn) => {
-      app.ws(path, ws(path, options, fn));
+      app.ws(path, options && options.isRaw ? fn : ws(path, options, fn));
       return _app;
+    },
+    static: (
+      route,
+      path,
+      { index = 'index.html', addPrettyUrl = true } = {}
+    ) => {
+      const dir = fs.readdirSync(path);
+
+      dir.forEach((file) => {
+        const handler = (res) => {
+          const sendFile = fs.readFileSync(resolve(path, file), 'utf-8');
+          res.end(sendFile);
+        };
+        if (addPrettyUrl && file === index) {
+          app.get(route, handler);
+        }
+
+        app.get(route + file, handler);
+      });
     }
   };
 
   httpMethods.forEach((method) => {
     _app[method] = (path, ...fns) => {
+      if (fns.length > 0) {
+        const isRaw = fns.find((fn) => fn.isRaw === true);
+
+        if (isRaw) {
+          const fn = fns.pop();
+          return app[method](path, (res, req) => fn(req, res));
+        }
+      }
       const [routePath, handler] = http(
         path,
         middlewares.concat(pathMiddlewares[path] || []).concat(fns),

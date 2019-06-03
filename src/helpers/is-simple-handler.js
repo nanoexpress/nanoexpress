@@ -10,6 +10,7 @@ const HttpRequestAdvancedProps = [
   'url',
   'method'
 ];
+const AllowedMembers = ['req', 'res'];
 
 const lineGoHandle = (string, handler) =>
   string
@@ -50,6 +51,8 @@ export default (fn) => {
       return line;
     }
 
+    const member = line.substr(0, 3);
+    const isComment = member.indexOf('//') === 0;
     if (index === 0) {
       if (line.indexOf('async') === 0 && !async) {
         line = line.substr(6);
@@ -57,6 +60,11 @@ export default (fn) => {
       if (line.indexOf('(req, res)') !== -1) {
         line = line.substr(10);
         line = '(res, req)' + line;
+      }
+    } else if (member && member.length === 3 && !isComment) {
+      if (AllowedMembers.indexOf(member) === -1) {
+        simple = false;
+        return line;
       }
     }
 
@@ -110,8 +118,13 @@ export default (fn) => {
     };
   }
 
-  return {
-    simple,
-    handler: new Function('return ' + newFnString)()
-  };
+  try {
+    const handler = new Function('return ' + newFnString)();
+    return {
+      simple,
+      handler
+    };
+  } catch (e) {
+    return { simple: false };
+  }
 };
