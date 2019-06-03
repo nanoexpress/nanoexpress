@@ -1,4 +1,3 @@
-import commonjs from 'rollup-plugin-commonjs';
 import resolve from 'rollup-plugin-node-resolve';
 import run from 'rollup-plugin-run';
 import babel from 'rollup-plugin-babel';
@@ -9,6 +8,8 @@ import pkg from './package.json';
 const dev = process.env.NODE_ENV === 'development';
 const watch = process.env.ROLLUP_WATCH;
 
+const dependencies = Object.keys(pkg.dependencies);
+
 export default {
   input: './src/nanoexpress.js',
   output: {
@@ -16,7 +17,7 @@ export default {
     file: './build/nanoexpress.js',
     esModule: false
   },
-  external: Object.keys(pkg.dependencies).concat([
+  external: dependencies.concat([
     'fs',
     'path',
     'querystring',
@@ -26,12 +27,10 @@ export default {
   ]),
   plugins: [
     json(),
-    commonjs({
-      sourceMap: false
-    }),
     resolve({
       mainFields: ['module', 'main'],
-      extensions: ['.mjs', '.js', '.json']
+      extensions: ['.mjs', '.js', '.json'],
+      exclude: 'node_modules/**'
     }),
     !dev &&
       !watch &&

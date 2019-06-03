@@ -1,5 +1,4 @@
-import { getMime } from '@sifrr/server/src/server/mime';
-import strToBuf from '@sifrr/server/src/server/streamtobuffer';
+import { getMime, stream2Buffer } from './sifrr-server';
 import fs from 'fs';
 import zlib from 'zlib';
 
@@ -99,7 +98,7 @@ export default function(
     return cache.wrap(
       `${path}_${mtimeutc}_${start}_${end}`,
       (cb) => {
-        strToBuf(readStream)
+        stream2Buffer(readStream)
           .then((b) => cb(null, b.toString('utf-8')))
           .catch(cb);
       },

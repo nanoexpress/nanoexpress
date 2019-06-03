@@ -1,6 +1,6 @@
 const { parse } = require('cookie');
 
-module.exports = (req, cookies) => {
+export default (req, cookies) => {
   const { headers } = req;
   const headerCookie = headers && headers.cookie;
 

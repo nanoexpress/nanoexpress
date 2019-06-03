@@ -3,8 +3,8 @@ import Ajv from 'ajv';
 
 import fs from 'fs';
 import { resolve } from 'path';
-import { getMime } from '@sifrr/server/src/server/mime';
-import sendFile from '@sifrr/server/src/server/sendfile';
+
+import { getMime, sendFile } from './helpers/sifrr-server';
 
 import { http, ws } from './middlewares';
 import { routeMapper } from './helpers';
