@@ -7,15 +7,12 @@ import { routeMapper } from './helpers';
 const nanoexpress = (options = {}) => {
   const time = Date.now(); // For better managing start-time / lags
   let app;
-  let ajv = new Ajv(options.ajv);
+  let ajv;
 
   if (options.https) {
     app = uWS.SSLApp(options.https);
   } else {
     app = uWS.App();
-  }
-  if (options.configureAjv) {
-    ajv = options.configureAjv(ajv);
   }
 
   const httpMethods = [
@@ -38,6 +35,14 @@ const nanoexpress = (options = {}) => {
   };
 
   config.https = !!options.https;
+
+  config.setAjv = () => {
+    ajv = new Ajv(options.ajv);
+    if (options.configureAjv) {
+      ajv = options.configureAjv(ajv);
+    }
+    config.ajv = ajv;
+  };
 
   const _app = {
     config: {

@@ -1,5 +1,9 @@
 import { headers, cookies, queries, params, body } from '../../normalizers';
 
+function getIPBuffer() {
+  return this.__response.getRemoteAddress();
+}
+
 export default (req, res, bodyCall) => {
   req.path = req.getUrl();
   req.method = req.method || req.getMethod();
@@ -7,10 +11,8 @@ export default (req, res, bodyCall) => {
   // Alias for Express-module
   req.url = req.path;
 
-  // IP solution still in progress
-  // I decided not use this method as who needs
-  // manually requests
-  // req.ip = Buffer.from(res.getRemoteAddress()).toString('hex');
+  req.__response = res;
+  req.getIPBuffer = getIPBuffer;
 
   req.headers = headers(req, req.headers);
   req.cookies = cookies(req, req.cookies);
