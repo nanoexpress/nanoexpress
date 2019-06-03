@@ -142,7 +142,7 @@ const nanoexpress = (options = {}) => {
     static: (
       route,
       path,
-      { index = 'index.html', addPrettyUrl = true } = {}
+      { index = 'index.html', addPrettyUrl = true, streamConfig } = {}
     ) => {
       const staticFilesPath = fs.readdirSync(path);
 
@@ -157,7 +157,7 @@ const nanoexpress = (options = {}) => {
             return;
           }
           if (isStreamableResource) {
-            sendFile(res, req, pathNormalisedFileName);
+            sendFile(res, req, pathNormalisedFileName, streamConfig);
             res.__streaming = true;
           } else {
             const sendFile = fs.readFileSync(pathNormalisedFileName, 'utf-8');
