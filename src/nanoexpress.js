@@ -3,6 +3,8 @@ import Ajv from 'ajv';
 
 import fs from 'fs';
 import { resolve } from 'path';
+import { getMime } from '@sifrr/server/src/server/mime';
+import sendFile from '@sifrr/server/src/server/sendfile';
 
 import { http, ws } from './middlewares';
 import { routeMapper } from './helpers';
@@ -142,19 +144,33 @@ const nanoexpress = (options = {}) => {
       path,
       { index = 'index.html', addPrettyUrl = true } = {}
     ) => {
-      const dir = fs.readdirSync(path);
+      const staticFilesPath = fs.readdirSync(path);
 
-      dir.forEach((file) => {
-        const handler = (res) => {
-          const sendFile = fs.readFileSync(resolve(path, file), 'utf-8');
-          res.end(sendFile);
+      for (const fileName of staticFilesPath) {
+        const isStreamableResource = getMime(fileName);
+
+        const pathNormalisedFileName = resolve(path, fileName);
+        const routeNormalised = route + fileName;
+
+        const handler = (res, req) => {
+          if (res.__streaming || res.__called) {
+            return;
+          }
+          if (isStreamableResource) {
+            sendFile(res, req, pathNormalisedFileName);
+            res.__streaming = true;
+          } else {
+            const sendFile = fs.readFileSync(pathNormalisedFileName, 'utf-8');
+            res.end(sendFile);
+            res.__called = true;
+          }
         };
-        if (addPrettyUrl && file === index) {
+        if (addPrettyUrl && fileName === index) {
           app.get(route, handler);
         }
 
-        app.get(route + file, handler);
-      });
+        app.get(routeNormalised, handler);
+      }
     }
   };
 

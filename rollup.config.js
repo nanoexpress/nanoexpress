@@ -18,6 +18,7 @@ export default {
   },
   external: Object.keys(pkg.dependencies).concat([
     'fs',
+    'path',
     'querystring',
     'http',
     'zlib',
