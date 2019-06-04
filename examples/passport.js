@@ -1,4 +1,4 @@
-const nanoexpress = require('../build/nanoexpress');
+const nanoexpress = require('..');
 const { passportInitialize } = require('../src/packed/middlewares');
 const expressSession = require('../node_modules/express-session');
 const passport = require('../node_modules/passport');

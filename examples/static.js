@@ -1,4 +1,4 @@
-const nanoexpress = require('../build/nanoexpress');
+const nanoexpress = require('..');
 const { resolve } = require('path');
 
 const app = nanoexpress();

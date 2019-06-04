@@ -106,6 +106,7 @@ const nanoexpress = (options = {}) => {
       if (_app._instance) {
         config.host = null;
         config.port = null;
+        app.us_listen_socket_close(_app._instance);
         console.log('[Server]: stopped successfully');
         return true;
       } else {

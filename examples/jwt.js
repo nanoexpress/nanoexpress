@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-const nanoexpress = require('../build/nanoexpress');
+const nanoexpress = require('..');
 const expressJwt = require('../node_modules/express-jwt');
 const jwt = require('../node_modules/jsonwebtoken');
 

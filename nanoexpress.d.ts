@@ -1,6 +1,6 @@
 import {
   AppOptions as AppOptionsBasic,
-  TemplatedApp as BasicApp,
+  TemplatedApp as AppTemplatedApp,
   HttpRequest as HttpRequestBasic,
   HttpResponse as HttpResponseBasic,
   WebSocket as WebSocketBasic
@@ -60,7 +60,7 @@ declare namespace nanoexpress {
     signed?: boolean;
     expires?: number | string;
   }
-  export interface HttpResponse {
+  export interface HttpResponse extends HttpResponseBasic {
     status(code: number): HttpResponse;
     setHeader(key: string, value: string | number): HttpResponse;
     hasHeader(key: string): HttpResponse;
@@ -133,13 +133,23 @@ declare namespace nanoexpress {
     };
   }
 
+  export interface StaticOptions {
+    index?: string;
+    addPrettyUrl?: boolean;
+    streamConfig?: object;
+  }
+
   type Middleware = MiddlewareOption | HttpRoute;
 
-  export interface nanoexpressApp {
+  export interface nanoexpressApp extends AppTemplatedApp {
     host: string | null;
     port: number | null;
     address: string;
-    static(route: string, folderPath: string): nanoexpressApp;
+    static(
+      route: string,
+      folderPath: string,
+      staticOptions?: StaticOptions
+    ): nanoexpressApp;
     use(path: string | Middleware, ...fns: Middleware[]): nanoexpressApp;
     get(path: string, ...fns: Middleware[]): nanoexpressApp;
     post(path: string, ...fns: Middleware[]): nanoexpressApp;

@@ -1,4 +1,4 @@
-const nanoexpress = require('../build/nanoexpress');
+const nanoexpress = require('..');
 
 function one(req, res, next) {
   req.one = true;
