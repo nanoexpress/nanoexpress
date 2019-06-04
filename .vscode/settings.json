@@ -1,5 +1,6 @@
 {
   "eslint.validate": ["javascript"],
+  "typescript.validate.enable": true,
   "files.associations": {
     "*.js": "javascript",
     "*.d.ts": "typescript"
