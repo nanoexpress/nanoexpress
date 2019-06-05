@@ -100,7 +100,7 @@ app.use(middlewares.passportInitialize()); // or app.use(passportInitialize());
 
 ## Docker Support
 
-If you using `alpine` or `slim` version of images, some errors may happen and you can fix with this minimal guide
+If you using `alpine` or `slim` version of `node` images, some errors may happen and you can fix with this minimal guide
 
 ### Requires
 
