@@ -98,6 +98,30 @@ app.use(middlewares.passportInitialize()); // or app.use(passportInitialize());
 - `express-session`
 - `passport`
 
+## Docker Support
+
+If you using `alpine` or `slim` version of images, some errors may happen and you can fix with this minimal guide
+
+### Requires
+
+- git
+
+#### For `git` missing error
+
+```Dockerfile
+# FROM ...
+RUN apk update && apk add --no-cache git
+# your scripts
+```
+
+#### For `Alpine` incompatible error
+
+```Dockerfile
+# your scripts
+RUN ln -s /lib/libc.musl-x86_64.so.1 /lib/ld-linux-x86-64.so.2
+CMD ["node", "server.js"]
+```
+
 ## Credits
 
 - [uWebSockets.js](https://github.com/uNetworking/uWebSockets.js)
