@@ -7,8 +7,6 @@ notifications:
   email: false
 node_js:
   - '10'
-before_install:
-  - npm update
 install:
   - npm i --prod
 script:
