@@ -10,7 +10,7 @@ node_js:
 before_install:
   - npm update
 install:
-  - npm i
+  - npm ci --prod
 script:
   - npm run lint
   - npm test
