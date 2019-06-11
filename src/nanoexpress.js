@@ -193,7 +193,10 @@ const nanoexpress = (options = {}) => {
         method,
         app
       );
-      app[method](typeof path === 'string' ? path : '/*', handler);
+      app[method](
+        typeof path === 'string' ? path : '/*',
+        typeof path === 'function' && !handler ? path : handler
+      );
       return _app;
     };
   });
