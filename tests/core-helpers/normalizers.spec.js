@@ -57,7 +57,7 @@ describe('queries normalize', () => {
   it('queries normalize non-empty', () => {
     const fakeReq = {
       getQuery() {
-        return '?foo=bar&bar=baz';
+        return 'foo=bar&bar=baz';
       }
     };
 
@@ -69,7 +69,7 @@ describe('queries normalize', () => {
   it('queries normalize empty', () => {
     const fakeReq = {
       getQuery() {
-        return '?';
+        return '';
       }
     };
 

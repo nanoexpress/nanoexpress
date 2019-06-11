@@ -3,20 +3,18 @@ import { parse } from 'querystring';
 export default (req, queries) => {
   const query = req.getQuery();
 
-  if (query.indexOf('?') === -1) {
+  if (!query) {
     return queries;
   }
-  if (query.length < 4) {
-    return queries;
-  }
-  const parsedQueries = parse(query.substr(1));
+  const parsed = parse(query);
 
-  if (!queries) {
-    queries = {};
-  }
+  for (const query in parsed) {
+    // On-Demand attaching for memory reason
+    if (!queries) {
+      queries = {};
+    }
 
-  for (const query in parsedQueries) {
-    queries[query] = parsedQueries[query];
+    queries[query] = parsed[query];
   }
   return queries;
 };
