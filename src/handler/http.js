@@ -31,11 +31,14 @@ export default (path, fn, config, { schema } = {}, ajv, method) => {
 
         if (!valid) {
           if (!errors) {
-            errors = [
-              { type, messages: validator.errors.map((err) => err.message) }
-            ];
+            errors = {
+              type: 'errors',
+              errors: [
+                { type, messages: validator.errors.map((err) => err.message) }
+              ]
+            };
           } else {
-            errors.push({
+            errors.errors.push({
               type,
               messages: validator.errors.map((err) => err.message)
             });
@@ -55,7 +58,7 @@ export default (path, fn, config, { schema } = {}, ajv, method) => {
 
     const response = http.response(res, req, config, schema && schema.response);
 
-    if (!fn.async) {
+    if (!fn.async || fn.simple) {
       return fn(request, response, config);
     } else if (!bodyCall && !res.abortHandler) {
       // For async function requires onAborted handler
@@ -81,11 +84,11 @@ export default (path, fn, config, { schema } = {}, ajv, method) => {
     if (!result || result.error) {
       res.writeHeader('Content-Type', 'text/json');
       return res.end(
-        '{"error":"' +
-          (result && result.error
+        `{"error":"${
+          result && result.error
             ? result.message
-            : 'The route you visited does not returned response') +
-          '"}'
+            : 'The route you visited does not returned response'
+        }"}`
       );
     }
     if (!result.stream && method !== 'options') {

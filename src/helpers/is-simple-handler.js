@@ -21,7 +21,7 @@ const lineGoHandle = (string, handler) =>
 const isMalicius = (string) =>
   !string.startsWith('async') && !string.startsWith('(re');
 
-export default (fn) => {
+export default (fn, isRaw = true) => {
   const fnString = fn.toString();
 
   if (
@@ -31,12 +31,14 @@ export default (fn) => {
     fnString.indexOf('prepared') !== -1
   ) {
     return {
-      simple: false
+      simple: false,
+      reason: 'complex'
     };
   }
   if (isMalicius(fnString)) {
     return {
-      simple: false
+      simple: false,
+      reason: 'warning'
     };
   }
 
@@ -51,13 +53,13 @@ export default (fn) => {
       return line;
     }
 
-    const member = line.substr(0, 3);
+    const member = line.replace(/return /g, '').substr(0, 3);
     const isComment = member.indexOf('//') === 0;
     if (index === 0) {
       if (line.indexOf('async') === 0 && !async) {
         line = line.substr(6);
       }
-      if (line.indexOf('(req, res)') !== -1) {
+      if (line.indexOf('(req, res)') !== -1 && isRaw) {
         line = line.substr(10);
         line = '(res, req)' + line;
       }
@@ -114,7 +116,8 @@ export default (fn) => {
 
   if (!simple) {
     return {
-      simple
+      simple,
+      reason: 'mismatch'
     };
   }
 
@@ -125,6 +128,6 @@ export default (fn) => {
       handler
     };
   } catch (e) {
-    return { simple: false };
+    return { simple: false, reason: 'error' };
   }
 };

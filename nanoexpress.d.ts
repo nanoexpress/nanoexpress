@@ -73,7 +73,7 @@ declare namespace nanoexpress {
     redirect(code: number | string, path?: string): HttpResponse;
     send(result: string | object | any[]): HttpResponse;
     json(result: object | any[]): HttpResponse;
-    cork(result: string | object | any[]): HttpResponse;
+    cork(fn: Function): HttpResponse;
     setCookie(
       key: string,
       value: string,

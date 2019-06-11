@@ -185,7 +185,7 @@ const nanoexpress = (options = {}) => {
           return app[method](path, (res, req) => fn(req, res));
         }
       }
-      const [routePath, handler] = http(
+      const handler = http(
         path,
         middlewares.concat(pathMiddlewares[path] || []).concat(fns),
         config,
@@ -193,7 +193,7 @@ const nanoexpress = (options = {}) => {
         method,
         app
       );
-      app[method](routePath, handler);
+      app[method](typeof path === 'string' ? path : '/*', handler);
       return _app;
     };
   });

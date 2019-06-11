@@ -1,10 +1,7 @@
-export default function cork(result) {
-  this.experimental_cork
-    ? (result) =>
-      this.experimental_cork(() => {
-        this.send(result);
-      })
-    : this.send(result);
+export default function cork(fn) {
+  if (this.experimental_cork) {
+    this.experimental_cork(fn);
+  }
 
   return this;
 }

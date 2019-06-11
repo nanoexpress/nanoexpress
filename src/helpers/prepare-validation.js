@@ -2,14 +2,20 @@ import fastJson from 'fast-json-stringify';
 
 const validationMethods = ['response', 'query', 'params', 'headers', 'body'];
 const validationSchema = {
-  type: 'array',
-  items: {
-    type: 'object',
-    properties: {
-      type: { type: 'string' },
-      messages: {
-        type: 'array',
-        items: { type: 'string' }
+  type: 'object',
+  properties: {
+    type: { type: 'string' },
+    errors: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          type: { type: 'string' },
+          messages: {
+            type: 'array',
+            items: { type: 'string' }
+          }
+        }
       }
     }
   }
