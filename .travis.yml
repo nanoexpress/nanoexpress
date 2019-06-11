@@ -5,6 +5,10 @@ cache:
     - node_modules
 notifications:
   email: false
+os:
+  - linux
+  - osx
+  - windows
 node_js:
   - '10'
   - '11'
