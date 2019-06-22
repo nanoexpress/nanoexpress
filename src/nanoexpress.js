@@ -122,6 +122,10 @@ const nanoexpress = (options = {}) => {
       config._notFoundHandler = fn;
       return _app;
     },
+    register: (fn) => {
+      fn(_app);
+      return _app;
+    },
     use: (path, ...fns) => {
       if (typeof path === 'function') {
         fns.unshift(path);
