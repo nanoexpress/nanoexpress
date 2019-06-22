@@ -89,7 +89,8 @@ declare namespace nanoexpress {
     req: HttpRequest,
     res: HttpResponse,
     next?: Function,
-    config?: object
+    config?: object,
+    previousMiddlewareResult?: any
   ) => any;
   type WsRoute = (req: HttpRequest, ws: WebSocket) => any;
 
