@@ -23,10 +23,12 @@ export default (path = '/*', fns, config, ajv, method, app) => {
   } = prepareRouteFunctions(fns, app);
 
   if (error) {
-    return (res) =>
-      res.end(
-        '{"middleware_type":"sync","error":"The route handler not found"}'
-      );
+    return config._notFoundHandler
+      ? config._notFoundHandler
+      : (res) =>
+        res.end(
+          '{"middleware_type":"sync","error":"The route handler not found"}'
+        );
   }
 
   const handler = empty
@@ -39,6 +41,9 @@ export default (path = '/*', fns, config, ajv, method, app) => {
           const error = isError();
           if (!isNext() || error) {
             if (error && !res.aborted) {
+              if (config._errorHandler) {
+                return config._errorHandler(error, req, res);
+              }
               return res.end(
                 `{"middleware_type":"sync",error":"${error.message}"}`
               );
@@ -50,6 +55,9 @@ export default (path = '/*', fns, config, ajv, method, app) => {
 
           if (middleware && middleware.error) {
             if (!res.aborted) {
+              if (config._errorHandler) {
+                return config._errorHandler(error, req, res);
+              }
               return res.end(
                 `{"middleware_type":"async",error":"${error.message}"}`
               );

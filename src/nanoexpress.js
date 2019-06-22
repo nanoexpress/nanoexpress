@@ -114,6 +114,14 @@ const nanoexpress = (options = {}) => {
         return false;
       }
     },
+    setErrorHandler: (fn) => {
+      config._errorHandler = fn;
+      return this;
+    },
+    setNotFoundHandler: (fn) => {
+      config._notFoundHandler = fn;
+      return this;
+    },
     use: (path, ...fns) => {
       if (typeof path === 'function') {
         fns.unshift(path);
