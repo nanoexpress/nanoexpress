@@ -98,7 +98,9 @@ const nanoexpress = (options = {}) => {
             config.host = null;
             config.port = null;
             console.log(`[Server]: failed to host at [localhost:${port}]`);
-            reject();
+            reject(
+              new Error(`[Server]: failed to host at [localhost:${port}]`)
+            );
           }
         });
       }),
