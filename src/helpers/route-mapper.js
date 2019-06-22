@@ -113,7 +113,7 @@ export default (app) => async (prefix, routes) => {
 
     if (route) {
       for await (const method of methods) {
-        const { callback, middlewares, schema } = route[method];
+        const { callback, middlewares = [], schema } = route[method];
 
         if (schema) {
           middlewares.unshift({ schema });
