@@ -79,28 +79,30 @@ const nanoexpress = (options = {}) => {
           return undefined;
         }
         app.listen(port, host, (token) => {
+          if (typeof host === 'string') {
+            config.host = host;
+          } else {
+            config.host = 'localhost';
+          }
+          if (typeof port === 'number') {
+            config.port = port;
+          }
+
           if (token) {
             _app._instance = token;
-            if (typeof host === 'string') {
-              config.host = host;
-            } else {
-              config.host = 'localhost';
-            }
-            if (typeof port === 'number') {
-              config.port = port;
-            }
             console.log(
-              `[Server]: started successfully at [localhost:${port}] in [${Date.now() -
-                time}ms]`
+              `[Server]: started successfully at [${
+                config.host
+              }:${port}] in [${Date.now() - time}ms]`
             );
             resolve(_app);
           } else {
+            console.log(`[Server]: failed to host at [${config.host}:${port}]`);
+            reject(
+              new Error(`[Server]: failed to host at [${config.host}:${port}]`)
+            );
             config.host = null;
             config.port = null;
-            console.log(`[Server]: failed to host at [localhost:${port}]`);
-            reject(
-              new Error(`[Server]: failed to host at [localhost:${port}]`)
-            );
           }
         });
       }),
