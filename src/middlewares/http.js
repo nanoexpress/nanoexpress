@@ -39,7 +39,7 @@ export default (path = '/*', fns, config, ajv, method, app) => {
           fn(req, res, config);
 
           const error = isError();
-          if (!isNext() || error) {
+          if (error || !isNext()) {
             if (error && !res.aborted) {
               if (config._errorHandler) {
                 return config._errorHandler(error, req, res);
@@ -51,12 +51,14 @@ export default (path = '/*', fns, config, ajv, method, app) => {
             return;
           }
         } else {
-          const middleware = await fn(req, res, config);
+          const middleware = await fn(req, res, config).catch((error) => ({
+            error
+          }));
 
           if (middleware && middleware.error) {
             if (!res.aborted) {
               if (config._errorHandler) {
-                return config._errorHandler(error, req, res);
+                return config._errorHandler(middleware.error, req, res);
               }
               return res.end(
                 `{"middleware_type":"async",error":"${error.message}"}`

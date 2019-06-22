@@ -163,8 +163,12 @@ declare namespace nanoexpress {
     ws(path: string, ...fns: Middleware[]): nanoexpressApp;
     listen(port: number, host?: string): Promise<nanoexpressApp>;
     close(): boolean;
-    setErrorHandler(cb: (req: HttpRequest, res: HttpResponse) => any): nanoexpressApp;
-    setNotFoundHandler(cb: (res: HttpRequestBasic, req: HttpRequestBasic) => any): nanoexpressApp;
+    setErrorHandler(
+      cb: (err: Error, req: HttpRequest, res: HttpResponse) => HttpResponse
+    ): nanoexpressApp;
+    setNotFoundHandler(
+      cb: (res: HttpRequestBasic, req: HttpRequestBasic) => HttpRequestBasic
+    ): nanoexpressApp;
     define(prefix: string, routes?: AppRoutes): nanoexpressApp;
     config: AppConfig;
   }

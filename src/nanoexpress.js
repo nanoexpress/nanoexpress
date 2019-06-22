@@ -116,11 +116,11 @@ const nanoexpress = (options = {}) => {
     },
     setErrorHandler: (fn) => {
       config._errorHandler = fn;
-      return this;
+      return _app;
     },
     setNotFoundHandler: (fn) => {
       config._notFoundHandler = fn;
-      return this;
+      return _app;
     },
     use: (path, ...fns) => {
       if (typeof path === 'function') {
