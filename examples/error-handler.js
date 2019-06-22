@@ -6,6 +6,14 @@ app.setErrorHandler((err, req, res) => {
   res.end(err.message);
 });
 
+app.setNotFoundHandler((res) => {
+  res.end('you accessing to missing route??');
+});
+
+app.setValidationErrorHandler((errors, req, res) => {
+  res.end('validation errors, ' + JSON.stringify(errors));
+});
+
 app.use((req, res, next) => {
   next(new Error('error happened?'));
 });
