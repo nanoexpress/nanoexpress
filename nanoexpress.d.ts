@@ -141,6 +141,15 @@ declare namespace nanoexpress {
 
   type Middleware = MiddlewareOption | HttpRoute;
 
+  interface validationErrorItems {
+    type: string;
+    messages: string[];
+  }
+  export interface validationErrors {
+    type: string;
+    errors: validationErrorItems;
+  }
+
   export interface nanoexpressApp extends AppTemplatedApp {
     host: string | null;
     port: number | null;
@@ -175,6 +184,13 @@ declare namespace nanoexpress {
         res: HttpRequestBasic,
         req: HttpRequestBasic
       ) => HttpRequestBasic
+    ): nanoexpressApp;
+    setValidationErrorHandler(
+      validationErrorHandlerCallback: (
+        errors: validationErrors,
+        req: HttpRequest,
+        res: HttpResponse
+      ) => any
     ): nanoexpressApp;
     register(
       appModuleRegisterCallback: (app: nanoexpressApp) => any

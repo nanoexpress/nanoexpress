@@ -47,6 +47,9 @@ export default (path, fn, config, { schema } = {}, ajv, method) => {
       }
 
       if (errors && !res.aborted) {
+        if (config._validationErrorHandler) {
+          return config._validationErrorHandler(errors, req, res);
+        }
         return res.end(validationStringify(errors));
       }
     }
