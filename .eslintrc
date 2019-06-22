@@ -10,10 +10,7 @@
     "sourceType": "module"
   },
   "rules": {
-    "comma-dangle": [
-      "error",
-      "never"
-    ],
+    "comma-dangle": ["error", "never"],
     "comma-spacing": [
       "error",
       {
@@ -21,10 +18,7 @@
         "after": true
       }
     ],
-    "eol-last": [
-      "error",
-      "always"
-    ],
+    "eol-last": ["error", "always"],
     "indent": [
       "error",
       2,
@@ -32,45 +26,20 @@
         "MemberExpression": 1
       }
     ],
-    "no-multiple-empty-lines": [
-      "error"
-    ],
+    "no-multiple-empty-lines": ["error"],
     "no-new-symbol": "error",
-    "no-trailing-spaces": [
-      "error"
-    ],
-    "no-undef": [
-      "error"
-    ],
-    "no-unused-vars": [
-      "error"
-    ],
+    "no-trailing-spaces": ["error"],
+    "no-undef": ["error"],
+    "no-unused-vars": ["error"],
     "no-console": 0,
-    "object-curly-spacing": [
-      "error",
-      "always"
-    ],
+    "object-curly-spacing": ["error", "always"],
     "object-shorthand": "error",
     "prefer-const": 2,
-    "quotes": [
-      "error",
-      "single"
-    ],
-    "semi": [
-      "error",
-      "always"
-    ],
-    "space-in-parens": [
-      "error",
-      "never"
-    ],
-    "strict": [
-      2,
-      "never"
-    ],
-    "max-len": [
-      "error",
-      120
-    ]
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"],
+    "space-in-parens": ["error", "never"],
+    "strict": [2, "never"],
+    "max-len": ["error", 120],
+    "require-atomic-updates": 0
   }
 }
