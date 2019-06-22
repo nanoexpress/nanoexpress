@@ -45,7 +45,8 @@ export default (fns) => {
         result = fn;
         result.async = false;
       } else {
-        result = (req, res, config) => fn(req, res, nextHandler, config);
+        result = (req, res, config, prevValue) =>
+          fn(req, res, nextHandler, config, prevValue);
         result.async = false;
       }
 

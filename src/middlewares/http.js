@@ -34,12 +34,14 @@ export default (path = '/*', fns, config, ajv, method, app) => {
   const handler = empty
     ? route
     : async (req, res, config) => {
+      let middlewareChainingTransferPreviousResult;
       for (const fn of prepared) {
         if (fn.simple || !fn.async) {
-          fn(req, res, config);
+          fn(req, res, config, middlewareChainingTransferPreviousResult);
 
           const error = isError();
-          if (error || !isNext()) {
+          middlewareChainingTransferPreviousResult = isNext();
+          if (error || !middlewareChainingTransferPreviousResult) {
             if (error && !res.aborted) {
               if (config._errorHandler) {
                 return config._errorHandler(error, req, res);
@@ -51,7 +53,12 @@ export default (path = '/*', fns, config, ajv, method, app) => {
             return;
           }
         } else {
-          const middleware = await fn(req, res, config).catch((error) => ({
+          const middleware = await fn(
+            req,
+            res,
+            config,
+            middlewareChainingTransferPreviousResult
+          ).catch((error) => ({
             error
           }));
 
@@ -66,6 +73,8 @@ export default (path = '/*', fns, config, ajv, method, app) => {
             }
             return;
           }
+
+          middlewareChainingTransferPreviousResult = middleware;
         }
       }
 
@@ -74,11 +83,16 @@ export default (path = '/*', fns, config, ajv, method, app) => {
       }
 
       if (!route.async || route.simple) {
-        route(req, res, config);
+        route(req, res, config, middlewareChainingTransferPreviousResult);
         return;
       }
 
-      return route(req, res, config);
+      return route(
+        req,
+        res,
+        config,
+        middlewareChainingTransferPreviousResult
+      );
     };
 
   handler.async = empty ? route.async : allAsync;
