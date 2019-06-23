@@ -8,7 +8,7 @@ export default function send(result) {
     this.modifyEnd();
   }
   if (typeof result === 'object') {
-    this.setHeader('Content-Type', 'application/json');
+    this.writeHeader('Content-Type', 'application/json');
     result = this.schema ? this.schema(result) : JSON.stringify(result);
   }
 
