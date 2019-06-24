@@ -98,11 +98,19 @@ export default (path, fn, config, { schema } = {}, ajv, method) => {
       );
     }
     if (!result.stream && method !== 'options') {
-      if (typeof result === 'string' && !res.statusCode) {
-        res.end(result);
-      } else {
-        res.send(result);
+      if (res.statusCode) {
+        res.writeStatus(res.statusCode);
       }
+
+      if (typeof result === 'object') {
+        res.writeHeader('Content-Type', 'application/json');
+
+        return res.end(
+          res.schema ? res.schema(result) : JSON.stringify(result)
+        );
+      }
+
+      res.end(result);
     }
   };
 };
