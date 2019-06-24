@@ -78,6 +78,7 @@ const nanoexpress = (options = {}) => {
           console.log('[Server]: PORT is required');
           return undefined;
         }
+        port = Number(port);
         app.listen(port, host, (token) => {
           if (typeof host === 'string') {
             config.host = host;
