@@ -17,6 +17,7 @@ export default (path = '/*', fns, config, ajv, method, app) => {
     empty,
     schema,
     allAsync,
+    asyncToSync,
     error,
     isNext,
     isError
@@ -97,6 +98,7 @@ export default (path = '/*', fns, config, ajv, method, app) => {
 
   handler.async = empty ? route.async : allAsync;
   handler.simple = route.simple;
+  handler.asyncToSync = asyncToSync;
 
   return http(path, handler, config, schema, ajv, method, app);
 };

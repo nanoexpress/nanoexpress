@@ -12,6 +12,7 @@ export default (fns) => {
     return { route: fns, empty: true };
   }
   const schema = fns.find((fn) => fn.schema);
+  const asyncToSync = fns.find((fn) => fn.asyncToSync !== undefined);
 
   let next = false;
   let error = { message: 'Inside middleware `next` does not called' };
@@ -32,7 +33,7 @@ export default (fns) => {
   const prepared = fns
     .map((fn, index) => {
       let result;
-      if (!fn || (typeof fn === 'object' && fn.schema)) {
+      if (!fn || typeof fn === 'object') {
         return null;
       }
       if (fn.then || fn.constructor.name === 'AsyncFunction') {
@@ -73,6 +74,7 @@ export default (fns) => {
     empty: prepared.length === 0,
     schema,
     route,
-    allAsync
+    allAsync,
+    asyncToSync
   };
 };

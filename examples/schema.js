@@ -6,6 +6,9 @@ app.get(
   '/',
   {
     schema: {
+      headers: false,
+      query: false,
+      params: false,
       response: {
         type: 'object',
         properties: {

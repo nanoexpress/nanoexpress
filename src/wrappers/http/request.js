@@ -4,7 +4,7 @@ function getIPBuffer() {
   return this.__response.getRemoteAddress();
 }
 
-export default (req, res, bodyCall) => {
+export default (req, res, bodyCall, schema) => {
   req.path = req.getUrl();
   req.method = req.method || req.getMethod();
 
@@ -14,10 +14,22 @@ export default (req, res, bodyCall) => {
   req.__response = res;
   req.getIPBuffer = getIPBuffer;
 
-  req.headers = headers(req, req.headers);
-  req.cookies = cookies(req, req.cookies);
-  req.params = params(req, req.params);
-  req.query = queries(req, req.query);
+  req.headers =
+    !schema && schema.headers !== false
+      ? headers(req, req.headers, schema && schema.headers)
+      : req.cookies;
+  req.cookies =
+    !schema && schema.cookies !== false && req.headers
+      ? cookies(req, req.cookies, schema && schema.cookies)
+      : req.cookies;
+  req.params =
+    !schema && schema.params !== false
+      ? params(req, req.params, schema && schema.params)
+      : req.cookies;
+  req.query =
+    !schema && schema.query !== false
+      ? queries(req, req.query, schema && schema.query)
+      : req.cookies;
 
   if (bodyCall) {
     return body(req, res).then((body) => {

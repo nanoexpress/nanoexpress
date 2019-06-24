@@ -107,8 +107,15 @@ declare namespace nanoexpress {
     ws: WsRoute;
   }
 
+  interface SchemaValue {
+    [key: string]: string | SchemaValue;
+  }
   interface Schema {
-    [key: string]: string | Schema;
+    headers: boolean | SchemaValue;
+    cookies: boolean | SchemaValue;
+    query: boolean | SchemaValue;
+    params: boolean | SchemaValue;
+    body: string | SchemaValue;
   }
   interface MiddlewareOption {
     schema?: Schema;

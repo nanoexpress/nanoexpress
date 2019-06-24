@@ -56,12 +56,17 @@ export default (path, fn, config, { schema } = {}, ajv, method) => {
 
     const request =
       bodyCall && res.onData
-        ? await http.request(req, res, bodyCall)
-        : http.request(req, res);
+        ? await http.request(req, res, bodyCall, schema)
+        : http.request(req, res, false, schema);
 
     const response = http.response(res, req, config, schema && schema.response);
 
-    if (!fn.async || fn.simple) {
+    if (
+      !fn.async ||
+      fn.simple ||
+      fn.asyncToSync ||
+      (schema && schema.asyncToSync)
+    ) {
       return fn(request, response, config);
     } else if (!bodyCall && !res.abortHandler) {
       // For async function requires onAborted handler
@@ -96,8 +101,7 @@ export default (path, fn, config, { schema } = {}, ajv, method) => {
             : 'The route you visited does not returned response'
         }"}`
       );
-    }
-    if (!result.stream && method !== 'options') {
+    } else if (!result.stream && method !== 'options') {
       if (res.statusCode) {
         res.writeStatus(res.statusCode);
       }
