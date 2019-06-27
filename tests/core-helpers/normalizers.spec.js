@@ -107,6 +107,7 @@ describe('cookie normalize', () => {
   });
   it('cookie normalize empty', async () => {
     const fakeReq = {};
+    fakeReq.getHeader = () => '';
 
     expect(cookies(fakeReq)).toBe(undefined);
   });

@@ -2,8 +2,7 @@ const { parse } = require('cookie');
 
 export default (req, cookies) => {
   const { headers } = req;
-  const headerCookie =
-    (headers && headers.cookie) || (req && req.getHeader('Cookie'));
+  const headerCookie = (headers && headers.cookie) || req.getHeader('Cookie');
 
   if (headerCookie) {
     if (cookies) {
