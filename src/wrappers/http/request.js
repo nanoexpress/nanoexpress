@@ -15,21 +15,21 @@ export default (req, res, bodyCall, schema) => {
   req.getIPBuffer = getIPBuffer;
 
   req.headers =
-    !schema && schema.headers !== false
+    !schema || schema.headers !== false
       ? headers(req, req.headers, schema && schema.headers)
-      : req.cookies;
+      : req.headers;
   req.cookies =
-    !schema && schema.cookies !== false && req.headers
+    !schema || schema.cookies !== false
       ? cookies(req, req.cookies, schema && schema.cookies)
       : req.cookies;
   req.params =
-    !schema && schema.params !== false
+    !schema || schema.params !== false
       ? params(req, req.params, schema && schema.params)
-      : req.cookies;
+      : req.params;
   req.query =
-    !schema && schema.query !== false
+    !schema || schema.query !== false
       ? queries(req, req.query, schema && schema.query)
-      : req.cookies;
+      : req.query;
 
   if (bodyCall) {
     return body(req, res).then((body) => {

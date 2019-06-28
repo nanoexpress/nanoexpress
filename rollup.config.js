@@ -1,6 +1,5 @@
 import resolve from 'rollup-plugin-node-resolve';
 import run from 'rollup-plugin-run';
-import babel from 'rollup-plugin-babel';
 import json from 'rollup-plugin-json';
 
 import pkg from './package.json';
@@ -32,12 +31,6 @@ export default {
       extensions: ['.mjs', '.js', '.json'],
       exclude: 'node_modules/**'
     }),
-    !dev &&
-      !watch &&
-      babel({
-        babelrc: true,
-        exclude: 'node_modules/**'
-      }),
     dev && watch && run()
   ]
 };

@@ -158,7 +158,12 @@ const nanoexpress = (options = {}) => {
       return _app;
     },
     ws: (path, options, fn) => {
-      app.ws(path, options && options.isRaw ? fn : ws(path, options, fn));
+      app.ws(
+        path,
+        options && options.isRaw
+          ? (ws, req) => fn(req, ws)
+          : ws(path, options, fn)
+      );
       return _app;
     },
     static: (
@@ -198,16 +203,20 @@ const nanoexpress = (options = {}) => {
 
   httpMethods.forEach((method) => {
     _app[method] = (path, ...fns) => {
+      let isPrefix;
       if (fns.length > 0) {
         const isRaw = fns.find((fn) => fn.isRaw === true);
+        isPrefix = fns.find((fn) => fn.isPrefix);
 
         if (isRaw) {
           const fn = fns.pop();
-          return app[method](path, (res, req) => fn(req, res));
+          return app[method](isPrefix ? isPrefix + path : path, (res, req) =>
+            fn(req, res)
+          );
         }
       }
       const handler = http(
-        path,
+        isPrefix ? isPrefix + path : path,
         middlewares.concat(pathMiddlewares[path] || []).concat(fns),
         config,
         ajv,
