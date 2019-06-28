@@ -6,7 +6,7 @@ Performance tip: _Using many middlewares may slow response performance_
 
 ## Async route
 
-### Basic example
+### Basic Async example
 
 ```js
 app.get('/', async () => ({ status: 'success' }));

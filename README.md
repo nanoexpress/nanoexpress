@@ -12,7 +12,7 @@
 
 Nano-framework for Node.js powered by uWebSockets.js
 
-**[NEW]**: Documentation available [here](./docs/get-started.md)
+**[NEW]**: Documentation available [here](./docs/index.md)
 
 _If you want **Suport** me, please see [Support](#support) section_
 

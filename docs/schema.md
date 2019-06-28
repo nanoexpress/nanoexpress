@@ -42,7 +42,7 @@ app.listen(4000);
 
 ## Serialization
 
-### Types of validation
+### Types of serialization
 
 - `response`
 
