@@ -12,6 +12,8 @@
 
 Nano-framework for Node.js powered by uWebSockets.js
 
+**[NEW]**: Documentation available [here](./docs/get-started.md)
+
 _If you want **Suport** me, please see [Support](#support) section_
 
 _See [**Credits**](#credits) if you want which libraries i've used_
@@ -21,6 +23,8 @@ _See [**Credits**](#credits) if you want which libraries i've used_
 This library reached the `Alpha` status and works good, see `/examples` folder.
 
 This library up to 25% slower than `uWebSockets.js` on normal and complex application because of method polyfilling layer. Basic usage/examples performance are same as `uWebSockets.js`, but not in all case gives you same performance.
+
+**Requires**: Node.js v10 or greater
 
 ## Benchmarks
 

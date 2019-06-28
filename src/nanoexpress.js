@@ -158,7 +158,12 @@ const nanoexpress = (options = {}) => {
       return _app;
     },
     ws: (path, options, fn) => {
-      app.ws(path, options && options.isRaw ? fn : ws(path, options, fn));
+      app.ws(
+        path,
+        options && options.isRaw
+          ? (ws, req) => fn(req, ws)
+          : ws(path, options, fn)
+      );
       return _app;
     },
     static: (

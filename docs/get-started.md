@@ -4,6 +4,8 @@ Thanks for choosing `nanoexpress` as backend server
 
 ## Install
 
+### **Requires**: Node.js v10 or greater
+
 ### npm
 
 ```bash
@@ -78,6 +80,8 @@ const app = nanoexpress();
 
 // This is only way to apply this plugin and related to only CORS plugin
 app.options('/*', cors());
+
+app.listen(4000);
 ```
 
 ### `app.use` example
@@ -95,11 +99,10 @@ app.use((req, res, next) => {
   req.time = Date.now();
   next();
 });
+
+app.listen(4000);
 ```
 
 ### You may look to [Passport](../examples/passport.js) example
 
-<div style="display: flex; justify-content: space-between">
-<!--<span>&laquo; Prev</span>-->
-<a href="./middlewares.md" style="margin-left: auto"><span>Next &raquo;</span></a>
-</div>
+[Middlewares &raquo;](./middlewares.md)

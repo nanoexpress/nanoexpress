@@ -16,6 +16,10 @@
     "coveralls": "npm run coverage && cat ./tests/coverage/lcov.info | coveralls",
     "prepublishOnly": "npm run lint && npm run test && npm run build"
   },
+  "engines": {
+    "node": ">=10.x",
+    "npm": ">=6.x"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dalisoft/nanoexpress.git"
@@ -56,7 +60,6 @@
     "nodemon": "^1.19.1",
     "prettier": "^1.17.1",
     "rollup": "^1.16.2",
-    "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-node-resolve": "^5.0.4",
     "rollup-plugin-run": "^1.1.0"
