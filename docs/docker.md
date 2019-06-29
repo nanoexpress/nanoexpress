@@ -24,6 +24,10 @@ RUN ln -s /lib/libc.musl-x86_64.so.1 /lib/ld-linux-x86-64.so.2
 # CMD ["node", "server.js"]
 ```
 
+## Multi-thread / Cluster
+
+Note: _In Docker with Linux images this feature available out-of-the-box! Enjoy!_
+
 [&laquo; TypeScript](./typescript.md)
 
 [Benchmark &raquo;](./benchmark.md)
