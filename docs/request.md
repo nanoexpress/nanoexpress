@@ -47,7 +47,7 @@ app.get('/user', async (req) => {
 
 ## Body example
 
-Bonus: _nanoexpress handlers body-parsing for you very fast_
+Bonus: _nanoexpress handles body-parsing for you very fast_
 
 ```js
 app.post('/user', async (req) => {
@@ -70,6 +70,30 @@ app.post('/user', async (req) => {
   const isUserLoggedIn = await dbHelper.checkUser(userId);
 
   // do something...
+});
+```
+
+## [Upload](../examples/upload-file.js) example
+
+Note: _This examples uses `express-fileupload` middleware as example_
+
+```js
+const fileUpload = require('express-fileupload');
+const path = require('path');
+
+app.use(fileUpload({ useTempFiles: true }));
+app.post('/', (req, res) => {
+  console.debug('files', req.files);
+  console.debug('body', req.body);
+
+  req.files.file.mv(path.join(__dirname, '/uploads/file.jpg'), (err) => {
+    if (err) {
+      res.status(500);
+      return res.send(err);
+    }
+
+    return res.send('File uploaded!');
+  });
 });
 ```
 

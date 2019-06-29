@@ -70,6 +70,18 @@ app.post('/auth', async (req, res) => {
 });
 ```
 
+## sendFile (aka Stream)
+
+Note: _File should on same directory of this request._
+
+_Or you can try `Absolute URLs` for stream_
+
+```js
+app.get('/video.mp4', (req, res) => {
+  res.sendFile('video.mp4');
+});
+```
+
 [&laquo; Request](./request.md)
 
-[Schema &raquo;](./schema.md)
+[Static Serve &raquo;](./static-serve.md)

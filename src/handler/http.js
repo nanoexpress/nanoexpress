@@ -22,6 +22,11 @@ export default (path, fn, config, { schema } = {}, ajv, method) => {
     req.rawPath = path;
     req.method = method;
 
+    const request =
+      bodyCall && res.onData
+        ? await http.request(req, res, bodyCall, schema)
+        : http.request(req, res, false, schema);
+
     if (validationStringify) {
       let errors;
       for (let i = 0, len = validation.length; i < len; i++) {
@@ -53,11 +58,6 @@ export default (path, fn, config, { schema } = {}, ajv, method) => {
         return res.end(validationStringify(errors));
       }
     }
-
-    const request =
-      bodyCall && res.onData
-        ? await http.request(req, res, bodyCall, schema)
-        : http.request(req, res, false, schema);
 
     const response = http.response(res, req, config, schema && schema.response);
 

@@ -10,6 +10,9 @@ export default (res, req, config, schema) => {
     __proto__[newMethod] = HttpResponse[newMethod];
   }
 
+  // Default HTTP Raw Status Code Integer
+  res.rawStatusCode = 200;
+
   // Attach Schema
   res.schema = schema;
 
