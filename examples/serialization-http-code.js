@@ -35,7 +35,7 @@ app.get(
       return res.json({ hello: 'world' });
     }
     res.status(403);
-    res.json({ status: 'error', message: 'Unauthorized' });
+    return res.json({ status: 'error', message: 'Unauthorized' });
   }
 );
 
