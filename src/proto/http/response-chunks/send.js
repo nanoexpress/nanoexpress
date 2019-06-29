@@ -7,9 +7,23 @@ export default function send(result) {
   if (this.statusCode) {
     this.modifyEnd();
   }
+
   if (typeof result === 'object') {
     this.writeHeader('Content-Type', 'application/json');
-    result = this.schema ? this.schema(result) : JSON.stringify(result);
+
+    if (this.schema) {
+      const { schema } = this;
+
+      const schemaWithCode = schema[this.rawStatusCode];
+
+      if (schemaWithCode) {
+        result = schemaWithCode(result);
+      } else {
+        result = schema(result);
+      }
+    } else {
+      result = JSON.stringify(result);
+    }
   }
 
   this.end(result);

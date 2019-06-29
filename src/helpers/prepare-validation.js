@@ -1,5 +1,7 @@
 import fastJson from 'fast-json-stringify';
 
+import isHttpCode from './is-http-code';
+
 const validationMethods = [
   'response',
   'query',
@@ -36,14 +38,21 @@ export default (ajv, schema, config) => {
       const _schema = schema[type];
       if (typeof _schema === 'object' && _schema) {
         if (type === 'response') {
-          schema[type] = fastJson(_schema);
+          const isHttpCodes = Object.keys(_schema).every(isHttpCode);
+
+          if (isHttpCodes) {
+            for (const code in _schema) {
+              _schema[code] = fastJson(_schema[code]);
+            }
+          } else {
+            schema[type] = fastJson(_schema);
+          }
         } else {
           if (!ajv) {
             config.setAjv();
             ajv = config.ajv;
           }
           const validator = ajv.compile(_schema);
-          schema[type] = validator;
           validation.push({ type, validator });
           if (!validationStringify) {
             validationStringify = fastJson(validationSchema);
