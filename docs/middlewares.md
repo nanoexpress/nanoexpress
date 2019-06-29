@@ -6,12 +6,16 @@ Note: _You can use almost any [express](https://expressjs.com) middleware withou
 
 Built-in middlewares implemented at layer-level for performance reason and enables automacilly when needed, not always
 
-- `cookie`
-- `body-parser`
-- `express-ws` (for comparing, uWS has built-in support at core-level)
-- `fast-json-stringify` (for validation)
-- `express-ajv` (for comparing, i did it at layer-level)
-- `express-declarative-routing` (for comparing, i did it at layer-level)
+### All of these things are already implemented in `nanoexpress`
+
+| Alternative                                                                           | Implement level | Which libraries uses                                                   |
+| ------------------------------------------------------------------------------------- | --------------- | ---------------------------------------------------------------------- |
+| [cookie](https://github.com/jshttp/cookie)                                            | Layer level     | [cookie](https://github.com/jshttp/cookie)                             |
+| [body-parser](https://github.com/expressjs/body-parser)                               | Layer level     | Node.js builtin [querystring](https://nodejs.org/api/querystring.html) |
+| [express-ws](https://github.com/HenningM/express-ws)                                  | Core level      | [Core](https://github.com/uNetworking/uWebSockets.js) library          |
+| [express-serializer](https://github.com/MediaComem/express-serializer)                | Layer level     | [fast-json-stringify](https://github.com/fastify/fast-json-stringify)  |
+| [express-ajv](https://bitbucket.org/netgenes/express-ajv)                             | Layer level     | [ajv](https://ajv.js.org)                                              |
+| [express-declarative-routing](https://github.com/cheesun/express-declarative-routing) | Layer level     | My own implementation                                                  |
 
 ## In-box Middlewares
 
@@ -26,6 +30,8 @@ import { middlewares } from 'nanoexpress/packed';
 const app = nanoexpress();
 app.use(middlewares.passportInitialize()); // or app.use(passportInitialize());
 ```
+
+#### Available middlewares
 
 - `passport`
 
