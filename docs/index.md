@@ -2,7 +2,7 @@
 
 ## Examples
 
-All examples are lives [here](../examples/)
+All examples are lives [here](https://github.com/dalisoft/nanoexpress/tree/master/examples)
 
 ## Table of Contents
 
