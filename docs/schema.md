@@ -105,6 +105,6 @@ app.get(
 app.listen(4000);
 ```
 
-[&laquo; Response](./response.md)
+[&laquo; Static Serve](./static-serve.md)
 
 [TypeScript &raquo;](./typescript.md)
