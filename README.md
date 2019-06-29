@@ -66,6 +66,10 @@ This library makes very thin layer between uWebSockets.js and your code. But, gi
 - TypeScript declaration
 - Tests and CI checked code
 
+## Examples
+
+All examples are lives [here](https://github.com/dalisoft/nanoexpress/tree/master/examples)
+
 ## Built-in Middlewares
 
 Built-in middlewares implemented at layer-level for performance reason and enables automacilly when needed, not always

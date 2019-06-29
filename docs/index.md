@@ -1,5 +1,9 @@
 # Documentation
 
+## Examples
+
+All examples are lives [here](../examples/)
+
 ## Table of Contents
 
 1. [Getting Started](./get-started.md)
