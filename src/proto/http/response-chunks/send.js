@@ -6,6 +6,8 @@ export default function send(result) {
   }
   if (this.statusCode) {
     this.modifyEnd();
+  } else {
+    this.applyHeadersAndStatus();
   }
 
   if (typeof result === 'object') {
