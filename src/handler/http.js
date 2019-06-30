@@ -103,16 +103,15 @@ export default (path, fn, config, { schema } = {}, ajv, method) => {
         }"}`
       );
     } else if (!result.stream && method !== 'options') {
-      if (res.statusCode) {
-        res.writeStatus(res.statusCode);
+      if ((res.statusCode || res._headers) && !res._modifiedEnd) {
+        res.modifyEnd();
+      }
+      if (res.writeHead) {
+        res.writeHead(res.statusCode || 200, res._headers);
       }
 
       if (typeof result === 'object') {
-        res.writeHeader('Content-Type', 'application/json');
-
-        return res.end(
-          res.schema ? res.schema(result) : JSON.stringify(result)
-        );
+        return res.json(result);
       }
 
       res.end(result);

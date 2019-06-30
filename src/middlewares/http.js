@@ -18,9 +18,7 @@ export default (path = '/*', fns, config, ajv, method, app) => {
     schema,
     allAsync,
     asyncToSync,
-    error,
-    isNext,
-    isError
+    error
   } = prepareRouteFunctions(fns, app);
 
   if (error) {
@@ -40,9 +38,7 @@ export default (path = '/*', fns, config, ajv, method, app) => {
         if (fn.simple || !fn.async) {
           fn(req, res, config, middlewareChainingTransferPreviousResult);
 
-          const error = isError();
-          middlewareChainingTransferPreviousResult = isNext();
-          if (error || !middlewareChainingTransferPreviousResult) {
+          if (error && !middlewareChainingTransferPreviousResult) {
             if (error && !res.aborted) {
               if (config._errorHandler) {
                 return config._errorHandler(error, req, res);

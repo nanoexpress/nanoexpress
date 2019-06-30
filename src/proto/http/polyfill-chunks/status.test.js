@@ -30,11 +30,4 @@ describe('normalize status', () => {
       expect(e.message).toBe('Invalid Code: {"code":200}');
     }
   });
-  it('status should trigger #modifyEnd method', async (done) => {
-    _this.modifyEnd = () => {
-      done();
-    };
-
-    status.call(_this, 200);
-  });
 });

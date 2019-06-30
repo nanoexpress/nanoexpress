@@ -4,10 +4,11 @@ export default function send(result) {
     console.error('[Server]: Error, Response was aborted before responsing');
     return undefined;
   }
-  if (this.statusCode) {
-    !this._modifiedEnd && this.modifyEnd();
-  } else {
-    this.applyHeadersAndStatus();
+  if (this.writeHead) {
+    this.writeHead(this.statusCode || 200, this._headers);
+  }
+  if ((this.statusCode || this._headers) && !this._modifiedEnd) {
+    this.modifyEnd();
   }
 
   if (typeof result === 'object') {

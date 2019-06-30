@@ -7,7 +7,7 @@ export default function modifyEnd() {
 
       if (_headers) {
         if (statusCode) {
-          this.writeHead(statusCode, _headers);
+          this.writeStatus(statusCode);
         }
 
         this.applyHeadersAndStatus();

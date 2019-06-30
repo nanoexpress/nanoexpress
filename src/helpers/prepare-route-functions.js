@@ -14,22 +14,6 @@ export default (fns) => {
   const schema = fns.find((fn) => fn.schema);
   const asyncToSync = fns.find((fn) => fn.asyncToSync !== undefined);
 
-  let next = false;
-  let error = { message: 'Inside middleware `next` does not called' };
-
-  const isNext = () => next;
-  const isError = () => error;
-
-  const nextHandler = (err, done = true) => {
-    if (err) {
-      error = err;
-      next = false;
-    } else {
-      error = null;
-      next = done;
-    }
-  };
-
   const prepared = fns
     .map((fn, index) => {
       let result;
@@ -47,8 +31,21 @@ export default (fns) => {
         result.async = false;
       } else {
         result = (req, res, config, prevValue) =>
-          fn(req, res, nextHandler, config, prevValue);
-        result.async = false;
+          new Promise((resolve) =>
+            fn(
+              req,
+              res,
+              (error, done) => {
+                if (error) {
+                  return resolve({ error });
+                }
+                resolve(done);
+              },
+              config,
+              prevValue
+            )
+          );
+        result.async = true;
       }
 
       const { simple, handler } = isSimpleHandler(result, false);
@@ -69,8 +66,6 @@ export default (fns) => {
 
   return {
     prepared,
-    isNext,
-    isError,
     empty: prepared.length === 0,
     schema,
     route,
