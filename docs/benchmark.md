@@ -6,11 +6,11 @@ Note #2: _Docker may be good place to get started with Clustering_
 
 ## Response/second
 
-![Benchmarks](/.github/images/benchmark.png)
+![Benchmarks](https://github.com/dalisoft/nanoexpress/blob/master/.github/images/benchmark.png)
 
 ## Memory usage
 
-![Memory Usage](/.github/images/memory.png)
+![Memory Usage](https://github.com/dalisoft/nanoexpress/blob/master/.github/images/memory.png)
 
 Benchmarked on my macBook Pro 2012 13" (Core i5, 8Gb RAM) performance.
 

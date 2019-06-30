@@ -28,8 +28,8 @@ This library up to 25% slower than `uWebSockets.js` on normal and complex applic
 
 ## Benchmarks
 
-![Benchmarks](/.github/images/benchmark.png)
-![Memory Usage](/.github/images/memory.png)
+![Benchmarks](https://github.com/dalisoft/nanoexpress/blob/master/.github/images/benchmark.png)
+![Memory Usage](https://github.com/dalisoft/nanoexpress/blob/master/.github/images/memory.png)
 
 Benchmarked on my macBook Pro 2012 13" (Core i5, 8Gb RAM) performance.
 
