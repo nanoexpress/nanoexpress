@@ -104,6 +104,7 @@ app.use(middlewares.passportInitialize()); // or app.use(passportInitialize());
 - `cors` (yes, `express` `cors` middleware)
 - `express-jwt`
 - `express-session`
+- `express-graphql`
 - `passport`
 
 ## Docker Support

@@ -16,11 +16,12 @@ export default (path, fn, config, { schema } = {}, ajv, method) => {
   );
 
   const bodyCall = bodyDisallowedMethods.indexOf(method) === -1;
+  const methodUpperCase = method.toUpperCase();
 
   return async (res, req) => {
     // For future usage
     req.rawPath = path;
-    req.method = method;
+    req.method = methodUpperCase;
 
     const request =
       bodyCall && res.onData

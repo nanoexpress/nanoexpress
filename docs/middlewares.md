@@ -67,6 +67,7 @@ Performance tip: _This library target is out-of-the-box async support and works 
 - `cors` (yes, `express` `cors` middleware)
 - `express-jwt`
 - `express-session`
+- `express-graphql`
 - `passport`
 
 ### Basic example
