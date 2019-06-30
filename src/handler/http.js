@@ -106,9 +106,9 @@ export default (path, fn, config, { schema } = {}, ajv, method) => {
       if ((res.statusCode || res._headers) && !res._modifiedEnd) {
         res.modifyEnd();
       }
-      if (res.writeHead && !this._headWritten) {
+      if (res.writeHead && !res._headWritten) {
         res.writeHead(res.statusCode || 200, res._headers);
-        this._headWritten = true;
+        res._headWritten = true;
       }
 
       if (typeof result === 'object') {
