@@ -5,7 +5,7 @@ export default function send(result) {
     return undefined;
   }
   if (this.statusCode) {
-    this.modifyEnd();
+    !this._modifiedEnd && this.modifyEnd();
   } else {
     this.applyHeadersAndStatus();
   }

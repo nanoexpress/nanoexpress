@@ -8,8 +8,6 @@ export default function modifyEnd() {
       if (_headers) {
         if (statusCode) {
           this.writeHead(statusCode, _headers);
-        } else {
-          this.setHeaders(_headers);
         }
 
         this.applyHeadersAndStatus();
