@@ -1,5 +1,3 @@
-const { getMime } = require('@sifrr/server/src/server/mime');
-const stream2Buffer = require('@sifrr/server/src/server/streamtobuffer');
-const sendFile = require('@sifrr/server/src/server/sendfile');
-
-export { getMime, stream2Buffer, sendFile };
+export { getMime } from './sifrr-server/mime';
+export { default as stream2Buffer } from './sifrr-server/stream-to-buffer';
+export { default as sendFile } from './sifrr-server/send-file';
