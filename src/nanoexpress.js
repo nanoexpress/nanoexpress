@@ -11,6 +11,7 @@ import { http, ws } from './middlewares';
 import { routeMapper } from './helpers';
 
 const readFile = util.promisify(fs.readFile);
+const readDir = util.promisify(fs.readdir);
 
 const nanoexpress = (options = {}) => {
   const time = Date.now(); // For better managing start-time / lags
@@ -169,12 +170,12 @@ const nanoexpress = (options = {}) => {
       );
       return _app;
     },
-    static: (
+    static: async (
       route,
       path,
       { index = 'index.html', addPrettyUrl = true, streamConfig } = {}
     ) => {
-      const staticFilesPath = fs.readdirSync(path);
+      const staticFilesPath = await readDir(path);
 
       for (const fileName of staticFilesPath) {
         const isStreamableResource = getMime(fileName);
