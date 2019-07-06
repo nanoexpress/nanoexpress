@@ -1,6 +1,9 @@
 import { getMime, stream2Buffer } from './sifrr-server';
 import fs from 'fs';
 import zlib from 'zlib';
+import util from 'util';
+
+const fsStat = util.promisify(fs.stat);
 
 const compressions = {
   br: zlib.createBrotliCompress,
@@ -9,7 +12,7 @@ const compressions = {
 };
 const bytes = 'bytes=';
 
-export default function(
+export default async function(
   path,
   {
     lastModified = true,
@@ -20,8 +23,18 @@ export default function(
     cache = false
   } = {}
 ) {
+  if (!this.abortHandler) {
+    this.onAborted(() => {
+      if (this.stream) {
+        this.stream.destroy();
+      }
+      this.aborted = true;
+    });
+    this.abortHandler = true;
+  }
+
   const res = this;
-  const stat = fs.statSync(path);
+  const stat = await fsStat(path);
   const { mtime } = stat;
   let { size } = stat;
 
@@ -64,7 +77,7 @@ export default function(
   }
 
   let readStream = fs.createReadStream(path, { start, end });
-  this.readStream = readStream;
+  this.stream = readStream;
   // Compression;
   let compressed = false;
   if (compress) {
@@ -80,16 +93,6 @@ export default function(
         break;
       }
     }
-  }
-
-  if (!res.abortHandler) {
-    res.onAborted(() => {
-      if (res.readStream) {
-        res.readStream.destroy();
-      }
-      res.aborted = true;
-    });
-    res.abortHandler = true;
   }
 
   res.writeHeaders(headers);

@@ -35,6 +35,8 @@ Performance tip #2: _If you not using these methods, especially `body`, your app
 - `setHeaders`
 - `writeHeaderValues`
 - `writeHeaders`
+- `type`
+- `header`
 
 ## Cookie + JSON example
 

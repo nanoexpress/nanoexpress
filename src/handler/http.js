@@ -72,8 +72,8 @@ export default (path, fn, config, { schema } = {}, ajv, method) => {
     } else if (!bodyCall && !res.abortHandler) {
       // For async function requires onAborted handler
       res.onAborted(() => {
-        if (res.readStream) {
-          res.readStream.destroy();
+        if (res.stream) {
+          res.stream.destroy();
         }
         res.aborted = true;
       });
@@ -86,7 +86,7 @@ export default (path, fn, config, { schema } = {}, ajv, method) => {
 
     const result = await fn(request, response, config);
 
-    if (res.aborted) {
+    if (res.aborted || res.stream) {
       return undefined;
     }
 
@@ -102,7 +102,7 @@ export default (path, fn, config, { schema } = {}, ajv, method) => {
             : 'The route you visited does not returned response'
         }"}`
       );
-    } else if (!result.stream && method !== 'options') {
+    } else if (method !== 'options') {
       if ((res.statusCode || res._headers) && !res._modifiedEnd) {
         res.modifyEnd();
       }

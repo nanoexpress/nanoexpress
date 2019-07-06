@@ -1,5 +1,8 @@
 import fs from 'fs';
 import zlib from 'zlib';
+import util from 'util';
+
+const fsStat = util.promisify(fs.stat);
 
 import writeHeaders from './write-headers';
 import { getMime } from './mime';
@@ -12,8 +15,17 @@ const compressions = {
 };
 const bytes = 'bytes=';
 
-export default function sendFile(res, req, path, options) {
-  sendFileToRes(
+export default async function sendFile(res, req, path, options) {
+  if (!res.abortHandler) {
+    res.onAborted(() => {
+      if (res.stream) {
+        res.stream.destroy();
+      }
+      res.aborted = true;
+    });
+    res.abortHandler = true;
+  }
+  return await sendFileToRes(
     res,
     {
       'if-modified-since': req.getHeader('if-modified-since'),
@@ -25,7 +37,7 @@ export default function sendFile(res, req, path, options) {
   );
 }
 
-function sendFileToRes(
+async function sendFileToRes(
   res,
   reqHeaders,
   path,
@@ -40,7 +52,7 @@ function sendFileToRes(
   } = {}
 ) {
   // eslint-disable-next-line prefer-const
-  let { mtime, size } = fs.statSync(path);
+  let { mtime, size } = await fsStat(path);
   mtime.setMilliseconds(0);
   const mtimeutc = mtime.toUTCString();
 
@@ -77,6 +89,8 @@ function sendFileToRes(
   if (end < 0) end = 0;
 
   let readStream = fs.createReadStream(path, { start, end });
+  res.stream = readStream;
+
   // Compression;
   let compressed = false;
   if (compress) {

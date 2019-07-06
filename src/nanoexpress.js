@@ -3,11 +3,14 @@ import Ajv from 'ajv';
 
 import fs from 'fs';
 import { resolve } from 'path';
+import util from 'util';
 
 import { getMime, sendFile } from './helpers/sifrr-server';
 
 import { http, ws } from './middlewares';
 import { routeMapper } from './helpers';
+
+const readFile = util.promisify(fs.readFile);
 
 const nanoexpress = (options = {}) => {
   const time = Date.now(); // For better managing start-time / lags
@@ -179,15 +182,14 @@ const nanoexpress = (options = {}) => {
         const pathNormalisedFileName = resolve(path, fileName);
         const routeNormalised = route + fileName;
 
-        const handler = (res, req) => {
+        const handler = async (res, req) => {
           if (res.__streaming || res.__called) {
             return;
           }
           if (isStreamableResource) {
-            sendFile(res, req, pathNormalisedFileName, streamConfig);
-            res.__streaming = true;
+            await sendFile(res, req, pathNormalisedFileName, streamConfig);
           } else {
-            const sendFile = fs.readFileSync(pathNormalisedFileName, 'utf-8');
+            const sendFile = await readFile(pathNormalisedFileName, 'utf-8');
             res.end(sendFile);
             res.__called = true;
           }

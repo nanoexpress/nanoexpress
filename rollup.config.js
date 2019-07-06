@@ -22,11 +22,13 @@ export default {
     'querystring',
     'http',
     'zlib',
-    'stream'
+    'stream',
+    'util'
   ]),
   plugins: [
     json(),
     resolve({
+      preferBuiltins: true,
       mainFields: ['module', 'main'],
       extensions: ['.mjs', '.js', '.json'],
       exclude: 'node_modules/**'
