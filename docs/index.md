@@ -4,6 +4,10 @@
 
 All examples are lives [here](https://github.com/dalisoft/nanoexpress/tree/master/examples)
 
+## Autodocument your API
+
+For example please see [this](https://github.com/dalisoft/nanoexpress/tree/master/examples/swagger.js)
+
 ## Table of Contents
 
 1. [Getting Started](./get-started.md)
