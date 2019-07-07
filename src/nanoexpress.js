@@ -15,7 +15,7 @@ const readDir = util.promisify(fs.readdir);
 let Ajv;
 
 try {
-  Ajv = require.resolve('ajv');
+  Ajv = require('ajv');
 } catch (e) {
   console.error(
     '[nanoexpress]: `Ajv` was not found in your dependencies list' +

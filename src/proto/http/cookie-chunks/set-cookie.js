@@ -1,7 +1,7 @@
 let cookie;
 
 try {
-  cookie = require.resolve('cookie');
+  cookie = require('cookie');
 } catch (e) {
   console.error(
     '[nanoexpress]: `cookie` was not found in your dependencies list' +
@@ -10,7 +10,7 @@ try {
 }
 
 export default function setCookie(name, value, options) {
-  if (!cookie) {
+  if (!cookie || !cookie.serialize) {
     return;
   }
 

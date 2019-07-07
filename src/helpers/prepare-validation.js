@@ -3,7 +3,7 @@ import isHttpCode from './is-http-code';
 let fastJson;
 
 try {
-  fastJson = require.resolve('fast-json-stringify');
+  fastJson = require('fast-json-stringify');
 } catch (e) {
   console.error(
     '[nanoexpress]: `fast-json-stringify` was not found in your dependencies list' +
