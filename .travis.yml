@@ -12,8 +12,8 @@ node_js:
 before_install:
   - npm install -g greenkeeper-lockfile
 install:
-  - npm install
   - npm i cookie ajv fast-json-stringify
+  - npm install
 before_script: greenkeeper-lockfile-update
 after_script: greenkeeper-lockfile-upload
 script:
