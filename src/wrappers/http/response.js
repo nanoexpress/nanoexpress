@@ -1,6 +1,6 @@
 import { HttpResponse } from '../../proto';
 
-export default (res, req, config, schema) => {
+export default (res, req, config) => {
   // Attach request
   res.__request = req;
 
@@ -12,9 +12,6 @@ export default (res, req, config, schema) => {
 
   // Default HTTP Raw Status Code Integer
   res.rawStatusCode = 200;
-
-  // Attach Schema
-  res.schema = schema;
 
   // Attach Config
   res.config = config;

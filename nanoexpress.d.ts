@@ -8,6 +8,9 @@ import {
 import { Ajv, Options as AjvOptions } from 'ajv';
 
 declare namespace nanoexpress {
+  export interface SwaggerOptions {
+    [key: string]: SwaggerOptions | string;
+  }
   export interface AppOptions extends AppOptionsBasic {
     https?: {
       key_file_name: string;
@@ -16,6 +19,7 @@ declare namespace nanoexpress {
     };
     ajv?: AjvOptions;
     configureAjv(ajv: Ajv): Ajv;
+    swagger?: SwaggerOptions;
   }
 
   export interface HttpRequestHeaders {

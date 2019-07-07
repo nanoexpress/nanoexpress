@@ -1,19 +1,23 @@
 import { http } from '../wrappers';
-import { prepareValidation, isSimpleHandler } from '../helpers';
+import { isSimpleHandler } from '../helpers';
 
 const bodyDisallowedMethods = ['get', 'options', 'head', 'trace', 'ws'];
-export default (path, fn, config, { schema } = {}, ajv, method) => {
+export default (
+  path,
+  fn,
+  config,
+  { schema } = {},
+  ajv,
+  method,
+  validationMap
+) => {
   const isSimpleRequest = isSimpleHandler(fn);
 
   if (isSimpleRequest.simple) {
     return isSimpleRequest.handler;
   }
   // For easier aliasing
-  const { validation, validationStringify } = prepareValidation(
-    ajv,
-    schema,
-    config
-  );
+  const { validation, validationStringify, responseSchema } = validationMap;
 
   const bodyCall = bodyDisallowedMethods.indexOf(method) === -1;
   const methodUpperCase = method.toUpperCase();
@@ -59,8 +63,11 @@ export default (path, fn, config, { schema } = {}, ajv, method) => {
         return res.end(validationStringify(errors));
       }
     }
+    if (responseSchema) {
+      res.schema = responseSchema;
+    }
 
-    const response = http.response(res, req, config, schema && schema.response);
+    const response = http.response(res, req, config);
 
     if (
       !fn.async ||

@@ -33,6 +33,8 @@ const validationSchema = {
 export default (ajv, schema, config) => {
   const validation = [];
   let validationStringify;
+  let responseSchema;
+
   if (schema) {
     validationMethods.forEach((type) => {
       const _schema = schema[type];
@@ -40,13 +42,15 @@ export default (ajv, schema, config) => {
         if (type === 'response') {
           const isHttpCodes = Object.keys(_schema).every(isHttpCode);
 
+          const newSchema = {};
           if (isHttpCodes) {
             for (const code in _schema) {
-              _schema[code] = fastJson(_schema[code]);
+              newSchema[code] = fastJson(_schema[code]);
             }
           } else {
-            schema[type] = fastJson(_schema);
+            newSchema[type] = fastJson(_schema);
           }
+          responseSchema = newSchema;
         } else {
           if (!ajv) {
             config.setAjv();
@@ -63,6 +67,7 @@ export default (ajv, schema, config) => {
   }
   return {
     validation,
-    validationStringify
+    validationStringify,
+    responseSchema
   };
 };

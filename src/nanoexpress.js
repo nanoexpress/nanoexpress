@@ -53,6 +53,8 @@ const nanoexpress = (options = {}) => {
     config.ajv = ajv;
   };
 
+  config.swagger = options.swagger;
+
   const _app = {
     config: {
       set: (key, value) => {
@@ -224,7 +226,7 @@ const nanoexpress = (options = {}) => {
         config,
         ajv,
         method,
-        app
+        _app
       );
       app[method](
         typeof path === 'string' ? path : '/*',

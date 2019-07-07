@@ -1,5 +1,9 @@
 import { http } from '../handler';
-import { prepareRouteFunctions } from '../helpers';
+import {
+  prepareValidation,
+  prepareRouteFunctions,
+  prepareSwaggerDocs
+} from '../helpers';
 
 export default (path = '/*', fns, config, ajv, method, app) => {
   if (typeof path === 'function') {
@@ -20,6 +24,20 @@ export default (path = '/*', fns, config, ajv, method, app) => {
     asyncToSync,
     error
   } = prepareRouteFunctions(fns, app);
+
+  const validationMap = prepareValidation(ajv, schema && schema.schema, config);
+
+  if (config.swagger) {
+    prepareSwaggerDocs(config.swagger, path, method, schema);
+
+    if (!app.swaggerApplied) {
+      app.get('/docs/swagger.json', { isRaw: true }, (req, res) => {
+        res.writeHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify(config.swagger, null, 4));
+      });
+      app.swaggerApplied = true;
+    }
+  }
 
   if (error) {
     return config._notFoundHandler
@@ -96,5 +114,5 @@ export default (path = '/*', fns, config, ajv, method, app) => {
   handler.simple = route.simple;
   handler.asyncToSync = asyncToSync;
 
-  return http(path, handler, config, schema, ajv, method, app);
+  return http(path, handler, config, schema, ajv, method, app, validationMap);
 };
