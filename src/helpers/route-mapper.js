@@ -84,7 +84,7 @@ export default (app) => async (prefix, routes) => {
         for (const method in value) {
           if (appMethods.includes(method)) {
             if (!value[method].callback) {
-              value[method] = { callback: value };
+              value[method] = { callback: value[method] };
             }
           } else {
             let normalisedPath = method;
@@ -113,11 +113,13 @@ export default (app) => async (prefix, routes) => {
 
     if (route) {
       for await (const method of methods) {
-        const { callback, middlewares = [], schema } = route[method];
+        // eslint-disable-next-line prefer-const
+        let { callback, middlewares = [], schema } = route[method];
 
         if (schema) {
           middlewares.unshift({ schema });
         }
+
         middlewares.push(callback);
 
         await app[method](path, ...middlewares);

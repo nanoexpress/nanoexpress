@@ -25,7 +25,8 @@ export default (fns) => {
         result.async = true;
       } else if (
         index === fns.length - 1 &&
-        fn.toString().indexOf('next)') === -1
+        fn.toString().indexOf('next)') === -1 &&
+        fn.toString().indexOf('async') === -1
       ) {
         result = fn;
         result.async = false;

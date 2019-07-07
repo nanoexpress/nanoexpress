@@ -2,23 +2,25 @@ const nanoexpress = require('..');
 
 const app = nanoexpress();
 
-app.get('/', () => '{"hello":"world"}');
-
 app.define({
   '/': {
-    get: () => ({ route: 'get /' }),
+    get: async () => ({ route: 'get /' }),
     '/sub1': {
-      get: () => ({ route: 'get /sub1/' }),
+      get: async () => ({ route: 'get /sub1/' }),
       '/:id': {
         '/verify': {
-          get: (req) => ({ route: 'get /sub1/' + req.params.id + '/verify' }),
-          post: (req) => ({ route: 'post /sub1/' + req.params.id + '/verify' })
+          get: async (req) => ({
+            route: 'get /sub1/' + req.params.id + '/verify'
+          }),
+          post: async (req) => ({
+            route: 'post /sub1/' + req.params.id + '/verify'
+          })
         }
       }
+    },
+    '/ext-sub': {
+      get: async () => ({ route: 'direct get /ext-sub/' })
     }
-  },
-  '/ext-sub': {
-    get: () => ({ route: 'direct get /ext-sub/' })
   }
 });
 
