@@ -1,6 +1,6 @@
 import isHttpCode from './is-http-code';
 
-let fastJson = null;
+let fastJson;
 
 try {
   fastJson = require.resolve('fast-json-stringify');
@@ -49,7 +49,7 @@ export default (ajv, schema, config) => {
       const _schema = schema[type];
       if (typeof _schema === 'object' && _schema) {
         if (type === 'response') {
-          if (!fastJson) {
+          if (typeof fastJson !== 'function') {
             return;
           }
           const isHttpCodes = Object.keys(_schema).every(isHttpCode);
@@ -68,10 +68,12 @@ export default (ajv, schema, config) => {
             config.setAjv();
             ajv = config.ajv;
           }
-          const validator = ajv.compile(_schema);
-          validation.push({ type, validator });
-          if (!validationStringify) {
-            validationStringify = fastJson(validationSchema);
+          if (ajv) {
+            const validator = ajv.compile(_schema);
+            validation.push({ type, validator });
+            if (!validationStringify) {
+              validationStringify = fastJson(validationSchema);
+            }
           }
         }
       }

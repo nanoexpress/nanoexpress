@@ -1,4 +1,4 @@
-let cookie = null;
+let cookie;
 
 try {
   cookie = require.resolve('cookie');

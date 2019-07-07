@@ -9,10 +9,10 @@ import { getMime, sendFile } from './helpers/sifrr-server';
 import { http, ws } from './middlewares';
 import { routeMapper } from './helpers';
 
-let Ajv = null;
-
 const readFile = util.promisify(fs.readFile);
 const readDir = util.promisify(fs.readdir);
+
+let Ajv;
 
 try {
   Ajv = require.resolve('ajv');
@@ -56,7 +56,7 @@ const nanoexpress = (options = {}) => {
   config.https = !!options.https;
 
   config.setAjv = () => {
-    if (!Ajv) {
+    if (typeof Ajv !== 'function') {
       return;
     }
     ajv = new Ajv(options.ajv);
