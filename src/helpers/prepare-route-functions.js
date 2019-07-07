@@ -20,7 +20,13 @@ export default (fns) => {
       if (!fn || typeof fn === 'object') {
         return null;
       }
-      if (fn.then || fn.constructor.name === 'AsyncFunction') {
+      const { simple, handler } = isSimpleHandler(fn, false);
+
+      if (simple) {
+        handler.simple = simple;
+        handler.async = false;
+        return handler;
+      } else if (fn.then || fn.constructor.name === 'AsyncFunction') {
         result = fn;
         result.async = true;
       } else if (
@@ -47,14 +53,6 @@ export default (fns) => {
             )
           );
         result.async = true;
-      }
-
-      const { simple, handler } = isSimpleHandler(result, false);
-
-      if (simple) {
-        handler.simple = simple;
-        handler.async = false;
-        return handler;
       }
 
       result.simple = false;

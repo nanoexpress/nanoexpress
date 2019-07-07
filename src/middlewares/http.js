@@ -92,7 +92,7 @@ export default (path = '/*', fns, config, ajv, method, app) => {
                 return config._errorHandler(middleware.error, req, res);
               }
               return res.end(
-                `{"middleware_type":"async",error":"${error.message}"}`
+                `{"middleware_type":"async",error":"${middleware.error.message}"}`
               );
             }
             return;
