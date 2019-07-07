@@ -1,8 +1,5 @@
 sudo: false
 language: node_js
-cache:
-  directories:
-    - node_modules
 notifications:
   email: false
 os:
@@ -13,14 +10,10 @@ node_js:
   - '11'
   - '12'
 before_install:
-  # package-lock.json was introduced in npm@5
-  - '[[ $(node -v) =~ ^v9.*$ ]] || npm install -g npm@latest' # skipped when using node 9
   - npm install -g greenkeeper-lockfile
 install:
   - npm install
-  - npm i cookie
-  - npm i ajv
-  - npm i fast-json-stringify
+  - npm i cookie ajv fast-json-stringify
 before_script: greenkeeper-lockfile-update
 after_script: greenkeeper-lockfile-upload
 script:
