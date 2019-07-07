@@ -97,8 +97,8 @@ export default (app) => async (prefix, routes) => {
         }
       } else {
         console.error(
-          `[Server]: The Schema of _*${path}*_ ` +
-            'is missing, please add schema!)'
+          `[nanoexpress]: The Schema of [${path}]` +
+            'is missing, please add schema!'
         );
       }
     }
