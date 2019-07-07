@@ -14,7 +14,7 @@ export default (req, cookies) => {
   const headerCookie =
     cookie && ((headers && headers.cookie) || req.getHeader('Cookie'));
 
-  if (headerCookie && cookie) {
+  if (headerCookie && cookie && cookie.parse) {
     if (cookies) {
       const parsedCookie = cookie.parse(headerCookie);
       for (const cookie in parsedCookie) {
