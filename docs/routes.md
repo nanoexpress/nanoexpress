@@ -66,6 +66,8 @@ app.get('/', { isPrefix: '/v1' }, (res, req) => {
 
 ## [Declarative](../examples/declarative-routing.js) example
 
+**Note**: _If you see error like this `Route - route function was not defined`, please try chaing your `get: (req, res) => {}` to `get: { callback: (req, res) => {} }`. This happens because there has some sort of bug, but not critical, doesn't affects to performance. PR are welcome_
+
 ```js
 app.define({
   '/': {
