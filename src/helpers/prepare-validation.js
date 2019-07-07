@@ -1,6 +1,15 @@
-import fastJson from 'fast-json-stringify';
-
 import isHttpCode from './is-http-code';
+
+let fastJson = null;
+
+try {
+  fastJson = require.resolve('fast-json-stringify');
+} catch (e) {
+  console.error(
+    '[nanoexpress]: `fast-json-stringify` was not found in your dependencies list' +
+      ', please install yourself for this feature working properly'
+  );
+}
 
 const validationMethods = [
   'response',
@@ -40,6 +49,9 @@ export default (ajv, schema, config) => {
       const _schema = schema[type];
       if (typeof _schema === 'object' && _schema) {
         if (type === 'response') {
+          if (!fastJson) {
+            return;
+          }
           const isHttpCodes = Object.keys(_schema).every(isHttpCode);
 
           const newSchema = {};

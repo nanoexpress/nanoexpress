@@ -62,6 +62,8 @@ app.post('/user', async (req) => {
 
 ## Cookies example
 
+**Note**: _For to be working properly `cookie` parsing, please install [cookie](https://github.com/jshttp/cookie) module yourself, it's in our library in `peerDependencies`_
+
 ```js
 app.post('/user', async (req) => {
   const { userId } = req.cookies;

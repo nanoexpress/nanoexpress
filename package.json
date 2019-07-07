@@ -1,6 +1,6 @@
 {
   "name": "nanoexpress",
-  "version": "0.11.0",
+  "version": "0.11.1",
   "description": "Nano-framework for Node.js powered by uWebSockets.js",
   "main": "build/nanoexpress.js",
   "module": "src/nanoexpress.js",
@@ -14,11 +14,10 @@
     "test": "jest --config jest.config.js",
     "coverage": "npm run test --coverage",
     "coveralls": "npm run coverage && cat ./tests/coverage/lcov.info | coveralls",
-    "prepublishOnly": "npm run lint && npm run test && npm run build"
+    "prepublishOnly": "npm run lint && npm run build"
   },
   "engines": {
-    "node": ">=10.x",
-    "npm": ">=6.x"
+    "node": ">=10.x"
   },
   "repository": {
     "type": "git",
@@ -40,10 +39,7 @@
   },
   "homepage": "https://github.com/dalisoft/nanoexpress#readme",
   "dependencies": {
-    "@dalisoft/events": "0.0.10",
-    "ajv": "^6.10.0",
-    "cookie": "^0.4.0",
-    "fast-json-stringify": "^1.15.3",
+    "@dalisoft/events": "^0.0.x",
     "uWebSockets.js": "github:uNetworking/uWebSockets.js#v15.11.0"
   },
   "devDependencies": {
@@ -60,7 +56,10 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-run": "^1.1.0"
   },
-  "optionalDependencies": {
-    "passport": "^0.4.0"
+  "peerDependencies": {
+    "cookie": "^0.x",
+    "fast-json-stringify": "^1.x",
+    "passport": "^0.4.0",
+    "ajv": "^6.x"
   }
 }

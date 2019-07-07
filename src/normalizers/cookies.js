@@ -1,17 +1,27 @@
-const { parse } = require('cookie');
+let cookie = null;
+
+try {
+  cookie = require.resolve('cookie');
+} catch (e) {
+  console.error(
+    '[nanoexpress]: `cookie` was not found in your dependencies list' +
+      ', please install yourself for this feature working properly'
+  );
+}
 
 export default (req, cookies) => {
   const { headers } = req;
-  const headerCookie = (headers && headers.cookie) || req.getHeader('Cookie');
+  const headerCookie =
+    cookie && ((headers && headers.cookie) || req.getHeader('Cookie'));
 
-  if (headerCookie) {
+  if (headerCookie && cookie) {
     if (cookies) {
-      const parsedCookie = parse(headerCookie);
+      const parsedCookie = cookie.parse(headerCookie);
       for (const cookie in parsedCookie) {
         cookies[cookie] = parsedCookie[cookie];
       }
     } else if (!cookies) {
-      cookies = parse(headerCookie);
+      cookies = cookie.parse(headerCookie);
     }
   }
   return cookies;

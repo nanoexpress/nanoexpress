@@ -1,5 +1,4 @@
 import uWS from 'uWebSockets.js';
-import Ajv from 'ajv';
 
 import fs from 'fs';
 import { resolve } from 'path';
@@ -10,8 +9,19 @@ import { getMime, sendFile } from './helpers/sifrr-server';
 import { http, ws } from './middlewares';
 import { routeMapper } from './helpers';
 
+let Ajv = null;
+
 const readFile = util.promisify(fs.readFile);
 const readDir = util.promisify(fs.readdir);
+
+try {
+  Ajv = require.resolve('ajv');
+} catch (e) {
+  console.error(
+    '[nanoexpress]: `Ajv` was not found in your dependencies list' +
+      ', please install yourself for this feature working properly'
+  );
+}
 
 const nanoexpress = (options = {}) => {
   const time = Date.now(); // For better managing start-time / lags
@@ -46,6 +56,9 @@ const nanoexpress = (options = {}) => {
   config.https = !!options.https;
 
   config.setAjv = () => {
+    if (!Ajv) {
+      return;
+    }
     ajv = new Ajv(options.ajv);
     if (options.configureAjv) {
       ajv = options.configureAjv(ajv);

@@ -2,6 +2,8 @@
 
 Performance tip: _If you correctly and exactly define the schema, your app will be faster by 25-30% which is good and validation support will be out-of-the-box_
 
+**Note**: _For to be it's working, please install [Ajv](http://ajv.js.org) module yourself, it's in our library in `peerDependencies`_
+
 ## Validation
 
 Note: _All validations are optional_
@@ -43,6 +45,8 @@ app.listen(4000);
 ## Serialization
 
 ### Types of serialization
+
+**Note**: _For to be better performance and working serialization, please install [fast-json-stringify](https://github.com/fastify/fast-json-stringify) module yourself, it's in our library in `peerDependencies`_
 
 - `response`
 - `response.HTTP_CODE`

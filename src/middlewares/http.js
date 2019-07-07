@@ -48,6 +48,15 @@ export default (path = '/*', fns, config, ajv, method, app) => {
         );
   }
 
+  if (route === undefined) {
+    console.error('[nanoexpress]: Route - route function was not defined', {
+      route,
+      path,
+      method
+    });
+    return;
+  }
+
   const handler = empty
     ? route
     : async (req, res, config) => {

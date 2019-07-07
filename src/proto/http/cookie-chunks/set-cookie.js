@@ -1,10 +1,23 @@
-const { serialize } = require('cookie');
+let cookie = null;
+
+try {
+  cookie = require.resolve('cookie');
+} catch (e) {
+  console.error(
+    '[nanoexpress]: `cookie` was not found in your dependencies list' +
+      ', please install yourself for this feature working properly'
+  );
+}
 
 export default function setCookie(name, value, options) {
+  if (!cookie) {
+    return;
+  }
+
   if (options.expires && Number.isInteger(options.expires)) {
     options.expires = new Date(options.expires);
   }
-  const serialized = serialize(name, value, options);
+  const serialized = cookie.serialize(name, value, options);
 
   let setCookie = this.getHeader('Set-Cookie');
 
