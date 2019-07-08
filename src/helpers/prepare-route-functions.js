@@ -25,10 +25,12 @@ export default (fns) => {
       if (simple) {
         handler.simple = simple;
         handler.async = false;
+        handler.type = 'simple';
         return handler;
       } else if (fn.then || fn.constructor.name === 'AsyncFunction') {
         result = fn;
         result.async = true;
+        result.type = 'sync';
       } else if (
         index === fns.length - 1 &&
         fn.toString().indexOf('next)') === -1 &&
@@ -36,6 +38,7 @@ export default (fns) => {
       ) {
         result = fn;
         result.async = false;
+        result.type = 'route';
       } else {
         result = (req, res, config, prevValue) =>
           new Promise((resolve) =>
@@ -53,6 +56,7 @@ export default (fns) => {
             )
           );
         result.async = true;
+        result.type = 'express';
       }
 
       result.simple = false;
