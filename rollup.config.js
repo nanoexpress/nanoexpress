@@ -14,7 +14,9 @@ export default {
   output: {
     format: 'cjs',
     file: './build/nanoexpress.js',
-    esModule: false
+    esModule: false,
+    sourcemap: !watch,
+    sourcemapFile: './build/nanoexpress.js.map'
   },
   external: dependencies.concat([
     'fs',
