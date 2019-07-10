@@ -58,7 +58,17 @@ export default (
 
       if (errors && !res.aborted) {
         if (config._validationErrorHandler) {
-          return config._validationErrorHandler(errors, req, res);
+          const validationHandlerResult = config._validationErrorHandler(
+            errors,
+            req,
+            res
+          );
+
+          if (validationHandlerResult && validationHandlerResult.errors) {
+            errors = validationHandlerResult;
+          } else {
+            return config._validationErrorHandler(errors, req, res);
+          }
         }
         return res.end(validationStringify(errors));
       }
