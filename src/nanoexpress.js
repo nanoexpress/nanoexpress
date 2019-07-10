@@ -11,6 +11,7 @@ import { routeMapper } from './helpers';
 
 const readFile = util.promisify(fs.readFile);
 const readDir = util.promisify(fs.readdir);
+const lstat = util.promisify(fs.lstat);
 
 let Ajv;
 
@@ -185,17 +186,31 @@ const nanoexpress = (options = {}) => {
       );
       return _app;
     },
-    static: async (
+    static: async function staticRoute(
       route,
       path,
       { index = 'index.html', addPrettyUrl = true, streamConfig } = {}
-    ) => {
+    ) {
+      if (!route.endsWith('/')) {
+        route += '/';
+      }
+
       const staticFilesPath = await readDir(path);
 
       for (const fileName of staticFilesPath) {
+        const pathNormalisedFileName = resolve(path, fileName);
+        const lstatInfo = await lstat(pathNormalisedFileName).catch(() => null);
+
+        if (lstatInfo && lstatInfo.isDirectory()) {
+          return staticRoute(route + fileName, pathNormalisedFileName, {
+            index,
+            addPrettyUrl,
+            streamConfig
+          });
+        }
+
         const isStreamableResource = getMime(fileName);
 
-        const pathNormalisedFileName = resolve(path, fileName);
         const routeNormalised = route + fileName;
 
         const handler = async (res, req) => {

@@ -41,7 +41,7 @@ export default async function(
   mtime.setMilliseconds(0);
   const mtimeutc = mtime.toUTCString();
 
-  const { headers } = res.__request;
+  const { headers = {} } = res.__request;
 
   // handling last modified
   if (lastModified) {
