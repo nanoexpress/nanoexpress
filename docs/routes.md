@@ -49,7 +49,7 @@ app.post('/', (req, res) => {
 Note: _Any polyfilled methods unavailable here, But performance may shock you!_
 
 ```js
-app.get('/', { isRaw: true }, (res, req) => {
+app.get('/', { isRaw: true }, (req, res) => {
   // do something...
 });
 ```
@@ -59,7 +59,7 @@ app.get('/', { isRaw: true }, (res, req) => {
 Note: _This option will be helpful when you want single config object to many routes_
 
 ```js
-app.get('/', { isPrefix: '/v1' }, (res, req) => {
+app.get('/', { isPrefix: '/v1' }, (req, res) => {
   // req.path === '/v1/'
 });
 ```
@@ -96,6 +96,6 @@ app.define({
 });
 ```
 
-[&laquo; Middlewares](./middlewares.md)
+[&laquo; Websocket](./websocket.md)
 
 [Request &raquo;](./request.md)

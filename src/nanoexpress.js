@@ -181,7 +181,7 @@ const nanoexpress = (options = {}) => {
         path,
         options && options.isRaw
           ? (ws, req) => fn(req, ws)
-          : ws(path, options, fn)
+          : ws(path, options, fn, config, ajv)
       );
       return _app;
     },

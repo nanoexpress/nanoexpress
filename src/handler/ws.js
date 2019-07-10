@@ -1,6 +1,6 @@
 import { ws as wsWrapper } from '../wrappers';
 
-export default (path, options = {}, fn) => {
+export default (path, options = {}, fn, config, ajv) => {
   // If users just opens WebSocket
   // without any parameters
   // we just normalize it for users
@@ -8,6 +8,8 @@ export default (path, options = {}, fn) => {
     fn = options;
     options = {};
   }
+
+  let validator = null;
 
   if (options.compression === undefined) {
     options.compression = 0;
@@ -17,6 +19,15 @@ export default (path, options = {}, fn) => {
   }
   if (options.idleTimeout === undefined) {
     options.idleTimeout = 120;
+  }
+  if (options.schema !== undefined) {
+    if (!ajv) {
+      config.setAjv();
+      ajv = config.ajv;
+    }
+    if (ajv) {
+      validator = ajv.compile(options.schema);
+    }
   }
 
   return {
@@ -32,6 +43,28 @@ export default (path, options = {}, fn) => {
     message: (ws, message, isBinary) => {
       if (!isBinary) {
         message = Buffer.from(message).toString('utf-8');
+      }
+      if (options.schema) {
+        if (typeof message === 'string') {
+          if (message.indexOf('[') === 0 || message.indexOf('{') === 0) {
+            if (message.indexOf('[object') === -1) {
+              message = JSON.parse(message);
+            }
+          }
+        }
+
+        const valid = validator(message);
+        if (!valid) {
+          ws.emit(
+            'message',
+            {
+              type: 'websocket.message',
+              errors: validator.errors.map((err) => err.message)
+            },
+            isBinary
+          );
+          return;
+        }
       }
       ws.emit('message', message, isBinary);
     },
