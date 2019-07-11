@@ -6,6 +6,7 @@ function getIPBuffer() {
 
 export default (req, res, bodyCall, schema) => {
   req.path = req.getUrl();
+  req.url = req.path;
   req.method = req.method || req.getMethod();
 
   // Alias for Express-module

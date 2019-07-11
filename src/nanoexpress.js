@@ -10,8 +10,6 @@ import { http, ws } from './middlewares';
 import { routeMapper } from './helpers';
 
 const readFile = util.promisify(fs.readFile);
-const readDir = util.promisify(fs.readdir);
-const lstat = util.promisify(fs.lstat);
 
 let Ajv;
 
@@ -186,57 +184,53 @@ const nanoexpress = (options = {}) => {
       );
       return _app;
     },
-    static: (route, path, staticConfig) => {
-      (async function staticRoute(
-        route,
-        path,
-        { index = 'index.html', addPrettyUrl = true, streamConfig } = {}
-      ) {
-        if (!route.endsWith('/')) {
-          route += '/';
+    static: function staticRoute(
+      route,
+      path,
+      { index = 'index.html', addPrettyUrl = true, streamConfig } = {}
+    ) {
+      if (!route.endsWith('/')) {
+        route += '/';
+      }
+
+      const staticFilesPath = fs.readdirSync(path);
+
+      for (const fileName of staticFilesPath) {
+        const pathNormalisedFileName = resolve(path, fileName);
+
+        const lstatInfo = fs.lstatSync(pathNormalisedFileName);
+
+        if (lstatInfo && lstatInfo.isDirectory()) {
+          staticRoute(route + fileName, pathNormalisedFileName, {
+            index,
+            addPrettyUrl,
+            streamConfig
+          });
+          continue;
         }
 
-        const staticFilesPath = await readDir(path);
+        const isStreamableResource = getMime(fileName);
 
-        for (const fileName of staticFilesPath) {
-          const pathNormalisedFileName = resolve(path, fileName);
+        const routeNormalised = route + fileName;
 
-          const lstatInfo = await lstat(pathNormalisedFileName).catch(
-            () => null
-          );
-
-          if (lstatInfo && lstatInfo.isDirectory()) {
-            await staticRoute(route + fileName, pathNormalisedFileName, {
-              index,
-              addPrettyUrl,
-              streamConfig
-            });
-            continue;
+        const handler = async (res, req) => {
+          if (res.__streaming || res.__called) {
+            return;
           }
-
-          const isStreamableResource = getMime(fileName);
-
-          const routeNormalised = route + fileName;
-
-          const handler = async (res, req) => {
-            if (res.__streaming || res.__called) {
-              return;
-            }
-            if (isStreamableResource) {
-              await sendFile(res, req, pathNormalisedFileName, streamConfig);
-            } else {
-              const sendFile = await readFile(pathNormalisedFileName, 'utf-8');
-              res.end(sendFile);
-              res.__called = true;
-            }
-          };
-          if (addPrettyUrl && fileName === index) {
-            app.get(route, handler);
+          if (isStreamableResource) {
+            await sendFile(res, req, pathNormalisedFileName, streamConfig);
+          } else {
+            const sendFile = await readFile(pathNormalisedFileName, 'utf-8');
+            res.end(sendFile);
+            res.__called = true;
           }
-
-          app.get(routeNormalised, handler);
+        };
+        if (addPrettyUrl && fileName === index) {
+          app.get(route, handler);
         }
-      })(route, path, staticConfig);
+
+        app.get(routeNormalised, handler);
+      }
       return _app;
     }
   };
