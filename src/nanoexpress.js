@@ -186,53 +186,58 @@ const nanoexpress = (options = {}) => {
       );
       return _app;
     },
-    static: async function staticRoute(
-      route,
-      path,
-      { index = 'index.html', addPrettyUrl = true, streamConfig } = {}
-    ) {
-      if (!route.endsWith('/')) {
-        route += '/';
-      }
-
-      const staticFilesPath = await readDir(path);
-
-      for (const fileName of staticFilesPath) {
-        const pathNormalisedFileName = resolve(path, fileName);
-
-        const lstatInfo = await lstat(pathNormalisedFileName).catch(() => null);
-
-        if (lstatInfo && lstatInfo.isDirectory()) {
-          await staticRoute(route + fileName, pathNormalisedFileName, {
-            index,
-            addPrettyUrl,
-            streamConfig
-          });
-          continue;
+    static: (route, path, staticConfig) => {
+      (async function staticRoute(
+        route,
+        path,
+        { index = 'index.html', addPrettyUrl = true, streamConfig } = {}
+      ) {
+        if (!route.endsWith('/')) {
+          route += '/';
         }
 
-        const isStreamableResource = getMime(fileName);
+        const staticFilesPath = await readDir(path);
 
-        const routeNormalised = route + fileName;
+        for (const fileName of staticFilesPath) {
+          const pathNormalisedFileName = resolve(path, fileName);
 
-        const handler = async (res, req) => {
-          if (res.__streaming || res.__called) {
-            return;
+          const lstatInfo = await lstat(pathNormalisedFileName).catch(
+            () => null
+          );
+
+          if (lstatInfo && lstatInfo.isDirectory()) {
+            await staticRoute(route + fileName, pathNormalisedFileName, {
+              index,
+              addPrettyUrl,
+              streamConfig
+            });
+            continue;
           }
-          if (isStreamableResource) {
-            await sendFile(res, req, pathNormalisedFileName, streamConfig);
-          } else {
-            const sendFile = await readFile(pathNormalisedFileName, 'utf-8');
-            res.end(sendFile);
-            res.__called = true;
+
+          const isStreamableResource = getMime(fileName);
+
+          const routeNormalised = route + fileName;
+
+          const handler = async (res, req) => {
+            if (res.__streaming || res.__called) {
+              return;
+            }
+            if (isStreamableResource) {
+              await sendFile(res, req, pathNormalisedFileName, streamConfig);
+            } else {
+              const sendFile = await readFile(pathNormalisedFileName, 'utf-8');
+              res.end(sendFile);
+              res.__called = true;
+            }
+          };
+          if (addPrettyUrl && fileName === index) {
+            app.get(route, handler);
           }
-        };
-        if (addPrettyUrl && fileName === index) {
-          app.get(route, handler);
+
+          app.get(routeNormalised, handler);
         }
-
-        app.get(routeNormalised, handler);
-      }
+      })(route, path, staticConfig);
+      return _app;
     }
   };
 
