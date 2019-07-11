@@ -189,7 +189,10 @@ const nanoexpress = (options = {}) => {
       path,
       { index = 'index.html', addPrettyUrl = true, streamConfig } = {}
     ) {
-      if (!route.endsWith('/')) {
+      if (path === undefined) {
+        path = route;
+        route = '/';
+      } else if (!route.endsWith('/')) {
         route += '/';
       }
 
