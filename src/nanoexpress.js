@@ -199,14 +199,16 @@ const nanoexpress = (options = {}) => {
 
       for (const fileName of staticFilesPath) {
         const pathNormalisedFileName = resolve(path, fileName);
+
         const lstatInfo = await lstat(pathNormalisedFileName).catch(() => null);
 
         if (lstatInfo && lstatInfo.isDirectory()) {
-          return staticRoute(route + fileName, pathNormalisedFileName, {
+          await staticRoute(route + fileName, pathNormalisedFileName, {
             index,
             addPrettyUrl,
             streamConfig
           });
+          continue;
         }
 
         const isStreamableResource = getMime(fileName);
