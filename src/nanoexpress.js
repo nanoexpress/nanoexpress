@@ -129,7 +129,8 @@ const nanoexpress = (options = {}) => {
       if (_app._instance) {
         config.host = null;
         config.port = null;
-        app.us_listen_socket_close(_app._instance);
+        uWS.us_listen_socket_close(_app._instance);
+        _app._instance = null;
         console.log('[Server]: stopped successfully');
         return true;
       } else {
