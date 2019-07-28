@@ -53,6 +53,7 @@ const nanoexpress = (options = {}) => {
   };
 
   config.https = !!options.https;
+  config.configureAjv = options.configureAjv;
 
   config.setAjv = () => {
     if (typeof Ajv !== 'function') {

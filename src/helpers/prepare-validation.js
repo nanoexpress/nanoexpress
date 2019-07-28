@@ -65,11 +65,14 @@ export default (ajv, schema, config) => {
           } else {
             newSchema[type] = fastJson(_schema);
           }
+
           responseSchema = newSchema;
         } else {
           if (!ajv) {
             config.setAjv();
             ajv = config.ajv;
+          } else {
+            ajv = config.configureAjv(ajv);
           }
           if (ajv) {
             const validator = ajv.compile(_schema);

@@ -9,13 +9,9 @@ node_js:
   - '10'
   - '11'
   - '12'
-before_install:
-  - npm install -g greenkeeper-lockfile
 install:
-  - npm i cookie ajv fast-json-stringify
   - npm install
-before_script: greenkeeper-lockfile-update
-after_script: greenkeeper-lockfile-upload
+  - npm i cookie ajv fast-json-stringify
 script:
   - npm run lint
   - npm test

@@ -66,3 +66,7 @@ tmp/
 dist/
 tests/coverage/
 coverage/
+
+# lock files
+package-lock.json
+yarn.lock
