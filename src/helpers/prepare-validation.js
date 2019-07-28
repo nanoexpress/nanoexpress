@@ -50,6 +50,9 @@ export default (ajv, schema, config) => {
       if (typeof _schema === 'object' && _schema) {
         if (type === 'response') {
           if (typeof fastJson !== 'function') {
+            console.error(
+              '[nanoexpress]: `fast-json-stringify` was not initialized properly'
+            );
             return;
           }
           const isHttpCodes = Object.keys(_schema).every(isHttpCode);

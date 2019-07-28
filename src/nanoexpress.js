@@ -56,6 +56,7 @@ const nanoexpress = (options = {}) => {
 
   config.setAjv = () => {
     if (typeof Ajv !== 'function') {
+      console.error('[nanoexpress]: `Ajv` was not initialized properly');
       return;
     }
     ajv = new Ajv(options.ajv);
