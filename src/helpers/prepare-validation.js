@@ -71,7 +71,7 @@ export default (ajv, schema, config) => {
           if (!ajv) {
             config.setAjv();
             ajv = config.ajv;
-          } else {
+          } else if (typeof config.configureAjv === 'function') {
             ajv = config.configureAjv(ajv);
           }
           if (ajv) {
