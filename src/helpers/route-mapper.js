@@ -14,7 +14,7 @@ const appMethods = [
 
 // Utils
 const pathKeyNormalizer = (path) =>
-  path.includes('{') ? path.replace(/\{(.*)\}/g, ':$1') : path;
+  path.indexOf('{') !== -1 ? path.replace(/\{(.*)\}/g, ':$1') : path;
 
 export default (app) => async (prefix, routes) => {
   if (typeof prefix !== 'string' && !routes) {
