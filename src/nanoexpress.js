@@ -250,9 +250,10 @@ const nanoexpress = (options = {}) => {
 
         if (isRaw) {
           const fn = fns.pop();
-          return app[method](isPrefix ? isPrefix + path : path, (res, req) =>
+          app[method](isPrefix ? isPrefix + path : path, (res, req) =>
             fn(req, res)
           );
+          return _app;
         }
       }
       const handler = http(
