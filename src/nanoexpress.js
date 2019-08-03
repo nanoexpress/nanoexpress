@@ -244,14 +244,17 @@ const nanoexpress = (options = {}) => {
   httpMethods.forEach((method) => {
     _app[method] = (path, ...fns) => {
       let isPrefix;
+      let isDirect;
       if (fns.length > 0) {
         const isRaw = fns.find((fn) => fn.isRaw === true);
         isPrefix = fns.find((fn) => fn.isPrefix);
+        isDirect = fns.find((fn) => fn.direct);
 
         if (isRaw) {
           const fn = fns.pop();
-          app[method](isPrefix ? isPrefix + path : path, (res, req) =>
-            fn(req, res)
+          app[method](
+            isPrefix ? isPrefix + path : path,
+            isDirect ? fn : (res, req) => fn(req, res)
           );
           return _app;
         }
