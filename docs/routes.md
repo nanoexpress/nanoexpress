@@ -54,6 +54,16 @@ app.get('/', { isRaw: true }, (req, res) => {
 });
 ```
 
+## Direct example
+
+Note: _Any polyfilled methods unavailable here, But performance may shock you!_
+
+```js
+app.get('/', { isRaw: true, direct: true }, (res, req) => {
+  // do something...
+});
+```
+
 ## Prefix example
 
 Note: _This option will be helpful when you want single config object to many routes_

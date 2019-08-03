@@ -124,6 +124,7 @@ declare namespace nanoexpress {
   interface MiddlewareOption {
     schema?: Schema;
     isRaw?: boolean;
+    direct?: boolean;
   }
 
   export interface AppRoute {
