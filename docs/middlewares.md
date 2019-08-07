@@ -2,6 +2,10 @@
 
 Note: _You can use almost any [express](https://expressjs.com) middleware without issues, if you facing with issues, let me know, we will solve issue together_
 
+Note #2: _Middlewares is not like [express](https://expressjs.com) middlewares, defined `nanoexpress` middlewares are called if any of methods are defined for performance and resource effecienty reason_
+
+Note #3: _[express](https://expressjs.com) like `app.use('/path', function)` not calling if route for `/path` is not defined_
+
 ## Built-in Middlewares
 
 Built-in middlewares implemented at layer-level for performance reason and enables automacilly when needed, not always
