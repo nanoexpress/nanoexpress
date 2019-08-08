@@ -10,7 +10,10 @@ export default (req, res, bodyCall, schema) => {
   req.method = req.method || req.getMethod();
 
   // Alias for Express-module
+  // TODO: make this normalized
   req.url = req.path;
+  req.originalUrl = req.url;
+  req.baseUrl = '';
 
   req.__response = res;
   req.getIPBuffer = getIPBuffer;

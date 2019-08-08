@@ -152,7 +152,7 @@ declare namespace nanoexpress {
     streamConfig?: object;
   }
 
-  type Middleware = MiddlewareOption | HttpRoute;
+  interface Middleware extends MiddlewareOption, HttpRoute {}
 
   interface validationErrorItems {
     type: string;
@@ -163,7 +163,7 @@ declare namespace nanoexpress {
     errors: validationErrorItems;
   }
 
-  export interface nanoexpressApp extends AppTemplatedApp {
+  interface nanoexpressAppInterface {
     host: string | null;
     port: number | null;
     address: string;
@@ -211,6 +211,10 @@ declare namespace nanoexpress {
     define(prefix: string, routes?: AppRoutes): nanoexpressApp;
     config: AppConfig;
   }
+
+  export interface nanoexpressApp
+    extends Omit<AppTemplatedApp, keyof nanoexpressAppInterface>,
+      nanoexpressAppInterface {}
 }
 
 declare function nanoexpress(

@@ -12,6 +12,8 @@ Performance tip: _If you want to your app be faster, please consider using [sche
 
 Performance tip #2: _If you not using these properties, especially `body`, your app will response faster, because these properties takes time parse_
 
+Note: _`req.originalUrl`, `req.baseUrl` is not same as `express` properties, just alias to `req.url`, currently does not have fix, any PR would be great_
+
 ## Headers example
 
 ```js
