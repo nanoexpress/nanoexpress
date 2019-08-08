@@ -98,6 +98,17 @@ const nanoexpress = (options = {}) => {
           console.log('[Server]: PORT is required');
           return undefined;
         }
+        if (middlewares && middlewares.length > 0 && !middlewares.called) {
+          _app.any('/*', ...middlewares);
+          middlewares.called = true;
+        }
+        for (const path in pathMiddlewares) {
+          const middleware = pathMiddlewares[path];
+          if (middleware && middleware.length > 0 && !middleware.called) {
+            _app.any(path, ...middleware);
+            middleware.called = true;
+          }
+        }
         port = Number(port);
         app.listen(port, host, (token) => {
           if (typeof host === 'string') {
@@ -259,9 +270,16 @@ const nanoexpress = (options = {}) => {
           return _app;
         }
       }
+      const pathMiddleware = pathMiddlewares[path];
+      if (pathMiddleware && pathMiddleware.length > 0) {
+        pathMiddleware.called = true;
+      }
+      if (middlewares && middlewares.length > 0) {
+        middlewares.called = true;
+      }
       const handler = http(
         isPrefix ? isPrefix + path : path,
-        middlewares.concat(pathMiddlewares[path] || []).concat(fns),
+        middlewares.concat(pathMiddleware || []).concat(fns),
         config,
         ajv,
         method,

@@ -20,12 +20,12 @@ export default (
   const { validation, validationStringify, responseSchema } = validationMap;
 
   const bodyCall = bodyDisallowedMethods.indexOf(method) === -1;
-  const methodUpperCase = method.toUpperCase();
+  const methodUpperCase = method !== 'any' && method.toUpperCase();
 
   return async (res, req) => {
     // For future usage
     req.rawPath = path;
-    req.method = methodUpperCase;
+    req.method = methodUpperCase || req.getMethod();
 
     const request =
       bodyCall && res.onData

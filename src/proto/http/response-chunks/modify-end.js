@@ -3,8 +3,13 @@ export default function modifyEnd() {
     const _oldEnd = this.end;
 
     this.end = function(chunk, encoding) {
-      const { _headers, statusCode } = this;
+      // eslint-disable-next-line prefer-const
+      let { _headers, statusCode } = this;
 
+      if (typeof statusCode === 'number') {
+        this.status(statusCode);
+        statusCode = this.statusCode;
+      }
       if (_headers) {
         if (statusCode) {
           this.writeStatus(statusCode);

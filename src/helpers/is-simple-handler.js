@@ -96,9 +96,11 @@ export default (fn, isRaw = true) => {
     }
 
     if (line.indexOf('req.') !== -1) {
-      const matchMethod = line.match(/req\.(.*)\(/);
-
-      if (matchMethod && HttpRequestAdvancedProps.includes(matchMethod[1])) {
+      if (
+        HttpRequestAdvancedProps.some(
+          (prop) => line.indexOf('req.' + prop) !== -1
+        )
+      ) {
         simple = false;
       }
     }

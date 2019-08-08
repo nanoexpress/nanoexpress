@@ -13,7 +13,7 @@ export default (req, res, bodyCall, schema) => {
   // TODO: make this normalized
   req.url = req.path;
   req.originalUrl = req.url;
-  req.baseUrl = req.url;
+  req.baseUrl = '';
 
   req.__response = res;
   req.getIPBuffer = getIPBuffer;
