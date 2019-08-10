@@ -27,6 +27,7 @@ app.ws('/', { isRaw: true }, (req, ws) => {
 ## Schema example
 
 Note: _This option gives you better safety with validating messages_
+
 Note 2: _This option auto-parses JSON-strings such as Array and Objects which may be helpful_
 
 ```js
