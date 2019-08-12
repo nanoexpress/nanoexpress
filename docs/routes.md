@@ -108,7 +108,7 @@ app.define({
 
 ## Known Issues
 
-- See [my comment on #28](https://github.com/dalisoft/nanoexpress/issues/28#issuecomment-520485552)
+- See [my comment on #28](https://github.com/dalisoft/nanoexpress/issues/28#issuecomment-520485552) and [here](https://github.com/uNetworking/uWebSockets.js/issues/123)
 
 [&laquo; Websocket](./websocket.md)
 
