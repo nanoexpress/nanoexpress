@@ -1,6 +1,6 @@
 {
   "name": "nanoexpress",
-  "version": "0.12.16",
+  "version": "0.12.17",
   "description": "Nano-framework for Node.js powered by uWebSockets.js",
   "main": "build/nanoexpress.js",
   "module": "src/nanoexpress.js",
@@ -45,13 +45,13 @@
   "devDependencies": {
     "@babel/core": "^7.4.5",
     "@babel/preset-env": "^7.4.5",
-    "coveralls": "^3.0.4",
+    "coveralls": "^3.0.6",
     "eslint": "^6.0.1",
-    "husky": "^3.0.0",
+    "husky": "^3.0.3",
     "jest": "^24.8.0",
     "lint-staged": "^9.0.0",
     "prettier": "^1.17.1",
-    "rollup": "^1.19.2",
+    "rollup": "^1.19.4",
     "rollup-plugin-json": "^4.0.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-run": "^1.1.0"

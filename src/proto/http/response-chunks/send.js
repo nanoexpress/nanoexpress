@@ -4,7 +4,7 @@ export default function send(result) {
     console.error('[Server]: Error, Response was aborted before responsing');
     return undefined;
   }
-  if (this.writeHead && !this._headWritten) {
+  if (this._headers && this.writeHead && !this._headWritten && !this.aborted) {
     this.writeHead(this.statusCode || 200, this._headers);
     this._headWritten = true;
   }
@@ -12,7 +12,9 @@ export default function send(result) {
     this.modifyEnd();
   }
 
-  if (typeof result === 'object') {
+  if (result === null || result === undefined) {
+    this.end('');
+  } else if (typeof result === 'object') {
     this.writeHeader('Content-Type', 'application/json');
 
     if (this.schema) {
@@ -28,9 +30,11 @@ export default function send(result) {
     } else {
       result = JSON.stringify(result);
     }
-  }
 
-  this.end(result);
+    this.end(result);
+  } else {
+    this.end(result);
+  }
 
   return this;
 }

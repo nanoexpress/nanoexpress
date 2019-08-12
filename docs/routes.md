@@ -2,7 +2,7 @@
 
 Routes are intellectual, not only good, because if your routes are simple, library uses direct calling to `uWebSockets.js` which improves response time by 30-40% and responses performance will be almost equal to `uWebSockets.js.
 
-Performance tip: _Using many middlewares may slow response performance_
+Performance tip: \_Using many middlewares may slow response
 
 ## Async route
 
@@ -105,6 +105,10 @@ app.define({
   }
 });
 ```
+
+## Known Issues
+
+- See [my comment on #28](https://github.com/dalisoft/nanoexpress/issues/28#issuecomment-520485552)
 
 [&laquo; Websocket](./websocket.md)
 

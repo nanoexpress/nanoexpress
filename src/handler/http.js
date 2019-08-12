@@ -120,15 +120,12 @@ export default (
         }"}`
       );
     } else if (method !== 'options') {
-      if ((res.statusCode || res._headers) && !res._modifiedEnd) {
-        res.modifyEnd();
-      }
-      if (res.writeHead && !res._headWritten) {
-        res.writeHead(res.statusCode || 200, res._headers);
-        res._headWritten = true;
-      }
-
-      if (typeof result === 'object') {
+      if (result === null || result === undefined) {
+        res.writeHeader('Content-Type', 'text/json');
+        return res.end(
+          '{"status":"error","message":"Result response is not valid"}'
+        );
+      } else if (typeof result === 'object') {
         return res.json(result);
       }
 
