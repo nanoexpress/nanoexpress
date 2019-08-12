@@ -2,7 +2,7 @@
 
 Routes are intellectual, not only good, because if your routes are simple, library uses direct calling to `uWebSockets.js` which improves response time by 30-40% and responses performance will be almost equal to `uWebSockets.js.
 
-Performance tip: \_Using many middlewares may slow response
+Performance tip: _Using many middlewares may slow response performance_
 
 ## Async route
 
