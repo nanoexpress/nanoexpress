@@ -8,6 +8,10 @@ All examples are lives [here](https://github.com/dalisoft/nanoexpress/tree/maste
 
 For example please see [this](https://github.com/dalisoft/nanoexpress/tree/master/examples/swagger.js)
 
+## Warning
+
+This library does not support HTTP2!
+
 ## Table of Contents
 
 1. [Getting Started](./get-started.md)

@@ -2,6 +2,10 @@
 
 Thanks for choosing `nanoexpress` as backend server
 
+## Warning
+
+This library does not support HTTP2!
+
 ## Install
 
 ### **Requires**: Node.js v10 or greater

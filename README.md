@@ -12,11 +12,15 @@
 
 Nano-framework for Node.js powered by uWebSockets.js
 
-**[NEW]**: Documentation available [here](https://github.com/dalisoft/nanoexpress/blob/master/docs/index.md)
+Documentation available [here](https://github.com/dalisoft/nanoexpress/blob/master/docs/index.md)
 
 _If you want **Suport** me, please see [Support](#support) section_
 
 _See [**Credits**](#credits) if you want which libraries i've used_
+
+## Warning
+
+This library does not support HTTP2!
 
 ## NOTE
 
@@ -28,7 +32,7 @@ This library up to 25% slower than `uWebSockets.js` on normal and complex applic
 
 ## Benchmarks
 
-NEW! We [available](https://github.com/the-benchmarker/web-frameworks) in web-frameworks!
+We [available](https://github.com/the-benchmarker/web-frameworks) in web-frameworks!
 
 ![Benchmarks](https://github.com/dalisoft/nanoexpress/raw/master/.github/images/benchmark.png)
 ![Memory Usage](https://github.com/dalisoft/nanoexpress/raw/master/.github/images/memory.png)
