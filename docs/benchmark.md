@@ -8,12 +8,13 @@ Note #2: _Docker may be good place to get started with Clustering_
 
 We [available](https://github.com/the-benchmarker/web-frameworks) in web-frameworks, but not this branch!
 
-| Library        | RPS   | Memory |
-| -------------- | ----- | ------ |
-| uWebSockets.js | 2M    | 80Mb   |
-| nanoexpress    | 1.79M | 180Mb  |
-| Raw HTTP       | 1.03M | 290Mb  |
-| express        | 654K  | 430Mb  |
+| Library         | RPS   | Memory |
+| --------------- | ----- | ------ |
+| uWebSockets.js  | 2M    | 80Mb   |
+| nanoexpress Pro | 1.79M | 180Mb  |
+| nanoexpress     | 1.65M | 120Mb  |
+| Raw HTTP        | 1.03M | 290Mb  |
+| express         | 654K  | 430Mb  |
 
 Benchmarked on my macBook Pro 2012 13" (Core i5, 8Gb RAM) performance.
 
