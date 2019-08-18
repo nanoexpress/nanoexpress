@@ -4,6 +4,20 @@ Routes are intellectual, not only good, because if your routes are simple, libra
 
 Performance tip: _Using many middlewares may slow response performance_
 
+## Route-middleware route
+
+Yes, finally, we have working model of Express-middleware like routes
+
+```js
+import Route from 'nanoexpress/src/Route';
+
+const route = new Router();
+
+route.get('/', async () => 'hello world');
+
+app.use(route);
+```
+
 ## Async route
 
 ### Basic Async example
