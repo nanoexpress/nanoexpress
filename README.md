@@ -18,10 +18,6 @@ Documentation available [here](https://github.com/dalisoft/nanoexpress/blob/pro/
 
 ## NOTE
 
-This library reached the `Alpha` status and works good, see `/examples` folder.
-
-This library up to 25% slower than `uWebSockets.js` on normal and complex application because of method polyfilling layer. Basic usage/examples performance are same as `uWebSockets.js`, but not in all case gives you same performance.
-
 **Requires**: Node.js v10 or greater
 
 ## Benchmarks
