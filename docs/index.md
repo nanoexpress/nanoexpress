@@ -2,11 +2,11 @@
 
 ## Examples
 
-All examples are lives [here](https://github.com/dalisoft/nanoexpress/tree/master/examples)
+All examples are lives [here](https://github.com/dalisoft/nanoexpress/tree/pro/examples)
 
 ## Autodocument your API
 
-For example please see [this](https://github.com/dalisoft/nanoexpress/tree/master/examples/swagger.js)
+For example please see [this](https://github.com/dalisoft/nanoexpress/tree/pro/examples/swagger.js)
 
 ## Warning
 
