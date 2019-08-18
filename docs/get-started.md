@@ -15,13 +15,13 @@ Thanks for choosing `nanoexpress` as backend server
 ### npm
 
 ```bash
-npm install nanoexpress
+npm install dalisoft/nanoexpress#pro
 ```
 
 ### yarn
 
 ```bash
-yarn add nanoexpress
+yarn add dalisoft/nanoexpress#pro
 ```
 
 ## Let's create server
