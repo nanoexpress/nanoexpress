@@ -119,17 +119,42 @@ export default class Route {
       prepareSwaggerDocs(_config.swagger, path, method, schema);
     }
 
+    if (
+      routeFunction.then ||
+      routeFunction.constructor.name === 'AsyncFunction'
+    ) {
+      const _oldRouteFunction = routeFunction;
+      routeFunction = (req, res, next) => {
+        let isAborted = false;
+        res.onAborted(() => {
+          isAborted = true;
+        });
+        return _oldRouteFunction(req, res)
+          .then((data) => {
+            if (!isAborted) {
+              res.send(data);
+            }
+            next(null, data);
+          })
+          .catch(next);
+      };
+      routeFunction.async = true;
+    }
+
+    if (schema) {
+      schema = schema.schema;
+    }
+
     routeFunction.isRaw = isRaw;
     routeFunction.path = path;
     routeFunction.schema = schema && schema.schema;
     routeFunction.validation =
-      schema &&
-      schema.schema &&
-      prepareValidation(this._ajv, schema, this._config);
+      schema && prepareValidation(this._ajv, schema, this._config);
 
     routeFunction.discard =
       /res\.(json|s?end|cork|sendFile)/g.test(routeFunction.toString()) ||
       routeFunction.toString().indexOf('next') === -1;
+
     methodArray.push(routeFunction);
 
     return this;
@@ -303,7 +328,16 @@ export default class Route {
                     ) {
                       return;
                     }
-                    routeFunction(req, res, this._handleNext, this._next);
+                    const callback = routeFunction(
+                      req,
+                      res,
+                      this._handleNext,
+                      this._next
+                    );
+
+                    if (callback && callback.async) {
+                      return callback;
+                    }
                   }
                 });
               } else {
@@ -319,7 +353,16 @@ export default class Route {
                   return;
                 }
 
-                routeFunction(req, res, this._handleNext, this._next);
+                const callback = routeFunction(
+                  req,
+                  res,
+                  this._handleNext,
+                  this._next
+                );
+
+                if (callback && callback.async) {
+                  return callback;
+                }
               }
             }
           }
