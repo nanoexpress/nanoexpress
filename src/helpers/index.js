@@ -1,15 +1,13 @@
-import routeMapper from './route-mapper';
 import sendFile from './send-file';
-import prepareRouteFunctions from './prepare-route-functions';
 import prepareValidation from './prepare-validation';
+import processValidation from './process-validation';
 import prepareSwaggerDocs from './prepare-swagger-docs';
-import isSimpleHandler from './is-simple-handler';
+import httpMethods from './http-methods';
 
 export {
-  routeMapper,
   sendFile,
-  prepareRouteFunctions,
   prepareValidation,
+  processValidation,
   prepareSwaggerDocs,
-  isSimpleHandler
+  httpMethods
 };

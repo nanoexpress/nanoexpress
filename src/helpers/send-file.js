@@ -1,4 +1,5 @@
-import { getMime, stream2Buffer } from './sifrr-server';
+import { getMime } from './mime';
+import stream2Buffer from './stream-to-buffer';
 import fs from 'fs';
 import zlib from 'zlib';
 import util from 'util';

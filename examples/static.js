@@ -1,10 +1,11 @@
 const nanoexpress = require('..');
-const { resolve } = require('path');
+const staticMiddleware = require('../build/static');
+const { join } = require('path');
 
 const app = nanoexpress();
 
 app
-  .static('/', resolve(__dirname, 'static'))
-  .get('/health', async () => ({ status: 'ok' }));
+  .use(staticMiddleware(join(__dirname + '/static')))
+  .get('/health', (req, res) => res.send({ status: 'ok' }));
 
 app.listen(4040);

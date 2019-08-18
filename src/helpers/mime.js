@@ -170,7 +170,7 @@ const mimes = {
 
 const getMime = (path) => {
   const i = path.lastIndexOf('.');
-  return mimes[path.substr(i + 1).toLowerCase()] || mimes['default'];
+  return mimes[path.substr(i + 1).toLowerCase()];
 };
 
 export { getMime, mimes };

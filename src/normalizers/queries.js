@@ -1,8 +1,9 @@
 import { parse } from 'querystring';
 
-export default (req, queries) => {
+export default (req) => {
   const query = req.getQuery();
 
+  let queries;
   if (!query) {
     return queries;
   }

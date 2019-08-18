@@ -1,4 +1,5 @@
-export default (req, headers, schema) => {
+export default (req, schema) => {
+  let headers;
   if (schema) {
     const { properties } = schema;
     for (const property in properties) {
@@ -8,7 +9,7 @@ export default (req, headers, schema) => {
       headers[property] = req.getHeader(property);
     }
     return headers;
-  } else {
+  } else if (schema !== false) {
     req.forEach((key, value) => {
       if (!headers) {
         headers = {};

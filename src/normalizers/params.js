@@ -1,8 +1,9 @@
 const PARAMS_REGEX = /:([A-Za-z0-9_-]+)/g;
 
-export default (req, params) => {
+export default (req) => {
   const { rawPath } = req;
 
+  let params;
   if (rawPath.indexOf(':') !== -1) {
     const paramsMatch = rawPath.match(PARAMS_REGEX);
 

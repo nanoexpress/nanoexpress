@@ -1,10 +1,5 @@
 export default function send(result) {
-  /* If we were aborted, you cannot respond */
-  if (this.aborted) {
-    console.error('[Server]: Error, Response was aborted before responsing');
-    return undefined;
-  }
-  if (this._headers && this.writeHead && !this._headWritten && !this.aborted) {
+  if (this._headers && this.writeHead && !this._headWritten) {
     this.writeHead(this.statusCode || 200, this._headers);
     this._headWritten = true;
   }

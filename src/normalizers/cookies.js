@@ -9,10 +9,11 @@ try {
   );
 }
 
-export default (req, cookies) => {
+export default (req) => {
   if (!cookie || !cookie.parse) {
     return;
   }
+  let cookies;
   const { headers } = req;
   const headerCookie =
     (headers && headers.cookie) || (req && req.getHeader('Cookie'));

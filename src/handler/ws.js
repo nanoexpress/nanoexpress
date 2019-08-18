@@ -1,32 +1,34 @@
-import { ws as wsWrapper } from '../wrappers';
+import { headers, cookies, queries, params } from '../normalizers';
+
+import Events from '@dalisoft/events';
+
+const __wsProto__ = Events.prototype;
 
 export default (path, options = {}, fn, config, ajv) => {
-  // If users just opens WebSocket
-  // without any parameters
-  // we just normalize it for users
   if (typeof options === 'function' && !fn) {
     fn = options;
     options = {};
   }
 
   let validator = null;
+  const { schema } = options;
 
-  if (options.compression === undefined) {
-    options.compression = 0;
-  }
-  if (options.maxPayloadLength === undefined) {
-    options.maxPayloadLength = 16 * 1024 * 1024;
-  }
-  if (options.idleTimeout === undefined) {
-    options.idleTimeout = 120;
-  }
-  if (options.schema !== undefined) {
+  Object.assign(
+    options,
+    {
+      compression: 0,
+      maxPayloadLength: 16 * 1024 * 1024,
+      idleTimeout: 120
+    },
+    options
+  );
+  if (schema) {
     if (!ajv) {
       config.setAjv();
       ajv = config.ajv;
     }
     if (ajv) {
-      validator = ajv.compile(options.schema);
+      validator = ajv.compile(schema);
     }
   }
 
@@ -36,9 +38,39 @@ export default (path, options = {}, fn, config, ajv) => {
       // For future usage
       req.rawPath = path;
 
-      const request = wsWrapper.request(req, ws);
-      const websocket = wsWrapper.ws(ws);
-      fn(request, websocket);
+      if (!req.headers) {
+        req.headers =
+          !schema || schema.headers !== false
+            ? headers(req, req.headers, schema && schema.headers)
+            : req.headers;
+      }
+      if (!req.cookies) {
+        req.cookies =
+          !schema || schema.cookies !== false
+            ? cookies(req, req.cookies, schema && schema.cookies)
+            : req.cookies;
+      }
+      if (!req.params) {
+        req.params =
+          !schema || schema.params !== false
+            ? params(req, req.params, schema && schema.params)
+            : req.params;
+      }
+      if (!req.query) {
+        req.query =
+          !schema || schema.query !== false
+            ? queries(req, req.query, schema && schema.query)
+            : req.query;
+      }
+      if (!ws.___events) {
+        ws.on = __wsProto__.on;
+        ws.once = __wsProto__.once;
+        ws.off = __wsProto__.off;
+        ws.emit = __wsProto__.emit;
+
+        ws.___events = [];
+      }
+      fn(req, ws);
     },
     message: (ws, message, isBinary) => {
       if (!isBinary) {

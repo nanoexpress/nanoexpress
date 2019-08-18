@@ -1,3 +1,4 @@
 const passportInitialize = require('./passport');
+const reDoc = require('./redoc');
 
-module.exports = { passportInitialize };
+module.exports = { passportInitialize, reDoc };

@@ -4,14 +4,13 @@ export default function stob(stream) {
     stream.on('data', buffers.push.bind(buffers));
 
     stream.on('end', () => {
-      switch (buffers.length) {
-      case 0:
+      const buffLen = buffers.length;
+
+      if (buffLen === 0) {
         resolve(Buffer.allocUnsafe(0));
-        break;
-      case 1:
+      } else if (buffLen === 1) {
         resolve(buffers[0]);
-        break;
-      default:
+      } else {
         resolve(Buffer.concat(buffers));
       }
     });

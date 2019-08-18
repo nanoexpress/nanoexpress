@@ -1,4 +1,5 @@
 const nanoexpress = require('..');
+const reDoc = require('../src/packed/middlewares/redoc');
 
 const app = nanoexpress({
   swagger: {
@@ -51,11 +52,9 @@ app.get(
       }
     }
   },
-  async () => ({ hello: 'world' })
+  (req, res) => res.send({ hello: 'world' })
 );
 
-app.get('/docs', (req, res) => {
-  res.sendFile(__dirname + '/swagger-redoc.html');
-});
+app.use(reDoc());
 
 app.listen(4040);
