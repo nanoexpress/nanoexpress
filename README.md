@@ -16,9 +16,10 @@ Nano-framework for Node.js powered by uWebSockets.js
 - This branch (PRO) is differs from master/dev branches
 - This branch is paid for commercial products if sources are closed
 
-## NOTE
+## Requires
 
-**Requires**: Node.js v10 or greater
+- Node.js v10 or greater
+- developer, already worked with nanoexpress before
 
 ## Benchmarks
 
@@ -39,12 +40,6 @@ Benchmarked on my macBook Pro 2012 13" (Core i5, 8Gb RAM) performance.
 _You can install `wrk` via `Homebrew` in `macOS` or `Linux`_
 
 **Benchmark command**: `wrk -t4 -d100 -c10`
-
-## Motiviation
-
-I've long-time planned somehow create own Express-like alternative Node.js framework, then seen uWebSockets.js. Almost 2 month i've think how do this right and decided to create Node.js framework with almost same as Express API.
-
-This library makes very thin layer between uWebSockets.js and your code. But, gives you very Familiar and Clean API. Async/Await supported out-of-the-box!
 
 ## Features
 
