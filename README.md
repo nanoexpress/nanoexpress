@@ -68,12 +68,11 @@ This library makes very thin layer between uWebSockets.js and your code. But, gi
 
 ## Examples
 
-All examples are lives [here](https://github.com/dalisoft/nanoexpress/tree/master/examples)
+All examples are lives [here](https://github.com/dalisoft/nanoexpress/tree/pro/examples)
 
 ## Credits
 
 - [uWebSockets.js](https://github.com/uNetworking/uWebSockets.js)
-- [Siffr Server](https://github.com/sifrr/sifrr/tree/master/packages/server/sifrr-server)
 - [fast-json-stringify](https://github.com/fastify/fast-json-stringify)
 - [ajv](https://ajv.js.org)
 - [cookie](https://github.com/jshttp/cookie#readme)
