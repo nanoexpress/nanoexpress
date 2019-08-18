@@ -3,24 +3,18 @@
 [![Greenkeeper badge](https://badges.greenkeeper.io/dalisoft/nanoexpress.svg)](https://greenkeeper.io/)
 [![Travis](https://img.shields.io/travis/dalisoft/nanoexpress.svg)](http://github.com/dalisoft/nanoexpress)
 [![Code Climate](https://codeclimate.com/github/dalisoft/nanoexpress/badges/gpa.svg)](https://codeclimate.com/github/dalisoft/nanoexpress)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/dalisoft/nanoexpress/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/dalisoft/nanoexpress/?branch=master)
-[![Coverage Status](https://coveralls.io/repos/github/dalisoft/nanoexpress/badge.svg?branch=master)](https://coveralls.io/github/dalisoft/nanoexpress?branch=master)
-[![NPM Downloads](https://img.shields.io/npm/dm/nanoexpress.svg)](https://npmjs.org/package/nanoexpress)
-[![NPM Version](https://img.shields.io/npm/v/nanoexpress.svg)](https://npmjs.org/package/nanoexpress)
-[![size](https://img.badgesize.io/https://unpkg.com/nanoexpress)](http://unpkg.com/nanoexpress)
-[![gzipsize](https://img.badgesize.io/https://unpkg.com/nanoexpress?compression=gzip)](http://unpkg.com/nanoexpress)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/dalisoft/nanoexpress/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/dalisoft/nanoexpress/?branch=pro)
+[![Coverage Status](https://coveralls.io/repos/github/dalisoft/nanoexpress/badge.svg?branch=pro)](https://coveralls.io/github/dalisoft/nanoexpress?branch=pro)
 
 Nano-framework for Node.js powered by uWebSockets.js
 
-Documentation available [here](https://github.com/dalisoft/nanoexpress/blob/master/docs/index.md)
-
-_If you want **Suport** me, please see [Support](#support) section_
-
-_See [**Credits**](#credits) if you want which libraries i've used_
+Documentation available [here](https://github.com/dalisoft/nanoexpress/blob/pro/docs/index.md)
 
 ## Warning
 
-This library does not support HTTP2!
+- This library does not support HTTP2!
+- This branch (PRO) is differs from master/dev branches
+- This branch is paid for commercial products if sources are closed
 
 ## NOTE
 
@@ -34,8 +28,8 @@ This library up to 25% slower than `uWebSockets.js` on normal and complex applic
 
 We [available](https://github.com/the-benchmarker/web-frameworks) in web-frameworks!
 
-![Benchmarks](https://github.com/dalisoft/nanoexpress/raw/master/.github/images/benchmark.png)
-![Memory Usage](https://github.com/dalisoft/nanoexpress/raw/master/.github/images/memory.png)
+![Benchmarks](https://github.com/dalisoft/nanoexpress/raw/pro/.github/images/benchmark.png)
+![Memory Usage](https://github.com/dalisoft/nanoexpress/raw/pro/.github/images/memory.png)
 
 Benchmarked on my macBook Pro 2012 13" (Core i5, 8Gb RAM) performance.
 
@@ -76,67 +70,6 @@ This library makes very thin layer between uWebSockets.js and your code. But, gi
 
 All examples are lives [here](https://github.com/dalisoft/nanoexpress/tree/master/examples)
 
-## Built-in Middlewares
-
-Built-in middlewares implemented at layer-level for performance reason and enables automacilly when needed, not always
-
-- `cookie`
-- `body-parser`
-- `express-ws` (for comparing, uWS has built-in support at core-level)
-- `fast-json-stringify` (for serialization)
-- `express-ajv` (for comparing, for validation, this library does it at layer-level)
-- `express-declarative-routing` (for comparing, this library does it at layer-level)
-
-## In-box Middlewares
-
-I'm excluded in-box modules from initialization for performance reason
-
-### How-to import
-
-```js
-import { middlewares } from 'nanoexpress/packed';
-// or import { passportInitialize } from 'nanoexpress/packed/middlewares';
-
-const app = nanoexpress();
-app.use(middlewares.passportInitialize()); // or app.use(passportInitialize());
-```
-
-- `passport`
-
-## Working Middlewares
-
-- `body-parser` (yes, if you don't want built-in)
-- `express-fileupload`
-- `cors` (yes, `express` `cors` middleware)
-- `express-jwt`
-- `express-session`
-- `express-graphql`
-- `passport`
-
-## Docker Support
-
-If you using `alpine` or `slim` version of `node` images, some errors may happen and you can fix with this minimal guide
-
-### Requires
-
-- git
-
-#### For `git` missing error
-
-```Dockerfile
-# FROM ...
-RUN apk update && apk add --no-cache git
-# your scripts
-```
-
-#### For `Alpine` incompatible error
-
-```Dockerfile
-# your scripts
-RUN ln -s /lib/libc.musl-x86_64.so.1 /lib/ld-linux-x86-64.so.2
-CMD ["node", "server.js"]
-```
-
 ## Credits
 
 - [uWebSockets.js](https://github.com/uNetworking/uWebSockets.js)
@@ -149,17 +82,4 @@ And to other libraries which used to create this library and without these libra
 
 ## License
 
-[![license](https://img.shields.io/github/license/dalisoft/nanoexpress.svg)](https://github.com/dalisoft/nanoexpress/blob/master/LICENSE)
-
-## Support
-
-[![Beerpay](https://img.shields.io/beerpay/dalisoft/nanoexpress.svg)](https://beerpay.io/dalisoft/nanoexpress/)
-[![GitHub issues](https://img.shields.io/github/issues/dalisoft/nanoexpress.svg)](http://github.com/dalisoft/nanoexpress/issues)
-
-- Star project
-- Fork project
-- Add Tests to Project
-- Watch project
-- Report bugs
-- Fix issue
-- Make PR
+This project is licensed under GPL-3.0 license and if you want use this on commercial projects with closed sources, you should contact to me via dalisoft@mail.ru for getting license

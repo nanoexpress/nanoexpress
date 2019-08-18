@@ -10,7 +10,9 @@ For example please see [this](https://github.com/dalisoft/nanoexpress/tree/maste
 
 ## Warning
 
-This library does not support HTTP2!
+- This library does not support HTTP2!
+- This branch (PRO) is differs from master/dev branches
+- This branch is paid for commercial products if sources are closed
 
 ## Table of Contents
 
@@ -27,3 +29,7 @@ This library does not support HTTP2!
 11. [Benchmark](./benchmark.md)
 12. [Testing](./testing.md)
 13. [Support](./support.md)
+
+## License
+
+This project is licensed under GPL v3.0 license and if you want use this on commercial projects with closed sources, you should contact to me via dalisoft@mail.ru for getting license

@@ -31,34 +31,11 @@ const app = nanoexpress();
 app.use(middlewares.passportInitialize()); // or app.use(passportInitialize());
 ```
 
-#### Available middlewares
+#### Packed middlewares
 
 - `passport`
-
-## Async middlewares
-
-### Basic example
-
-```js
-app.use(async (req) => {
-  req.appId = 'MY_APP_ID';
-});
-```
-
-### Method defining
-
-```js
-function lazyEnd(end) {
-  setTimeout(() => this.end(end), 0);
-}
-app.use(async (req, res) => {
-  res.lazyEnd = lazyEnd;
-});
-```
-
-## Express/Connect like middlewares
-
-Performance tip: _This library target is out-of-the-box async support and works good, but we recommend using `sync` aka Express/Connect like method for performance reason_
+- `redoc`
+- `static`
 
 ### Tested Express/Connect like Middlewares
 
@@ -95,7 +72,7 @@ app.use((req, res, next) => {
 
 ## Error handling
 
-Error which comes from Middleware automacilly will be handled by `nanoexpress`
+Error which comes from Middleware automacilly will be handled by `nanoexpress`, but not always and may not work stable
 
 [&laquo; Getting started](./get-started.md)
 

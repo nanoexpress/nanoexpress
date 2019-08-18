@@ -74,7 +74,7 @@ export default class Route {
 
     return this;
   }
-  _handleNext(err, done) {
+  _handleNext(err, done = true) {
     const { _config, _req, _res } = this;
 
     if (err) {

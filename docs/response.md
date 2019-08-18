@@ -1,8 +1,6 @@
 # Response
 
-Performance tip: _If you want to your app be faster, please consider using [schemas](./schema.md)_
-
-Performance tip #2: _If you not using these methods, especially `body`, your app will response faster, because these properties takes time parse_
+Performance tip: _If you want to your app be faster, please consider using [schemas](./schema.md) for serilization which improves RPS by 3-5%_
 
 ## Methods
 

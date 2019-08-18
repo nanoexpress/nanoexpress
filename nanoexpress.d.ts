@@ -119,7 +119,8 @@ declare namespace nanoexpress {
     cookies: boolean | SchemaValue;
     query: boolean | SchemaValue;
     params: boolean | SchemaValue;
-    body: string | SchemaValue;
+    body: string | boolean | SchemaValue;
+    response: boolean | SchemaValue;
   }
   interface MiddlewareOption {
     schema?: Schema;
@@ -141,8 +142,7 @@ declare namespace nanoexpress {
 
   export interface AppConfig {
     config: {
-      set(key: string, value: any): void;
-      get(key: string): any;
+      [key: string]: any;
     };
   }
 
@@ -173,16 +173,16 @@ declare namespace nanoexpress {
       staticOptions?: StaticOptions
     ): nanoexpressApp;
     use(path: string | Middleware, ...fns: Middleware[]): nanoexpressApp;
-    get(path: string, ...fns: Middleware[]): nanoexpressApp;
-    post(path: string, ...fns: Middleware[]): nanoexpressApp;
-    put(path: string, ...fns: Middleware[]): nanoexpressApp;
-    patch(path: string, ...fns: Middleware[]): nanoexpressApp;
-    del(path: string, ...fns: Middleware[]): nanoexpressApp;
-    options(path: string, ...fns: Middleware[]): nanoexpressApp;
-    head(path: string, ...fns: Middleware[]): nanoexpressApp;
-    trace(path: string, ...fns: Middleware[]): nanoexpressApp;
-    any(path: string | Middleware, ...fns: Middleware[]): nanoexpressApp;
-    ws(path: string, ...fns: Middleware[]): nanoexpressApp;
+    get(path: string, schema: Schema, fn: HttpRoute): nanoexpressApp;
+    post(path: string, schema: Schema, fn: HttpRoute): nanoexpressApp;
+    put(path: string, schema: Schema, fn: HttpRoute): nanoexpressApp;
+    patch(path: string, schema: Schema, fn: HttpRoute): nanoexpressApp;
+    del(path: string, schema: Schema, fn: HttpRoute): nanoexpressApp;
+    options(path: string, schema: Schema, fn: HttpRoute): nanoexpressApp;
+    head(path: string, schema: Schema, fn: HttpRoute): nanoexpressApp;
+    trace(path: string, schema: Schema, fn: HttpRoute): nanoexpressApp;
+    any(path: string, schema: Schema, fn: HttpRoute): nanoexpressApp;
+    ws(path: string, schema: Schema, fn: WsRoute): nanoexpressApp;
     listen(port: number, host?: string): Promise<nanoexpressApp>;
     close(): boolean;
     setErrorHandler(
@@ -192,12 +192,6 @@ declare namespace nanoexpress {
         res: HttpResponse
       ) => HttpResponse
     ): nanoexpressApp;
-    setNotFoundHandler(
-      notFoundHandlerCallback: (
-        res: HttpRequestBasic,
-        req: HttpRequestBasic
-      ) => HttpRequestBasic
-    ): nanoexpressApp;
     setValidationErrorHandler(
       validationErrorHandlerCallback: (
         errors: validationErrors,
@@ -205,10 +199,6 @@ declare namespace nanoexpress {
         res: HttpResponse
       ) => any
     ): nanoexpressApp;
-    register(
-      appModuleRegisterCallback: (app: nanoexpressApp) => any
-    ): nanoexpressApp;
-    define(prefix: string, routes?: AppRoutes): nanoexpressApp;
     config: AppConfig;
   }
 

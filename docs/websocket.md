@@ -14,16 +14,6 @@ app.ws('/', (req, ws) => {
 });
 ```
 
-## Raw example
-
-Note: _Any polyfilled methods unavailable here, But performance may shock you!_
-
-```js
-app.ws('/', { isRaw: true }, (req, ws) => {
-  // do something...
-});
-```
-
 ## Schema example
 
 Note: _This option gives you better safety with validating messages_

@@ -8,11 +8,9 @@
 - `body`
 - `cookies`
 
-Performance tip: _If you want to your app be faster, please consider using [schemas](./schema.md)_
+Performance tip: _If you want to your app be faster, please consider using [schemas](./schema.md) for serilization which improves RPS by 3-5%_
 
-Performance tip #2: _If you not using these properties, especially `body`, your app will response faster, because these properties takes time parse_
-
-Note: _`req.originalUrl`, `req.baseUrl` is not same as `express` properties, just alias to `req.url`, currently does not have fix, any PR would be great_
+Performance tip #2: _If you not using these properties, especially `body` and `headers`, your app response becomes faster, because these properties takes time for parse_
 
 ## Headers example
 
@@ -49,7 +47,7 @@ app.get('/user', async (req) => {
 
 ## Body example
 
-Bonus: _nanoexpress handles body-parsing for you very fast_
+Bonus: _nanoexpress handles body-parsing for you faster than any external middleware and even without external middleware_
 
 ```js
 app.post('/user', async (req) => {

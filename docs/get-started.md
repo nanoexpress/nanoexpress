@@ -4,7 +4,9 @@ Thanks for choosing `nanoexpress` as backend server
 
 ## Warning
 
-This library does not support HTTP2!
+- This library does not support HTTP2!
+- This branch (PRO) is differs from master/dev branches
+- This branch is paid for commercial products if sources are closed
 
 ## Install
 
@@ -82,8 +84,7 @@ const cors = require('cors');
 
 const app = nanoexpress();
 
-// This is only way to apply this plugin and related to only CORS plugin
-app.options('/*', cors());
+app.use(cors());
 
 app.listen(4000);
 ```
@@ -95,13 +96,9 @@ const nanoexpress = require('nanoexpress');
 
 const app = nanoexpress();
 
-app.use(async (req) => {
-  req.time = Date.now();
-});
-// or sync variant (aka Express/Connect variant)
 app.use((req, res, next) => {
   req.time = Date.now();
-  next();
+  next(null, true);
 });
 
 app.listen(4000);
