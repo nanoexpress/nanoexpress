@@ -26,10 +26,14 @@ This library up to 25% slower than `uWebSockets.js` on normal and complex applic
 
 ## Benchmarks
 
-We [available](https://github.com/the-benchmarker/web-frameworks) in web-frameworks!
+We [available](https://github.com/the-benchmarker/web-frameworks) in web-frameworks, but not this branch!
 
-![Benchmarks](https://github.com/dalisoft/nanoexpress/raw/pro/.github/images/benchmark.png)
-![Memory Usage](https://github.com/dalisoft/nanoexpress/raw/pro/.github/images/memory.png)
+| Library        | RPS   | Memory |
+| -------------- | ----- | ------ |
+| uWebSockets.js | 2M    | 80Mb   |
+| nanoexpress    | 1.79M | 180Mb  |
+| Raw HTTP       | 1.03M | 290Mb  |
+| express        | 654K  | 430Mb  |
 
 Benchmarked on my macBook Pro 2012 13" (Core i5, 8Gb RAM) performance.
 
@@ -37,7 +41,7 @@ Benchmarked on my macBook Pro 2012 13" (Core i5, 8Gb RAM) performance.
 
 _You can install `wrk` via `Homebrew` in `macOS` or `Linux`_
 
-**Benchmark command**: `wrk -t1 -d60 -c100`
+**Benchmark command**: `wrk -t4 -d100 -c10`
 
 ## Motiviation
 
