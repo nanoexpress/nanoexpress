@@ -145,10 +145,6 @@ export default class Route {
     routeFunction.validation =
       exactlySchema && prepareValidation(this._ajv, exactlySchema);
 
-    if (_config && _config.swagger && schema) {
-      prepareSwaggerDocs(_config.swagger, path, method, schema);
-    }
-
     routeFunction.discard =
       /res\.(json|s?end|cork|sendFile)/g.test(routeFunction.toString()) ||
       routeFunction.toString().indexOf('next') === -1;
@@ -159,6 +155,10 @@ export default class Route {
       routeFunction.path.indexOf(this._baseUrl) === -1
     ) {
       routeFunction.path = this._baseUrl + routeFunction.path;
+    }
+
+    if (_config && _config.swagger && schema) {
+      prepareSwaggerDocs(_config.swagger, routeFunction.path, method, schema);
     }
 
     if (!this._config.strictPath && routeFunction.path) {

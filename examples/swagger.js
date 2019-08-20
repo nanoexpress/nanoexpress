@@ -59,7 +59,20 @@ app.get(
 const barRoute = new Route();
 app.use('/foo', barRoute);
 
-barRoute.get('/bar', (req, res) => res.send({ foo: 'bar' }));
+barRoute.get(
+  '/bar',
+  {
+    schema: {
+      response: {
+        type: 'object',
+        properties: {
+          foo: { type: 'string' }
+        }
+      }
+    }
+  },
+  (req, res) => res.send({ foo: 'bar' })
+);
 
 app.use(reDoc());
 
