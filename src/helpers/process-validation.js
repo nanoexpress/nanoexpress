@@ -2,23 +2,25 @@ export default (req, res, config, { validationStringify, validation } = {}) => {
   if (validationStringify) {
     let errors;
     for (let i = 0, len = validation.length; i < len; i++) {
-      const { type, validator } = validation[i];
+      const { type, validator, schema } = validation[i];
 
       const reqValue = req[type];
 
       if (reqValue === undefined) {
-        if (!errors) {
-          errors = {
-            type: 'errors',
-            errors: { [type]: ['value is not defined'] }
-          };
-        } else {
-          const _errors = errors.errors;
-
-          if (_errors[type]) {
-            _errors[type].push('value is not defined');
+        if (schema && schema.required) {
+          if (!errors) {
+            errors = {
+              type: 'errors',
+              errors: { [type]: ['value is not defined'] }
+            };
           } else {
-            _errors[type] = ['value is not defined'];
+            const _errors = errors.errors;
+
+            if (_errors[type]) {
+              _errors[type].push('value is not defined');
+            } else {
+              _errors[type] = ['value is not defined'];
+            }
           }
         }
         continue;

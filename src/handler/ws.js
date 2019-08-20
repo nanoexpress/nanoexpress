@@ -4,7 +4,7 @@ import Events from '@dalisoft/events';
 
 const __wsProto__ = Events.prototype;
 
-export default (path, options = {}, fn, config, ajv) => {
+export default (path, options = {}, fn, ajv) => {
   if (typeof options === 'function' && !fn) {
     fn = options;
     options = {};
@@ -31,8 +31,11 @@ export default (path, options = {}, fn, config, ajv) => {
   return {
     ...options,
     open: (ws, req) => {
-      // For future usage
       req.rawPath = path;
+      req.path = req.getUrl();
+      req.baseUrl = '';
+      req.originalUrl = req.path;
+      req.url = req.path;
 
       if (!req.headers) {
         req.headers =
@@ -77,21 +80,21 @@ export default (path, options = {}, fn, config, ajv) => {
           if (message.indexOf('[') === 0 || message.indexOf('{') === 0) {
             if (message.indexOf('[object') === -1) {
               message = JSON.parse(message);
+
+              const valid = validator(message);
+              if (!valid) {
+                ws.emit(
+                  'message',
+                  {
+                    type: 'websocket.message',
+                    errors: validator.errors.map((err) => err.message)
+                  },
+                  isBinary
+                );
+                return;
+              }
             }
           }
-        }
-
-        const valid = validator(message);
-        if (!valid) {
-          ws.emit(
-            'message',
-            {
-              type: 'websocket.message',
-              errors: validator.errors.map((err) => err.message)
-            },
-            isBinary
-          );
-          return;
         }
       }
       ws.emit('message', message, isBinary);

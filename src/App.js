@@ -1,5 +1,6 @@
 import uWS from 'uWebSockets.js';
 
+import wsHandler from './handler/ws';
 import { httpMethods } from './helpers';
 
 export default class App {
@@ -74,10 +75,12 @@ export default class App {
 
     return this;
   }
-  ws(path, options, fn) {
+  ws(path, options, wsConfig) {
     this._app.ws(
       path,
-      options && options.isRaw ? (ws, req) => fn(req, ws) : fn
+      options && options.isRaw
+        ? wsConfig
+        : wsHandler(path, options, wsConfig, this._config.ajv)
     );
 
     return this;

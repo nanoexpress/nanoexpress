@@ -68,7 +68,7 @@ export default (ajv, schema) => {
         } else {
           if (ajv) {
             const validator = ajv.compile(_schema);
-            validation.push({ type, validator });
+            validation.push({ type, validator, schema: _schema });
             if (!validationStringify) {
               validationStringify = fastJson(validationSchema);
             }

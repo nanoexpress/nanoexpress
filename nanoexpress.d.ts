@@ -122,6 +122,12 @@ declare namespace nanoexpress {
     body: string | boolean | SchemaValue;
     response: boolean | SchemaValue;
   }
+  export interface WebSocketOptions {
+    compression?: number;
+    maxPayloadLength?: number;
+    idleTimeout?: number;
+    schema?: Schema;
+  }
   interface MiddlewareOption {
     schema?: Schema;
     isRaw?: boolean;
@@ -182,7 +188,7 @@ declare namespace nanoexpress {
     head(path: string, schema: Schema, fn: HttpRoute): nanoexpressApp;
     trace(path: string, schema: Schema, fn: HttpRoute): nanoexpressApp;
     any(path: string, schema: Schema, fn: HttpRoute): nanoexpressApp;
-    ws(path: string, schema: Schema, fn: WsRoute): nanoexpressApp;
+    ws(path: string, options: WebSocketOptions, fn: WsRoute): nanoexpressApp;
     listen(port: number, host?: string): Promise<nanoexpressApp>;
     close(): boolean;
     setErrorHandler(
