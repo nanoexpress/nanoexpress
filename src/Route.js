@@ -134,6 +134,7 @@ export default class Route {
           })
           .catch(next);
       };
+      // Maybe we later use this property
       routeFunction.async = true;
     }
 
@@ -325,16 +326,7 @@ export default class Route {
                       return;
                     }
 
-                    const callback = routeFunction(
-                      req,
-                      res,
-                      this._handleNext,
-                      this._next
-                    );
-
-                    if (routeFunction.async) {
-                      return callback;
-                    }
+                    routeFunction(req, res, this._handleNext, this._next);
                   }
                 });
               } else {
@@ -350,16 +342,7 @@ export default class Route {
                   return;
                 }
 
-                const callback = routeFunction(
-                  req,
-                  res,
-                  this._handleNext,
-                  this._next
-                );
-
-                if (routeFunction.async) {
-                  return callback;
-                }
+                routeFunction(req, res, this._handleNext, this._next);
               }
             }
           }
