@@ -13,9 +13,12 @@ import Route from 'nanoexpress/src/Route';
 
 const route = new Router();
 
-route.get('/', async () => 'hello world');
-
+// To working properly, first apply `app.use(route)`
+// and then set `route.get(...)`, else this not works
+// properly yet
 app.use(route);
+
+route.get('/', async () => 'hello world');
 ```
 
 ## Async route

@@ -1,15 +1,5 @@
+import fastJson from 'fast-json-stringify';
 import isHttpCode from './is-http-code';
-
-let fastJson;
-
-try {
-  fastJson = require('fast-json-stringify');
-} catch (e) {
-  console.error(
-    '[nanoexpress]: `fast-json-stringify` was not found in your dependencies list' +
-      ', please install yourself for this feature working properly'
-  );
-}
 
 const validationMethods = [
   'response',
@@ -24,22 +14,34 @@ const validationSchema = {
   properties: {
     type: { type: 'string' },
     errors: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          type: { type: 'string' },
-          messages: {
-            type: 'array',
-            items: { type: 'string' }
-          }
+      type: 'object',
+      properties: {
+        headers: {
+          type: 'array',
+          items: { type: 'string' }
+        },
+        cookies: {
+          type: 'array',
+          items: { type: 'string' }
+        },
+        query: {
+          type: 'array',
+          items: { type: 'string' }
+        },
+        params: {
+          type: 'array',
+          items: { type: 'string' }
+        },
+        body: {
+          type: 'array',
+          items: { type: 'string' }
         }
       }
     }
   }
 };
 
-export default (ajv, schema, config) => {
+export default (ajv, schema) => {
   const validation = [];
   let validationStringify;
   let responseSchema;
@@ -50,12 +52,6 @@ export default (ajv, schema, config) => {
       const _schema = schema[type];
       if (typeof _schema === 'object' && _schema) {
         if (type === 'response') {
-          if (typeof fastJson !== 'function') {
-            console.error(
-              '[nanoexpress]: `fast-json-stringify` was not initialized properly'
-            );
-            return;
-          }
           const isHttpCodes = Object.keys(_schema).every(isHttpCode);
 
           let newSchema;
@@ -70,12 +66,6 @@ export default (ajv, schema, config) => {
 
           responseSchema = newSchema;
         } else {
-          if (!ajv) {
-            config.setAjv();
-            ajv = config.ajv;
-          } else if (typeof config.configureAjv === 'function') {
-            ajv = config.configureAjv(ajv);
-          }
           if (ajv) {
             const validator = ajv.compile(_schema);
             validation.push({ type, validator });

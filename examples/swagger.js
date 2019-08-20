@@ -1,4 +1,5 @@
 const nanoexpress = require('..');
+const Route = require('../build/Route');
 const reDoc = require('../src/packed/middlewares/redoc');
 
 const app = nanoexpress({
@@ -52,8 +53,13 @@ app.get(
       }
     }
   },
-  (req, res) => res.send({ hello: 'world' })
+  async () => ({ hello: 'world' })
 );
+
+const barRoute = new Route();
+app.use('/foo', barRoute);
+
+barRoute.get('/bar', (req, res) => res.send({ foo: 'bar' }));
 
 app.use(reDoc());
 

@@ -1,18 +1,6 @@
-let cookie;
-
-try {
-  cookie = require('cookie');
-} catch (e) {
-  console.error(
-    '[nanoexpress]: `cookie` was not found in your dependencies list' +
-      ', please install yourself for this feature working properly'
-  );
-}
+import cookie from 'cookie';
 
 export default (req) => {
-  if (!cookie || !cookie.parse) {
-    return;
-  }
   let cookies;
   const { headers } = req;
   const headerCookie =

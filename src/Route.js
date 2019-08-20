@@ -8,9 +8,9 @@ import {
 } from './helpers';
 
 export default class Route {
-  constructor(config = {}, ajv) {
+  constructor(config = {}) {
     this._config = config;
-    this._ajv = ajv;
+    this._ajv = config.ajv;
     this._methods = null;
     this._next = true;
 
@@ -20,6 +20,7 @@ export default class Route {
     this._handleNext = this._handleNext.bind(this);
 
     this._module = true;
+    this._rootLevel = false;
   }
   use(path, ...middlewares) {
     let { _methods } = this;
@@ -34,41 +35,40 @@ export default class Route {
     }
 
     const anyMethodCallbacks = _methods.any;
-    const popLastValue =
-      anyMethodCallbacks.length > 0
-        ? anyMethodCallbacks.pop()
-        : middlewares.length > 0 && middlewares.pop();
 
     anyMethodCallbacks.push(...middlewares);
-
-    if (typeof path === 'function') {
-      anyMethodCallbacks.unshift(path);
-      popLastValue && (popLastValue._baseUrl = '');
-      path._baseUrl = path._baseUrl || '';
-    }
-
-    popLastValue && anyMethodCallbacks.push(popLastValue);
 
     for (let i = 0, len = anyMethodCallbacks.length, callback; i < len; i++) {
       callback = anyMethodCallbacks[i];
       if (!callback) {
-        return;
+        continue;
       }
       if (callback._module) {
         callback._ajv = this._ajv;
-        callback._baseUrl = path;
-      }
-      if (!callback.path) {
+        callback._config = this._config;
+
         if (typeof path === 'string') {
           callback._baseUrl = path;
           callback.path = path;
+        } else {
+          callback._baseUrl = this._baseUrl;
+        }
+      } else if (!callback.path) {
+        if (typeof path === 'string') {
+          callback._baseUrl = path;
+          if (typeof path === 'string') {
+            callback._baseUrl = path;
+          } else {
+            callback._baseUrl = this._baseUrl;
+          }
         } else {
           callback._direct = true;
           callback._baseUrl = '';
         }
       }
       callback.discard =
-        /res\.(json|s?end|cork|sendFile)/g.test(callback.toString()) ||
+        (!callback._module &&
+          /res\.(json|s?end|cork|sendFile)/g.test(callback.toString())) ||
         callback.toString().indexOf('next') === -1;
     }
 
@@ -115,10 +115,6 @@ export default class Route {
       schema = null;
     }
 
-    if (_config && _config.swagger) {
-      prepareSwaggerDocs(_config.swagger, path, method, schema);
-    }
-
     if (
       routeFunction.then ||
       routeFunction.constructor.name === 'AsyncFunction'
@@ -141,19 +137,40 @@ export default class Route {
       routeFunction.async = true;
     }
 
-    if (schema) {
-      schema = schema.schema;
-    }
+    const exactlySchema = (schema && schema.schema) || undefined;
 
     routeFunction.isRaw = isRaw;
     routeFunction.path = path;
-    routeFunction.schema = schema && schema.schema;
+    routeFunction.schema = exactlySchema;
     routeFunction.validation =
-      schema && prepareValidation(this._ajv, schema, this._config);
+      exactlySchema && prepareValidation(this._ajv, exactlySchema);
+
+    if (_config && _config.swagger && schema) {
+      prepareSwaggerDocs(_config.swagger, path, method, schema);
+    }
 
     routeFunction.discard =
       /res\.(json|s?end|cork|sendFile)/g.test(routeFunction.toString()) ||
       routeFunction.toString().indexOf('next') === -1;
+
+    if (
+      this._baseUrl !== '' &&
+      this._module &&
+      routeFunction.path.indexOf(this._baseUrl) === -1
+    ) {
+      routeFunction.path = this._baseUrl + routeFunction.path;
+    }
+
+    if (!this._config.strictPath && routeFunction.path) {
+      if (
+        routeFunction.path.charAt(routeFunction.path.length - 1) !== '/' &&
+        Math.abs(
+          routeFunction.path.lastIndexOf('.') - routeFunction.path.length
+        ) > 5
+      ) {
+        routeFunction.path += '/';
+      }
+    }
 
     methodArray.push(routeFunction);
 
@@ -228,27 +245,6 @@ export default class Route {
 
             if (!this._next) {
               break;
-            }
-
-            if (
-              this._baseUrl !== '' &&
-              this._module &&
-              routeFunction.path.indexOf(this._baseUrl) === -1
-            ) {
-              routeFunction.path = this._baseUrl + routeFunction.path;
-            }
-
-            if (!this._config.strictPath && routeFunction.path) {
-              if (
-                routeFunction.path.charAt(routeFunction.path.length - 1) !==
-                  '/' &&
-                Math.abs(
-                  routeFunction.path.lastIndexOf('.') -
-                    routeFunction.path.length
-                ) > 5
-              ) {
-                routeFunction.path += '/';
-              }
             }
 
             if (
@@ -328,6 +324,7 @@ export default class Route {
                     ) {
                       return;
                     }
+
                     const callback = routeFunction(
                       req,
                       res,
@@ -335,7 +332,7 @@ export default class Route {
                       this._next
                     );
 
-                    if (callback && callback.async) {
+                    if (routeFunction.async) {
                       return callback;
                     }
                   }
@@ -360,7 +357,7 @@ export default class Route {
                   this._next
                 );
 
-                if (callback && callback.async) {
+                if (routeFunction.async) {
                   return callback;
                 }
               }

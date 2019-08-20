@@ -1,5 +1,5 @@
 import { Readable } from 'stream';
-const { parse } = require('querystring');
+import { parse } from 'querystring';
 
 export default async (req, res) => {
   const stream = new Readable();

@@ -23,10 +23,6 @@ export default (path, options = {}, fn, config, ajv) => {
     options
   );
   if (schema) {
-    if (!ajv) {
-      config.setAjv();
-      ajv = config.ajv;
-    }
     if (ajv) {
       validator = ajv.compile(schema);
     }

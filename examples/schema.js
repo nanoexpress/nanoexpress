@@ -7,7 +7,12 @@ app.get(
   {
     schema: {
       headers: false,
-      query: false,
+      query: {
+        type: 'object',
+        properties: {
+          test: { type: 'boolean' }
+        }
+      },
       params: false,
       response: {
         type: 'object',

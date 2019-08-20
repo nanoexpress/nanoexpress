@@ -1,19 +1,6 @@
-let cookie;
-
-try {
-  cookie = require('cookie');
-} catch (e) {
-  console.error(
-    '[nanoexpress]: `cookie` was not found in your dependencies list' +
-      ', please install yourself for this feature working properly'
-  );
-}
+import cookie from 'cookie';
 
 export default function setCookie(name, value, options) {
-  if (!cookie || !cookie.serialize) {
-    return;
-  }
-
   if (options.expires && Number.isInteger(options.expires)) {
     options.expires = new Date(options.expires);
   }

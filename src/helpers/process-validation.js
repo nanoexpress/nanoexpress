@@ -4,21 +4,42 @@ export default (req, res, config, { validationStringify, validation } = {}) => {
     for (let i = 0, len = validation.length; i < len; i++) {
       const { type, validator } = validation[i];
 
-      const valid = validator(req[type]);
+      const reqValue = req[type];
+
+      if (reqValue === undefined) {
+        if (!errors) {
+          errors = {
+            type: 'errors',
+            errors: { [type]: ['value is not defined'] }
+          };
+        } else {
+          const _errors = errors.errors;
+
+          if (_errors[type]) {
+            _errors[type].push('value is not defined');
+          } else {
+            _errors[type] = ['value is not defined'];
+          }
+        }
+        continue;
+      }
+
+      const valid = validator(reqValue);
 
       if (!valid) {
         if (!errors) {
           errors = {
             type: 'errors',
-            errors: [
-              { type, messages: validator.errors.map((err) => err.message) }
-            ]
+            errors: { [type]: validator.errors.map((err) => err.message) }
           };
         } else {
-          errors.errors.push({
-            type,
-            messages: validator.errors.map((err) => err.message)
-          });
+          const _errors = errors.errors;
+
+          if (_errors[type]) {
+            _errors[type].push(...validator.errors.map((err) => err.message));
+          } else {
+            _errors[type] = validator.errors.map((err) => err.message);
+          }
         }
       }
     }

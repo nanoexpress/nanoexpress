@@ -1,3 +1,4 @@
+import commonjs from 'rollup-plugin-commonjs';
 import resolve from 'rollup-plugin-node-resolve';
 
 import pkg from './package.json';
@@ -10,7 +11,8 @@ const plugins = [
     mainFields: ['module', 'main'],
     extensions: ['.mjs', '.js', '.json'],
     exclude: 'node_modules/**'
-  })
+  }),
+  commonjs()
 ];
 const external = dependencies.concat([
   'fs',
@@ -21,6 +23,7 @@ const external = dependencies.concat([
   'stream',
   'util'
 ]);
+
 export default [
   {
     input: './src/static.js',
