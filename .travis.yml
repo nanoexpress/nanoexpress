@@ -10,8 +10,7 @@ node_js:
   - '11'
   - '12'
 install:
-  - npm install
-  - npm i cookie ajv fast-json-stringify
+  - npm ci
 script:
   - npm run lint
   - npm test
