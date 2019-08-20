@@ -19,8 +19,11 @@ export default class App {
     let address = '';
     if (config.host) {
       address += config.https ? 'https://' : 'http://';
-      address += config.host;
-      address += ':' + config.port;
+      address += config.host || 'localhost';
+
+      if (config.port) {
+        address += ':' + config.port;
+      }
     }
 
     return address;
