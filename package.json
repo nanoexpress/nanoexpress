@@ -6,7 +6,7 @@
   "module": "src/nanoexpress.js",
   "typings": "nanoexpress.d.ts",
   "scripts": {
-    "postinstall": "npm ci && npm run build && rm -rf node_modules",
+    "postinstall": "rm -rf node_modules && npm ci && npm run build && rm -rf node_modules",
     "dev": "rollup -c -w",
     "watch": "nodemon build/server.js",
     "watch-dev": "NODE_ENV=development rollup -c -w",
