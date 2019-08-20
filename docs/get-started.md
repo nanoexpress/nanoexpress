@@ -42,6 +42,14 @@ Special route are
 - `app.any(req, res)`
 - `app.options(req, res)`
 
+### Options
+
+There has few options which you can configure
+
+- `strictPath: boolean` - Improves performance little (1%), but disables path normalising
+- `rawRoute: boolean` - Improves performance little (2-3%), but some polyfilled `HttpRequest` and all polyfilled `HttpResponse` methods will be disabled
+- `https: { key_file_name: string, cert_file_name: string }` - Option to enable SSL (https) mode
+
 ### [Basic](../examples/basic.js) server
 
 ```js

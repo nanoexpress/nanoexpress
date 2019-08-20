@@ -195,13 +195,15 @@ export default class Route {
       req.baseUrl = _baseUrl || '';
 
       // Aliases for future usage and easy-access
-      req.__response = res;
-      res.__request = req;
+      if (!_config.rawRoute) {
+        req.__response = res;
+        res.__request = req;
 
-      // Extending proto
-      const { __proto__ } = res;
-      for (const newMethod in HttpResponse) {
-        __proto__[newMethod] = HttpResponse[newMethod];
+        // Extending proto
+        const { __proto__ } = res;
+        for (const newMethod in HttpResponse) {
+          __proto__[newMethod] = HttpResponse[newMethod];
+        }
       }
 
       // Default HTTP Raw Status Code Integer
@@ -215,7 +217,7 @@ export default class Route {
       const bodyAllowedMethod =
         reqMethod === 'post' || reqMethod === 'put' || reqMethod === 'del';
 
-      if (!_config.strictPath) {
+      if (!_config.strictPath && reqPathLength > 1) {
         if (
           req.path.charAt(reqPathLength - 1) !== '/' &&
           Math.abs(req.path.lastIndexOf('.') - req.path.length) > 5
