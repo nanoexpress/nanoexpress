@@ -9,5 +9,3 @@ docs/
 tests/
 src/**/*.test.js
 jest.config.js
-package-lock.json
-yarn.lock
