@@ -11,15 +11,15 @@ export default (req, res, config, { validationStringify, validation } = {}) => {
           if (!errors) {
             errors = {
               type: 'errors',
-              errors: { [type]: ['value is not defined'] }
+              errors: { [type]: [type + ' is not missing'] }
             };
           } else {
             const _errors = errors.errors;
 
             if (_errors[type]) {
-              _errors[type].push('value is not defined');
+              _errors[type].push(type + ' is not missing');
             } else {
-              _errors[type] = ['value is not defined'];
+              _errors[type] = [type + ' is not missing'];
             }
           }
         }
