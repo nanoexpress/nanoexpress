@@ -21,6 +21,8 @@ export default class Route {
 
     this._module = true;
     this._rootLevel = false;
+
+    this._methodCount = 0;
   }
   use(path, ...middlewares) {
     let { _methods } = this;
@@ -32,9 +34,15 @@ export default class Route {
 
     if (!_methods.any) {
       _methods.any = [];
+      this._methodCount += 1;
     }
 
     const anyMethodCallbacks = _methods.any;
+
+    if (typeof path === 'function') {
+      middlewares.unshift(path);
+      path = undefined;
+    }
 
     anyMethodCallbacks.push(...middlewares);
 
@@ -52,18 +60,15 @@ export default class Route {
           callback.path = path;
         } else {
           callback._baseUrl = this._baseUrl;
+          callback._direct = true;
         }
       } else if (!callback.path) {
         if (typeof path === 'string') {
           callback._baseUrl = path;
-          if (typeof path === 'string') {
-            callback._baseUrl = path;
-          } else {
-            callback._baseUrl = this._baseUrl;
-          }
+          callback.path = path;
         } else {
           callback._direct = true;
-          callback._baseUrl = '';
+          callback._baseUrl = this._baseUrl;
         }
       }
       callback.discard =
@@ -100,6 +105,7 @@ export default class Route {
 
     if (!_methods[method]) {
       _methods[method] = [];
+      this._methodCount += 1;
     }
 
     const methodArray = _methods[method];
@@ -183,7 +189,7 @@ export default class Route {
     this._req = req;
     this._res = res;
 
-    const { _methods, _config, _baseUrl } = this;
+    const { _methods, _config, _baseUrl, _methodCount } = this;
 
     if (_methods) {
       req.method = req.method || req.getMethod();
@@ -213,6 +219,8 @@ export default class Route {
       // by avoid re-reference items over again
       let anyRoutesCalled = false;
       let reqPathLength = req.path.length;
+      let methodIndex = 0;
+      let breakRoutes = false;
       const reqMethod = req.method;
       const bodyAllowedMethod =
         reqMethod === 'post' || reqMethod === 'put' || reqMethod === 'del';
@@ -228,6 +236,8 @@ export default class Route {
       }
 
       for (const method in _methods) {
+        methodIndex++;
+
         if (method === 'any' || method === reqMethod) {
           const methodArray = _methods[method];
 
@@ -247,6 +257,7 @@ export default class Route {
             }
 
             if (!this._next) {
+              breakRoutes = true;
               break;
             }
 
@@ -263,10 +274,6 @@ export default class Route {
             }
 
             if (routeFunction._direct || req.path === routeFunction.path) {
-              if (routeFunction.discard) {
-                anyRoutesCalled = true;
-              }
-
               this._next = false;
 
               req.rawPath = routeFunction.path || req.path;
@@ -329,6 +336,10 @@ export default class Route {
                     }
 
                     routeFunction(req, res, this._handleNext, this._next);
+
+                    if (routeFunction.discard) {
+                      anyRoutesCalled = !this._next;
+                    }
                   }
                 });
               } else {
@@ -340,19 +351,23 @@ export default class Route {
                 }
 
                 routeFunction(req, res, this._handleNext, this._next);
-              }
-            } else {
-              if (!anyRoutesCalled && i === len - 1) {
-                if (_config._notFoundHandler) {
-                  _config._notFoundHandler(req, res);
-                } else {
-                  res.writeStatus('404 Not Found');
-                  res.writeHeader('Content-Type', 'application/json');
-                  res.end('{"error": "The route does not exist","code": 404}');
+
+                if (routeFunction.discard) {
+                  anyRoutesCalled = !this._next;
                 }
               }
             }
           }
+        }
+      }
+
+      if (!anyRoutesCalled && (breakRoutes || methodIndex === _methodCount)) {
+        if (_config._notFoundHandler) {
+          _config._notFoundHandler(req, res);
+        } else {
+          res.writeStatus('404 Not Found');
+          res.writeHeader('Content-Type', 'application/json');
+          res.end('{"error": "The route does not exist","code": 404}');
         }
       }
     }
