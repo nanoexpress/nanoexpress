@@ -183,7 +183,7 @@ export default class Route {
     this._req = req;
     this._res = res;
 
-    const { _methods, _config } = this;
+    const { _methods, _config, _baseUrl } = this;
 
     if (_methods) {
       req.method = req.method || req.getMethod();
@@ -192,7 +192,7 @@ export default class Route {
       // Aliases for polyfill
       req.url = req.path;
       req.originalUrl = req.url;
-      req.baseUrl = this._baseUrl || '';
+      req.baseUrl = _baseUrl || '';
 
       // Aliases for future usage and easy-access
       req.__response = res;
@@ -319,7 +319,7 @@ export default class Route {
                       processValidation(
                         req,
                         res,
-                        this._config,
+                        _config,
                         routeFunction.validation
                       )
                     ) {
@@ -332,17 +332,22 @@ export default class Route {
               } else {
                 if (
                   !isRaw &&
-                  processValidation(
-                    req,
-                    res,
-                    this._config,
-                    routeFunction.validation
-                  )
+                  processValidation(req, res, _config, routeFunction.validation)
                 ) {
                   return;
                 }
 
                 routeFunction(req, res, this._handleNext, this._next);
+              }
+            } else {
+              if (!anyRoutesCalled && i === len - 1) {
+                if (_config._notFoundHandler) {
+                  _config._notFoundHandler(req, res);
+                } else {
+                  res.writeStatus('404 Not Found');
+                  res.writeHeader('Content-Type', 'application/json');
+                  res.end('{"error": "The route does not exist","code": 404}');
+                }
               }
             }
           }

@@ -71,6 +71,22 @@ app.get('/', { isRaw: true }, (req, res) => {
 });
 ```
 
+## Error handling example
+
+```js
+app.setErrorHandler((err, req, res) => {
+  if (checkSomething(err)) {
+    res.send(sendSomething());
+  }
+});
+```
+
+Also available these methods
+
+- `app.setErrorHandler(error: Error, req: HttpRequest, res: HttpResponse): HttpResponse`
+- `app.setValidationErrorHandler(errors: ValidationErrors[], req: HttpRequest, res: HttpResponse): HttpResponse`
+- `app.setNotFoundHandler(req: HttpRequest, res: HttpResponse): HttpResponse`
+
 ## Known Issues
 
 Ooops, there no known issues yet

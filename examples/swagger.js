@@ -1,5 +1,4 @@
 const nanoexpress = require('..');
-const Route = require('../build/Route');
 const reDoc = require('../src/packed/middlewares/redoc');
 
 const app = nanoexpress({
@@ -54,24 +53,6 @@ app.get(
     }
   },
   async () => ({ hello: 'world' })
-);
-
-const barRoute = new Route();
-app.use('/foo', barRoute);
-
-barRoute.get(
-  '/bar',
-  {
-    schema: {
-      response: {
-        type: 'object',
-        properties: {
-          foo: { type: 'string' }
-        }
-      }
-    }
-  },
-  (req, res) => res.send({ foo: 'bar' })
 );
 
 app.use(reDoc());

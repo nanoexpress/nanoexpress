@@ -56,6 +56,11 @@ export default class App {
 
     return this;
   }
+  setNotFoundHandler(fn) {
+    this._config._notFoundHandler = fn;
+
+    return this;
+  }
   setValidationErrorHandler(fn) {
     this._config._validationErrorHandler = fn;
 
