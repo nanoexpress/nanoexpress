@@ -1,4 +1,4 @@
-# nanoexpress
+# nanoexpress Pro
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/dalisoft/nanoexpress.svg)](https://greenkeeper.io/)
 [![Travis](https://img.shields.io/travis/dalisoft/nanoexpress.svg)](http://github.com/dalisoft/nanoexpress)
@@ -15,6 +15,8 @@ Nano-framework for Node.js powered by uWebSockets.js
 - This library does not support HTTP2!
 - This branch (PRO) is differs from master/dev branches
 - This branch is paid for commercial products if sources are closed
+
+## For Price, look [here](https://github.com/dalisoft/nanoexpress/issues/29)
 
 ## Requires
 
