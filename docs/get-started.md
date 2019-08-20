@@ -24,6 +24,18 @@ npm install dalisoft/nanoexpress#pro
 yarn add dalisoft/nanoexpress#pro
 ```
 
+> **Note**: For **PRO** version you should do addinational steps to make it working properly
+
+```bash
+cd node_modules/nanoexpress
+npm i
+npm run build
+
+# below code is optional, but useful for docker builds
+rm -rf node_modules
+npm i --prod
+```
+
 ## Let's create server
 
 There few types of method defining, let me show you
