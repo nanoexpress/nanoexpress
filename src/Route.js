@@ -322,24 +322,24 @@ export default class Route {
                   }
                   if (bodyResponse) {
                     req.body = bodyResponse;
+                  }
 
-                    if (
-                      !isRaw &&
-                      processValidation(
-                        req,
-                        res,
-                        _config,
-                        routeFunction.validation
-                      )
-                    ) {
-                      return;
-                    }
+                  if (
+                    !isRaw &&
+                    processValidation(
+                      req,
+                      res,
+                      _config,
+                      routeFunction.validation
+                    )
+                  ) {
+                    return;
+                  }
 
-                    routeFunction(req, res, this._handleNext, this._next);
+                  routeFunction(req, res, this._handleNext, this._next);
 
-                    if (routeFunction.discard) {
-                      anyRoutesCalled = !this._next;
-                    }
+                  if (routeFunction.discard) {
+                    anyRoutesCalled = !this._next;
                   }
                 });
               } else {
