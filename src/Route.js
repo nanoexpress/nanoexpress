@@ -102,11 +102,18 @@ export default class Route {
           });
           _isAbortHandler = true;
         }
-        return _oldRouteFunction(req, res).then((data) => {
-          if (!isAborted) {
-            res.send(data);
-          }
-        });
+        return _oldRouteFunction(req, res)
+          .then((data) => {
+            if (!isAborted) {
+              res.send(data);
+            }
+          })
+          .catch((err) => {
+            if (!isAborted) {
+              res.status(err.code || err.status || 500);
+              res.send({ error: err.message });
+            }
+          });
       };
     }
 
@@ -202,15 +209,15 @@ export default class Route {
       let reqPathLength = req.path.length;
       const isOptions = _canApplyOptions && req.method === 'options';
 
+      res.writeHead.notModified = true;
+
       if (_middlewares && _middlewares.length > 0) {
         for (let i = 0, len = _middlewares.length, middleware; i < len; i++) {
           middleware = _middlewares[i];
 
           if (!_next) {
             if (!finished) {
-              return _handleNext(
-                'Middleware failed while executing middlewares'
-              );
+              _handleNext('Middleware failed while executing middlewares');
             }
             return;
           } else {
@@ -220,11 +227,18 @@ export default class Route {
               req.path.indexOf(middleware._baseUrl) !== -1
             ) {
               middleware.run(res, req);
+              _next = true;
             } else {
               middleware(req, res, _handleNext, _next);
             }
           }
         }
+      }
+
+      // Polyfill for express-session and on-headers module
+      if (!res.writeHead.notModified) {
+        res.writeHead(res.statusCode || res.rawStatusCode, res._headers);
+        res.writeHead.notModified = true;
       }
 
       if (!isOptions && _next && (_direct || !fetchUrl || req.path === path)) {
