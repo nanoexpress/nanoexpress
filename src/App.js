@@ -42,18 +42,15 @@ export default class App {
       this.activateDocs();
     }
 
+    this._routeCalled = false;
+
     return this;
   }
   activateDocs() {
-    this._route._addMethod(
-      'get',
-      '/docs/swagger.json',
-      undefined,
-      (req, res) => {
-        res.writeHeader('Content-Type', 'application/json');
-        res.end(JSON.stringify(this._config.swagger, null, 4));
-      }
-    );
+    this._app.get('/docs/swagger.json', (res) => {
+      res.writeHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify(this._config.swagger, null, 4));
+    });
   }
   setErrorHandler(fn) {
     this._config._errorHandler = fn;
@@ -86,10 +83,15 @@ export default class App {
     return this;
   }
   listen(port, host) {
-    const { _config: config, _app: app } = this;
+    const { _config: config, _app: app, _route: route, _routeCalled } = this;
 
-    // Attach handlers
-    this._app.any('*', this._route.run);
+    if (!_routeCalled && route._middlewares && route._middlewares.length > 0) {
+      console.error(
+        'nanoexpress [Server]: None of middleware will be called until you define route'
+      );
+    } else if (config._notFoundHandler) {
+      this.get('/*', config._notFoundHandler);
+    }
 
     return new Promise((resolve, reject) => {
       if (port === undefined) {
@@ -146,11 +148,35 @@ export default class App {
 for (let i = 0, len = httpMethods.length; i < len; i++) {
   const method = httpMethods[i];
   App.prototype[method] = function(path, ...fns) {
+    const { _app, _route } = this;
+
     if (fns.length > 0) {
       const isRaw = fns.find((fn) => fn.isRaw === true);
       const schema = fns.find((fn) => fn.schema);
 
-      this._route._addMethod(method, path, schema, fns.pop(), isRaw);
+      const _canApplyOptions =
+        method !== 'options' &&
+        method !== 'head' &&
+        method !== 'trace' &&
+        _route._middlewares &&
+        _route._middlewares.length;
+
+      const preparedRouteFunction = _route._prepareMethod(
+        method,
+        path,
+        schema,
+        fns.pop(),
+        isRaw,
+        _canApplyOptions
+      );
+
+      if (_canApplyOptions) {
+        _app.options(path, preparedRouteFunction);
+      }
+
+      _app[method](path, preparedRouteFunction);
+
+      this._routeCalled = true;
     }
     return this;
   };
