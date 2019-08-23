@@ -138,7 +138,7 @@ export default class Route {
         }
         _next = false;
         finished = true;
-        _res.statusCode = err.code || err.status || 403;
+        _res.statusCode = err.code || err.status || 400;
         return _res.send(
           `{"error":"${typeof err === 'string' ? err : err.message}"}`
         );
@@ -231,13 +231,12 @@ export default class Route {
               middleware.run(res, req);
             } else {
               middleware(req, res, _handleNext, _next);
-              _next = false;
             }
           }
         }
       }
 
-      if (_direct || !fetchUrl || req.path === path) {
+      if (_next && (_direct || !fetchUrl || req.path === path)) {
         req.rawPath = path || req.path;
         req.baseUrl = _baseUrl || req.baseUrl;
 
@@ -261,29 +260,18 @@ export default class Route {
             }
             if (bodyResponse) {
               req.body = bodyResponse;
-
-              if (
-                !isRaw &&
-                validation &&
-                validation.validationStringify &&
-                processValidation(req, res, _config, validation)
-              ) {
-                return;
-              }
-
-              routeFunction(req, res);
-            } else {
-              if (
-                !isRaw &&
-                validation &&
-                validation.validationStringify &&
-                processValidation(req, res, _config, validation)
-              ) {
-                return;
-              }
-
-              routeFunction(req, res);
             }
+
+            if (
+              !isRaw &&
+              validation &&
+              validation.validationStringify &&
+              processValidation(req, res, _config, validation)
+            ) {
+              return;
+            }
+
+            routeFunction(req, res);
           });
         } else {
           if (
