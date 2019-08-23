@@ -7,29 +7,25 @@ export default function send(result) {
     this.modifyEnd();
   }
 
-  if (result === null || result === undefined) {
-    this.end('');
+  if (!result) {
+    result = '';
   } else if (typeof result === 'object') {
     this.writeHeader('Content-Type', 'application/json');
 
-    if (this.schema) {
-      const { schema } = this;
+    const { fastJson } = this;
 
-      const schemaWithCode = schema[this.rawStatusCode];
+    if (fastJson) {
+      const fastJsonWithCode = fastJson[this.rawStatusCode];
 
-      if (schemaWithCode) {
-        result = schemaWithCode(result);
+      if (fastJsonWithCode) {
+        result = fastJsonWithCode(result);
       } else {
-        result = schema(result);
+        result = fastJson(result);
       }
     } else {
       result = JSON.stringify(result);
     }
-
-    this.end(result);
-  } else {
-    this.end(result);
   }
 
-  return this;
+  return this.end(result);
 }

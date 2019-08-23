@@ -42,6 +42,7 @@
     "@dalisoft/events": "^0.0.x",
     "ajv": "^6.10.2",
     "cookie": "^0.4.0",
+    "cors": "^2.8.5",
     "fast-json-stringify": "^1.15.4",
     "uWebSockets.js": "github:uNetworking/uWebSockets.js#binaries"
   },

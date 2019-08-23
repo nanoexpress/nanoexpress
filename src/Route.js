@@ -11,189 +11,153 @@ export default class Route {
   constructor(config = {}) {
     this._config = config;
     this._ajv = config.ajv;
-    this._methods = null;
-    this._next = true;
+    this._middlewares = null;
 
     this._baseUrl = '';
 
-    this.run = this.run.bind(this);
-    this._handleNext = this._handleNext.bind(this);
-
     this._module = true;
     this._rootLevel = false;
-
-    this._methodCount = 0;
   }
   use(path, ...middlewares) {
-    let { _methods } = this;
+    let { _middlewares } = this;
 
-    if (!_methods) {
-      _methods = {};
-      this._methods = _methods;
+    if (!_middlewares) {
+      _middlewares = [];
+      this._middlewares = _middlewares;
     }
-
-    if (!_methods.any) {
-      _methods.any = [];
-      this._methodCount += 1;
-    }
-
-    const anyMethodCallbacks = _methods.any;
 
     if (typeof path === 'function') {
       middlewares.unshift(path);
       path = undefined;
     }
 
-    anyMethodCallbacks.push(...middlewares);
+    _middlewares.push(...middlewares);
 
-    for (let i = 0, len = anyMethodCallbacks.length, callback; i < len; i++) {
-      callback = anyMethodCallbacks[i];
-      if (!callback) {
+    for (let i = 0, len = _middlewares.length, middleware; i < len; i++) {
+      middleware = _middlewares[i];
+      if (!middleware) {
         continue;
       }
-      if (callback._module) {
-        callback._ajv = this._ajv;
-        callback._config = this._config;
+      if (middleware._module) {
+        middleware._ajv = this._ajv;
+        middleware._config = this._config;
 
         if (typeof path === 'string') {
-          callback._baseUrl = path;
-          callback.path = path;
+          middleware._baseUrl = path;
+          middleware.path = path;
         } else {
-          callback._baseUrl = this._baseUrl;
-          callback._direct = true;
+          middleware._baseUrl = this._baseUrl;
+          middleware._direct = true;
         }
-      } else if (!callback.path) {
+      } else if (!middleware.path) {
         if (typeof path === 'string') {
-          callback._baseUrl = path;
-          callback.path = path;
+          middleware._baseUrl = path;
+          middleware.path = path;
         } else {
-          callback._direct = true;
-          callback._baseUrl = this._baseUrl;
+          middleware._direct = true;
+          middleware._baseUrl = this._baseUrl;
         }
       }
-      callback.discard =
-        (!callback._module &&
-          /res\.(json|s?end|cork|sendFile)/g.test(callback.toString())) ||
-        callback.toString().indexOf('next') === -1;
+      middleware.discard =
+        (!middleware._module &&
+          /res\.(json|s?end|cork|sendFile)/g.test(middleware.toString())) ||
+        middleware.toString().indexOf('next') === -1;
     }
 
     return this;
   }
-  _handleNext(err, done = true) {
-    const { _config, _req, _res } = this;
+  _prepareMethod(method, path, schema, routeFunction, isRaw, _canApplyOptions) {
+    const { _config, _baseUrl, _middlewares, _module, _rootLevel, _ajv } = this;
 
-    if (err) {
-      if (_config._errorHandler) {
-        return _config._errorHandler(err, _req, _res);
-      }
-      return _res.end(`{error":"${err.message}"}`);
-    } else {
-      this._next = done;
-    }
-
-    this._req = null;
-    this._res = null;
-  }
-  _addMethod(method, path, schema, routeFunction, isRaw = false) {
-    let { _methods } = this;
-    const { _config } = this;
-
-    if (!_methods) {
-      _methods = {};
-      this._methods = _methods;
-    }
-
-    if (!_methods[method]) {
-      _methods[method] = [];
-      this._methodCount += 1;
-    }
-
-    const methodArray = _methods[method];
+    const fetchMethod = method === 'any' || _canApplyOptions;
+    const fetchUrl = path.indexOf(':') !== -1 || (_module && !_rootLevel);
+    let validation = null;
+    let _direct = false;
+    let _schema = null;
+    let isAborted = false;
+    let _isAbortHandler = false;
+    const bodyAllowedMethod =
+      method === 'post' || method === 'put' || method === 'del';
 
     if (typeof path === 'function' && !routeFunction) {
-      path._direct = true;
-
+      _direct = true;
       routeFunction = path;
-    }
-    if (typeof schema === 'function' && !routeFunction) {
+    } else if (typeof schema === 'function' && !routeFunction) {
       routeFunction = schema;
-
       schema = null;
     }
+
+    _schema = (schema && schema.schema) || undefined;
+    validation = _schema && prepareValidation(_ajv, _schema);
 
     if (
       routeFunction.then ||
       routeFunction.constructor.name === 'AsyncFunction'
     ) {
       const _oldRouteFunction = routeFunction;
-      routeFunction = (req, res, next) => {
-        let isAborted = false;
-        res.onAborted(() => {
-          isAborted = true;
+      routeFunction = (req, res) => {
+        if (!_isAbortHandler && !finished) {
+          res.onAborted(() => {
+            isAborted = true;
+          });
+          _isAbortHandler = true;
+        }
+        return _oldRouteFunction(req, res).then((data) => {
+          if (!isAborted) {
+            res.send(data);
+          }
         });
-        return _oldRouteFunction(req, res)
-          .then((data) => {
-            if (!isAborted) {
-              res.send(data);
-            }
-            next(null, data);
-          })
-          .catch(next);
       };
-      // Maybe we later use this property
-      routeFunction.async = true;
     }
 
-    const exactlySchema = (schema && schema.schema) || undefined;
-
-    routeFunction.isRaw = isRaw;
-    routeFunction.path = path;
-    routeFunction.schema = exactlySchema;
-    routeFunction.validation =
-      exactlySchema && prepareValidation(this._ajv, exactlySchema);
-
-    routeFunction.discard =
-      /res\.(json|s?end|cork|sendFile)/g.test(routeFunction.toString()) ||
-      routeFunction.toString().indexOf('next') === -1;
-
-    if (
-      this._baseUrl !== '' &&
-      this._module &&
-      routeFunction.path.indexOf(this._baseUrl) === -1
-    ) {
-      routeFunction.path = this._baseUrl + routeFunction.path;
+    if (_baseUrl !== '' && _module && path.indexOf(_baseUrl) === -1) {
+      path = _baseUrl + path;
     }
 
     if (_config && _config.swagger && schema) {
       prepareSwaggerDocs(_config.swagger, routeFunction.path, method, schema);
     }
 
-    if (!this._config.strictPath && routeFunction.path) {
+    if (!_config.strictPath && path) {
       if (
-        routeFunction.path.charAt(routeFunction.path.length - 1) !== '/' &&
-        Math.abs(
-          routeFunction.path.lastIndexOf('.') - routeFunction.path.length
-        ) > 5
+        path.charAt(path.length - 1) !== '/' &&
+        Math.abs(path.lastIndexOf('.') - path.length) > 5
       ) {
-        routeFunction.path += '/';
+        path += '/';
       }
     }
 
-    methodArray.push(routeFunction);
+    let _next = true;
+    let _req = null;
+    let _res = null;
+    let finished = false;
+    const _handleNext = (err, done = true) => {
+      if (err) {
+        if (_config._errorHandler) {
+          return _config._errorHandler(err, _req, _res);
+        }
+        _next = false;
+        finished = true;
+        _res.statusCode = err.code || err.status || 400;
+        return _res.send(
+          `{"error":"${typeof err === 'string' ? err : err.message}"}`
+        );
+      } else {
+        _next = done;
+      }
+      _req = null;
+      _res = null;
+    };
 
-    return this;
-  }
-  run(res, req) {
-    this._next = true;
+    return (res, req) => {
+      _next = true;
+      _req = req;
+      _res = res;
+      isAborted = false;
 
-    this._req = req;
-    this._res = res;
-
-    const { _methods, _config, _baseUrl, _methodCount } = this;
-
-    if (_methods) {
-      req.method = req.method || req.getMethod();
-      req.path = req.path || req.getUrl();
+      req.rawPath = path;
+      req.method = fetchMethod ? req.getMethod() : method;
+      req.path = fetchUrl ? req.getUrl() : path;
 
       // Aliases for polyfill
       req.url = req.path;
@@ -201,7 +165,7 @@ export default class Route {
       req.baseUrl = _baseUrl || '';
 
       // Aliases for future usage and easy-access
-      if (!_config.rawRoute) {
+      if (!isRaw) {
         req.__response = res;
         res.__request = req;
 
@@ -215,162 +179,115 @@ export default class Route {
       // Default HTTP Raw Status Code Integer
       res.rawStatusCode = 200;
 
-      // Caching value may improve performance
-      // by avoid re-reference items over again
-      let anyRoutesCalled = false;
-      let reqPathLength = req.path.length;
-      let methodIndex = 0;
-      let breakRoutes = false;
-      const reqMethod = req.method;
-      const bodyAllowedMethod =
-        reqMethod === 'post' || reqMethod === 'put' || reqMethod === 'del';
+      // Assign schemas
+      res.fastJson = validation && validation.responseSchema;
 
-      if (!_config.strictPath && reqPathLength > 1) {
-        if (
-          req.path.charAt(reqPathLength - 1) !== '/' &&
-          Math.abs(req.path.lastIndexOf('.') - req.path.length) > 5
-        ) {
-          req.path += '/';
-          reqPathLength += 1;
+      if (!isRaw && _schema !== false) {
+        if (!_schema || _schema.headers !== false) {
+          req.headers = headers(req, _schema && _schema.headers);
+        }
+        if (!_schema || _schema.cookies !== false) {
+          req.cookies = cookies(req, _schema && _schema.cookies);
+        }
+        if (!_schema || _schema.params !== false) {
+          req.params = params(req, _schema && _schema.params);
+        }
+        if (!_schema || _schema.query !== false) {
+          req.query = queries(req, _schema && _schema.query);
         }
       }
 
-      for (const method in _methods) {
-        methodIndex++;
+      // Caching value may improve performance
+      // by avoid re-reference items over again
+      let reqPathLength = req.path.length;
+      const isOptions = _canApplyOptions && req.method === 'options';
 
-        if (method === 'any' || method === reqMethod) {
-          const methodArray = _methods[method];
+      if (_middlewares && _middlewares.length > 0) {
+        for (let i = 0, len = _middlewares.length, middleware; i < len; i++) {
+          middleware = _middlewares[i];
 
-          if (anyRoutesCalled) {
-            break;
+          if (!_next) {
+            if (!finished) {
+              return _handleNext(
+                'Middleware failed while executing middlewares'
+              );
+            }
+            return;
+          } else {
+            if (
+              !isRaw &&
+              middleware._module &&
+              req.path.indexOf(middleware._baseUrl) !== -1
+            ) {
+              middleware.run(res, req);
+            } else {
+              middleware(req, res, _handleNext, _next);
+            }
+          }
+        }
+      }
+
+      if (!isOptions && _next && (_direct || !fetchUrl || req.path === path)) {
+        if (!_config.strictPath && reqPathLength > 1) {
+          if (
+            req.path.charAt(reqPathLength - 1) !== '/' &&
+            Math.abs(req.path.lastIndexOf('.') - req.path.length) > 5
+          ) {
+            req.path += '/';
+            reqPathLength += 1;
+          }
+        }
+
+        req.rawPath = path || req.path;
+        req.baseUrl = _baseUrl || req.baseUrl;
+
+        if (
+          !isRaw &&
+          bodyAllowedMethod &&
+          res.onData &&
+          _schema !== false &&
+          (!_schema || !_schema.body !== false)
+        ) {
+          if (!_isAbortHandler && !finished) {
+            res.onAborted(() => {
+              isAborted = true;
+            });
+            _isAbortHandler = true;
           }
 
-          for (
-            let i = 0, routeFunction, len = methodArray.length;
-            i < len;
-            i++
-          ) {
-            routeFunction = methodArray[i];
-
-            if (!routeFunction) {
-              continue;
+          return body(req, res).then((bodyResponse) => {
+            if (isAborted) {
+              return;
             }
-
-            if (!this._next) {
-              breakRoutes = true;
-              break;
+            if (bodyResponse) {
+              req.body = bodyResponse;
             }
 
             if (
-              !routeFunction.isRaw &&
-              routeFunction._module &&
-              req.path.indexOf(routeFunction._baseUrl) !== -1
+              !isRaw &&
+              validation &&
+              validation.validationStringify &&
+              processValidation(req, res, _config, validation)
             ) {
-              routeFunction.run(res, req);
-              routeFunction._next = true;
-              this._next = true;
-              anyRoutesCalled = true;
-              continue;
+              return;
             }
 
-            if (routeFunction._direct || req.path === routeFunction.path) {
-              this._next = false;
-
-              req.rawPath = routeFunction.path || req.path;
-              req.baseUrl = routeFunction._baseUrl || req.baseUrl;
-
-              const schema = routeFunction.schema;
-              const isRaw = routeFunction.isRaw;
-
-              res.schema =
-                routeFunction.validation &&
-                routeFunction.validation.responseSchema;
-
-              if (!isRaw && !req.headers) {
-                req.headers =
-                  !schema || schema.headers !== false
-                    ? headers(req, req.headers, schema && schema.headers)
-                    : req.headers;
-              }
-              if (!isRaw && !req.cookies) {
-                req.cookies =
-                  !schema || schema.cookies !== false
-                    ? cookies(req, req.cookies, schema && schema.cookies)
-                    : req.cookies;
-              }
-              if (!isRaw && !req.params) {
-                req.params =
-                  !schema || schema.params !== false
-                    ? params(req, req.params, schema && schema.params)
-                    : req.params;
-              }
-              if (!isRaw && !req.query) {
-                req.query =
-                  !schema || schema.query !== false
-                    ? queries(req, req.query, schema && schema.query)
-                    : req.query;
-              }
-
-              if (!isRaw && bodyAllowedMethod && !req.body) {
-                let isAborted = false;
-                res.onAborted(() => {
-                  isAborted = true;
-                });
-                return body(req, res).then((bodyResponse) => {
-                  if (isAborted) {
-                    return;
-                  }
-                  if (bodyResponse) {
-                    req.body = bodyResponse;
-                  }
-
-                  if (
-                    !isRaw &&
-                    processValidation(
-                      req,
-                      res,
-                      _config,
-                      routeFunction.validation
-                    )
-                  ) {
-                    return;
-                  }
-
-                  routeFunction(req, res, this._handleNext, this._next);
-
-                  if (routeFunction.discard) {
-                    anyRoutesCalled = !this._next;
-                  }
-                });
-              } else {
-                if (
-                  !isRaw &&
-                  processValidation(req, res, _config, routeFunction.validation)
-                ) {
-                  return;
-                }
-
-                routeFunction(req, res, this._handleNext, this._next);
-
-                if (routeFunction.discard) {
-                  anyRoutesCalled = !this._next;
-                }
-              }
-            }
-          }
-        }
-      }
-
-      if (!anyRoutesCalled && (breakRoutes || methodIndex === _methodCount)) {
-        if (_config._notFoundHandler) {
-          _config._notFoundHandler(req, res);
+            routeFunction(req, res);
+          });
         } else {
-          res.writeStatus('404 Not Found');
-          res.writeHeader('Content-Type', 'application/json');
-          res.end('{"error": "The route does not exist","code": 404}');
+          if (
+            !isRaw &&
+            validation &&
+            validation.validationStringify &&
+            processValidation(req, res, _config, validation)
+          ) {
+            return;
+          }
+
+          routeFunction(req, res);
         }
       }
-    }
+    };
   }
 }
 

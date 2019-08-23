@@ -7,12 +7,8 @@ app.get(
   {
     schema: {
       headers: false,
-      query: {
-        type: 'object',
-        properties: {
-          test: { type: 'boolean' }
-        }
-      },
+      query: false,
+      cookies: false,
       params: false,
       response: {
         type: 'object',
