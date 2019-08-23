@@ -200,16 +200,7 @@ export default class Route {
       // Caching value may improve performance
       // by avoid re-reference items over again
       let reqPathLength = req.path.length;
-
-      if (!_config.strictPath && reqPathLength > 1) {
-        if (
-          req.path.charAt(reqPathLength - 1) !== '/' &&
-          Math.abs(req.path.lastIndexOf('.') - req.path.length) > 5
-        ) {
-          req.path += '/';
-          reqPathLength += 1;
-        }
-      }
+      const isOptions = _canApplyOptions && req.method === 'options';
 
       if (_middlewares && _middlewares.length > 0) {
         for (let i = 0, len = _middlewares.length, middleware; i < len; i++) {
@@ -236,7 +227,17 @@ export default class Route {
         }
       }
 
-      if (_next && (_direct || !fetchUrl || req.path === path)) {
+      if (!isOptions && _next && (_direct || !fetchUrl || req.path === path)) {
+        if (!_config.strictPath && reqPathLength > 1) {
+          if (
+            req.path.charAt(reqPathLength - 1) !== '/' &&
+            Math.abs(req.path.lastIndexOf('.') - req.path.length) > 5
+          ) {
+            req.path += '/';
+            reqPathLength += 1;
+          }
+        }
+
         req.rawPath = path || req.path;
         req.baseUrl = _baseUrl || req.baseUrl;
 
