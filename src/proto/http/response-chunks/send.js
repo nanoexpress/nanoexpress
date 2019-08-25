@@ -1,12 +1,4 @@
 export default function send(result) {
-  if (this._headers && this.writeHead && !this._headWritten) {
-    this.writeHead(this.statusCode || 200, this._headers);
-    this._headWritten = true;
-  }
-  if ((this.statusCode || this._headers) && !this._modifiedEnd) {
-    this.modifyEnd();
-  }
-
   if (!result) {
     result = '';
   } else if (typeof result === 'object') {

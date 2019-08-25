@@ -4,7 +4,7 @@ export default function writeHead(code, headers) {
     code = 200;
   }
 
-  if (code !== undefined) {
+  if (code !== undefined && code !== 200) {
     this.status(code);
   }
   if (headers !== undefined) {

@@ -11,21 +11,22 @@ export default async (req, res) => {
     return undefined;
   }
 
+  let isAborted = false;
   let body = await new Promise((resolve) => {
     /* Register error cb */
-    if (!res.abortHandler && res.onAborted) {
-      res.onAborted(() => {
-        if (res.stream) {
-          res.stream.destroy();
-        }
-        res.aborted = true;
-        resolve();
-      });
-      res.abortHandler = true;
-    }
+    res.onAborted(() => {
+      if (res.stream) {
+        res.stream.destroy();
+      }
+      isAborted = true;
+      resolve();
+    });
 
     let buffer;
     res.onData((chunkPart, isLast) => {
+      if (isAborted) {
+        return;
+      }
       const chunk = Buffer.from(chunkPart);
       stream.push(
         new Uint8Array(
