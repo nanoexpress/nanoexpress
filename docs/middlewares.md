@@ -56,6 +56,14 @@ app.use((req, res, next) => {
 });
 ```
 
+### Async example
+
+```js
+app.use(async (req, res) => {
+  req.myAsyncWork = await fetchMyThing(req);
+});
+```
+
 ### Method defining
 
 ```js
