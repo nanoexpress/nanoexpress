@@ -81,6 +81,7 @@ describe('body normalize', () => {
   it('body normalize non-empty', async () => {
     const fakeReq = {};
     const fakeRes = {
+      onAborted() {},
       onData(fn) {
         fn(Buffer.from('fake body'), true);
       }
