@@ -1,4 +1,4 @@
-const nanoexpress = require('..');
+import nanoexpress from '../index.mjs';
 const cors = require('../node_modules/cors');
 
 const app = nanoexpress();

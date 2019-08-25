@@ -1,4 +1,4 @@
-const nanoexpress = require('..');
+import nanoexpress from '../index.mjs';
 const staticMiddleware = require('../build/static');
 const { join } = require('path');
 

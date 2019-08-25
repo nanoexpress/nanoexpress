@@ -3,7 +3,8 @@
   "version": "0.2.0",
   "description": "Nano-framework for Node.js powered by uWebSockets.js",
   "type": "module",
-  "main": "src/nanoexpress.js",
+  "main": "index.mjs",
+  "module": "src/nanoexpress.mjs",
   "typings": "nanoexpress.d.ts",
   "scripts": {
     "watch-dev": "NODE_ENV=development rollup -c -w",

@@ -1,4 +1,4 @@
-const nanoexpress = require('..');
+import nanoexpress from '../index.mjs';
 
 function one(req, res, next) {
   req.one = true;

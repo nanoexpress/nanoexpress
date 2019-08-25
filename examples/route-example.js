@@ -1,4 +1,4 @@
-const nanoexpress = require('..');
+import nanoexpress from '../index.mjs';
 const Route = require('../build/Route');
 
 const app = nanoexpress();

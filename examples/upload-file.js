@@ -1,4 +1,4 @@
-const nanoexpress = require('..');
+import nanoexpress from '../index.mjs';
 const fileUpload = require('../node_modules/express-fileupload');
 
 const path = require('path');
