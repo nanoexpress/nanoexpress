@@ -33,7 +33,7 @@ app.use(middlewares.passportInitialize()); // or app.use(passportInitialize());
 
 #### Packed middlewares
 
-- `passport`
+- `passport` (requires `passport` module)
 - `redoc`
 - `static`
 

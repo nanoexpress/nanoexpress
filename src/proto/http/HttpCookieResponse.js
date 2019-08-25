@@ -1,4 +1,4 @@
-import * as HttpCookieResponseChunks from './cookie-chunks';
+import * as HttpCookieResponseChunks from './cookie-chunks/index.js';
 
 const HttpCookieResponse = {
   ...HttpCookieResponseChunks

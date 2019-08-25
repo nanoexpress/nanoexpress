@@ -1,11 +1,17 @@
-import { headers, cookies, queries, params, body } from './normalizers';
-import { HttpResponse } from './proto';
+import {
+  headers,
+  cookies,
+  queries,
+  params,
+  body
+} from './normalizers/index.js';
+import { HttpResponse } from './proto/index.js';
 import {
   prepareSwaggerDocs,
   prepareValidation,
   processValidation,
   httpMethods
-} from './helpers';
+} from './helpers/index.js';
 
 export default class Route {
   constructor(config = {}) {

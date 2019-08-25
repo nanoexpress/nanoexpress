@@ -1,4 +1,4 @@
-import * as HttpResponsePolyfillChunks from './polyfill-chunks';
+import * as HttpResponsePolyfillChunks from './polyfill-chunks/index.js';
 
 const HttpResponsePolyfill = {
   ...HttpResponsePolyfillChunks

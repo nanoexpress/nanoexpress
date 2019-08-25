@@ -1,4 +1,4 @@
-import isHttpCode from './is-http-code';
+import isHttpCode from './is-http-code.js';
 
 export default function swaggerDocsGenerator(
   swaggerDef,

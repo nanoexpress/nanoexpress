@@ -1,10 +1,10 @@
-import sendFile from '../../helpers/send-file';
+import sendFile from '../../helpers/send-file.js';
 
-import * as HttpResponseChunks from './response-chunks';
+import * as HttpResponseChunks from './response-chunks/index.js';
 
-import HttpCookieResponse from './HttpCookieResponse';
-import HttpHeaderResponse from './HttpHeaderResponse';
-import HttpResponsePolyfill from './HttpResponsePolyfill';
+import HttpCookieResponse from './HttpCookieResponse.js';
+import HttpHeaderResponse from './HttpHeaderResponse.js';
+import HttpResponsePolyfill from './HttpResponsePolyfill.js';
 
 const HttpResponse = {
   ...HttpHeaderResponse,

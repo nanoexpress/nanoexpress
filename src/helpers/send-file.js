@@ -1,5 +1,5 @@
-import { getMime } from './mime';
-import stream2Buffer from './stream-to-buffer';
+import { getMime } from './mime.js';
+import stream2Buffer from './stream-to-buffer.js';
 import fs from 'fs';
 import zlib from 'zlib';
 import util from 'util';

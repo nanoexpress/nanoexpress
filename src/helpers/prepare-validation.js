@@ -1,5 +1,5 @@
 import fastJson from 'fast-json-stringify';
-import isHttpCode from './is-http-code';
+import isHttpCode from './is-http-code.js';
 
 const validationMethods = [
   'response',

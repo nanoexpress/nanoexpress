@@ -1,3 +1,3 @@
-import HttpResponse from './HttpResponse';
+import HttpResponse from './HttpResponse.js';
 
 export { HttpResponse };

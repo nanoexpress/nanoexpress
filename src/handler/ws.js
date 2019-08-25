@@ -1,4 +1,4 @@
-import { headers, cookies, queries, params } from '../normalizers';
+import { headers, cookies, queries, params } from '../normalizers/index.js';
 
 import Events from '@dalisoft/events';
 

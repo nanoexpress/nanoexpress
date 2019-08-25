@@ -1,7 +1,7 @@
 import uWS from 'uWebSockets.js';
 
-import wsHandler from './handler/ws';
-import { httpMethods } from './helpers';
+import wsHandler from './handler/ws.js';
+import { httpMethods } from './helpers/index.js';
 
 export default class App {
   get config() {
