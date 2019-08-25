@@ -71,6 +71,16 @@ app.get('/', { isRaw: true }, (req, res) => {
 });
 ```
 
+## noMiddleware example
+
+Note: _All middlewares including globals will be disabled for this route_
+
+```js
+app.get('/', { noMiddleware: true }, (req, res) => {
+  // do something...
+});
+```
+
 ## Error handling example
 
 ```js

@@ -17,6 +17,7 @@ const nanoexpress = (options = {}) => {
 
   // Initialize Route instance
   const routeInstance = new Route(config);
+  routeInstance._app = app;
   routeInstance._rootLevel = true;
 
   // Initialize App instance

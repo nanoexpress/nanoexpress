@@ -164,14 +164,7 @@ for (let i = 0, len = httpMethods.length; i < len; i++) {
     const { _app, _route } = this;
 
     if (fns.length > 0) {
-      const schema = fns.find((fn) => fn.schema);
-
-      const preparedRouteFunction = _route._prepareMethod(
-        method,
-        path,
-        schema,
-        ...fns
-      );
+      const preparedRouteFunction = _route._prepareMethod(method, path, ...fns);
 
       _app[method](path, preparedRouteFunction);
 

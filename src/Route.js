@@ -41,6 +41,7 @@ export default class Route {
       if (middleware._module) {
         middleware._ajv = this._ajv;
         middleware._config = this._config;
+        middleware._app = this._app;
 
         if (typeof path === 'string') {
           middleware._baseUrl = path;
@@ -66,7 +67,7 @@ export default class Route {
 
     return this;
   }
-  _prepareMethod(method, path, schema, ...middlewares) {
+  _prepareMethod(method, path, ...middlewares) {
     const { _config, _baseUrl, _middlewares, _module, _rootLevel, _ajv } = this;
 
     const fetchMethod = method === 'any';
@@ -75,7 +76,6 @@ export default class Route {
     let _direct = false;
     let _schema = null;
     let isAborted = false;
-    let _isAbortHandler = false;
     const bodyAllowedMethod =
       method === 'post' || method === 'put' || method === 'del';
     let responseSchema;
@@ -91,6 +91,12 @@ export default class Route {
         middleware &&
         middleware.noMiddleware === true
     );
+    let schema = middlewares.find(
+      (middleware) =>
+        typeof middleware === 'object' &&
+        middleware &&
+        typeof middleware.schema === 'object'
+    );
 
     middlewares = middlewares.filter(
       (middleware) => typeof middleware === 'function'
@@ -99,6 +105,7 @@ export default class Route {
     if (_middlewares && _middlewares.length > 0) {
       middlewares = _middlewares.concat(middlewares);
     }
+
     if (noMiddleware) {
       middlewares.length = 0;
     }
@@ -124,12 +131,6 @@ export default class Route {
     ) {
       const _oldRouteFunction = routeFunction;
       routeFunction = (req, res) => {
-        if (!_isAbortHandler && !finished) {
-          res.onAborted(() => {
-            isAborted = true;
-          });
-          _isAbortHandler = true;
-        }
         return _oldRouteFunction(req, res)
           .then((data) => {
             if (!isAborted && data && data !== res) {
@@ -148,40 +149,41 @@ export default class Route {
             return null;
           });
       };
-
-      routeFunction.async = true;
     }
 
-    middlewares = middlewares.map((middleware) => {
-      if (middleware.then || middleware.constructor.name === 'AsyncFunction') {
-        // do nothing
-      } else {
-        const _oldMiddleware = middleware;
-        middleware = (req, res) =>
-          new Promise((resolve) => {
-            _oldMiddleware(req, res, (err, done) => {
-              if (err) {
-                finished = true;
-                if (_config._errorHandler) {
-                  return _config._errorHandler(err, req, res);
+    middlewares = middlewares
+      .map((middleware) => {
+        if (middleware._module) {
+          // don't touch, it's Route module
+        } else if (
+          middleware.then ||
+          middleware.constructor.name === 'AsyncFunction'
+        ) {
+          // do nothing
+        } else {
+          const _oldMiddleware = middleware;
+          middleware = (req, res) =>
+            new Promise((resolve) => {
+              _oldMiddleware(req, res, (err, done) => {
+                if (err) {
+                  finished = true;
+                  if (_config._errorHandler) {
+                    return _config._errorHandler(err, req, res);
+                  }
+                  res.statusCode = err.code || err.status || 400;
+                  res.send(
+                    `{"error":"${typeof err === 'string' ? err : err.message}"}`
+                  );
+                  resolve();
+                } else {
+                  resolve(done);
                 }
-                res.statusCode = err.code || err.status || 400;
-                res.send(
-                  `{"error":"${typeof err === 'string' ? err : err.message}"}`
-                );
-                resolve();
-              } else {
-                resolve(done);
-              }
+              });
             });
-          });
-      }
-      return middleware;
-    });
-
-    if (_baseUrl !== '' && _module && path.indexOf(_baseUrl) === -1) {
-      path = _baseUrl + path;
-    }
+        }
+        return middleware;
+      })
+      .filter((middleware) => typeof middleware === 'function');
 
     if (_config && _config.swagger && schema) {
       prepareSwaggerDocs(_config.swagger, routeFunction.path, method, schema);
@@ -263,15 +265,7 @@ export default class Route {
             break;
           }
 
-          if (
-            !isRaw &&
-            middleware._module &&
-            req.path.indexOf(middleware._baseUrl) !== -1
-          ) {
-            await middleware.run(res, req);
-          } else {
-            await middleware(req, res);
-          }
+          await middleware(req, res);
         }
       }
 
@@ -280,9 +274,11 @@ export default class Route {
       }
 
       if (!_config.strictPath && reqPathLength > 1) {
+        const dotIndex = req.path.lastIndexOf('.');
         if (
           req.path.charAt(reqPathLength - 1) !== '/' &&
-          Math.abs(req.path.lastIndexOf('.') - req.path.length) > 5
+          (dotIndex === -1 ||
+            (dotIndex !== -1 && Math.abs(dotIndex - req.path.length)) > 5)
         ) {
           req.path += '/';
           reqPathLength += 1;
@@ -347,7 +343,27 @@ export default class Route {
 
 for (let i = 0, len = httpMethods.length; i < len; i++) {
   const method = httpMethods[i];
-  Route.prototype[method] = function(path, schema, routeFunction, isRaw) {
-    return this._addMethod(method, path, schema, routeFunction, isRaw);
+  Route.prototype[method] = function(path, ...middlewares) {
+    const { _baseUrl, _module, _app, _config } = this;
+
+    if (middlewares.length > 0) {
+      if (_baseUrl !== '' && _module && path.indexOf(_baseUrl) === -1) {
+        path = _baseUrl + path;
+      }
+
+      let _path = path;
+      if (!_config.strictPath && path) {
+        if (
+          path.charAt(path.length - 1) !== '/' &&
+          Math.abs(path.lastIndexOf('.') - path.length) > 5
+        ) {
+          _path += '/';
+        }
+      }
+
+      _app.get(_path, this._prepareMethod(method, path, ...middlewares));
+    }
+
+    return this;
   };
 }
