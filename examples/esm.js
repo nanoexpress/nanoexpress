@@ -1,4 +1,4 @@
-import nanoexpress from '../index.mjs';
+import nanoexpress from '../src/nanoexpress.mjs';
 
 const app = nanoexpress({
   strictPath: true

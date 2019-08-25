@@ -1,4 +1,4 @@
-import nanoexpress from '../index.mjs';
+import nanoexpress from '../src/nanoexpress.mjs';
 const fileUpload = require('../node_modules/express-fileupload');
 
 const path = require('path');

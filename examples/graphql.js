@@ -1,4 +1,4 @@
-import nanoexpress from '../index.mjs';
+import nanoexpress from '../src/nanoexpress.mjs';
 const graphqlHTTP = require('../node_modules/express-graphql');
 const { buildSchema } = require('../node_modules/graphql');
 

@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import nanoexpress from '../index.mjs';
+import nanoexpress from '../src/nanoexpress.mjs';
 const expressJwt = require('../node_modules/express-jwt');
 const jwt = require('../node_modules/jsonwebtoken');
 

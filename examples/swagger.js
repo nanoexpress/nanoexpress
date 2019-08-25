@@ -1,4 +1,4 @@
-import nanoexpress from '../index.mjs';
+import nanoexpress from '../src/nanoexpress.mjs';
 const reDoc = require('../src/packed/middlewares/redoc');
 
 const app = nanoexpress({
