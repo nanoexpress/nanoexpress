@@ -50,16 +50,6 @@ module.exports = (config = {}) => {
     </html>
     `);
     } else {
-      // We call this to avoid POOL response instance
-      // If response is POOLED, we will see ERROR and can't respond
-      // anything like before, this basically is happening for CPU
-      // and memory reduce reason
-      if (!res.abortHandler) {
-        res.onAborted(() => {
-          res.aborted = true;
-        });
-        res.abortHandler = true;
-      }
       next(null, true);
     }
   };

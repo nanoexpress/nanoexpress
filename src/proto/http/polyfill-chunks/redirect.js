@@ -37,7 +37,6 @@ export default function redirect(code, path) {
 
   this.writeHead(code, { Location });
   this.end();
-  this.aborted = true;
 
   return this;
 }

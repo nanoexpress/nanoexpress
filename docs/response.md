@@ -2,6 +2,8 @@
 
 Performance tip: _If you want to your app be faster, please consider using [schemas](./schema.md) for serilization which improves RPS by 3-5%_
 
+Stability tip: _If you don't want crash of your application, please try always check return values and do not allow like this values `{foo: undefined}` as this crashes, this issue refers to uWebSockets.js_
+
 ## Methods
 
 ### `uWebSockets.js` methods

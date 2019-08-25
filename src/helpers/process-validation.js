@@ -46,7 +46,7 @@ export default (req, res, config, { validationStringify, validation } = {}) => {
       }
     }
 
-    if (errors && !res.aborted) {
+    if (errors) {
       if (config._validationErrorHandler) {
         const validationHandlerResult = config._validationErrorHandler(
           errors,

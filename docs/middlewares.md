@@ -74,6 +74,23 @@ app.use((req, res, next) => {
 
 Error which comes from Middleware automacilly will be handled by `nanoexpress`, but not always and may not work stable
 
+## Known Bugs
+
+### CORS per-route bug
+
+Note: _This bug can be fixed, bug we used this way to improve performance and reduce latency between requests_
+
+There only one workaround to this
+
+```js
+const corsPerRoute = cors();
+app.options('/my-route', corsPerRoute, () => {});
+
+app.get('/my-route', corsPerRoute, (req, res) => {
+  res.send('this route protected by your cors per-route config');
+});
+```
+
 [&laquo; Getting started](./get-started.md)
 
 [WebSocket &raquo;](./websocket.md)

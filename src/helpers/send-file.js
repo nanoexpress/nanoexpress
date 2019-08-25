@@ -24,20 +24,22 @@ export default async function(
     cache = false
   } = {}
 ) {
-  if (!this.abortHandler) {
-    this.onAborted(() => {
-      if (this.stream) {
-        this.stream.destroy();
-      }
-      this.aborted = true;
-    });
-    this.abortHandler = true;
-  }
+  let isAborted = false;
+  this.onAborted(() => {
+    if (this.stream) {
+      this.stream.destroy();
+    }
+    isAborted = true;
+  });
 
   const res = this;
   const stat = await fsStat(path);
   const { mtime } = stat;
   let { size } = stat;
+
+  if (isAborted) {
+    return;
+  }
 
   mtime.setMilliseconds(0);
   const mtimeutc = mtime.toUTCString();
@@ -113,6 +115,10 @@ export default async function(
           res.end();
           throw err;
         }
+        if (isAborted) {
+          readStream.destroy();
+          return;
+        }
         res.end(string);
       }
     );
@@ -127,6 +133,10 @@ export default async function(
     });
   } else {
     readStream.on('data', (buffer) => {
+      if (isAborted) {
+        readStream.destroy();
+        return;
+      }
       const chunk = buffer.buffer.slice(
           buffer.byteOffset,
           buffer.byteOffset + buffer.byteLength
@@ -164,11 +174,15 @@ export default async function(
   }
   readStream
     .on('error', () => {
-      res.writeStatus('500 Internal server error');
-      res.end();
+      if (!isAborted) {
+        res.writeStatus('500 Internal server error');
+        res.end();
+      }
       readStream.destroy();
     })
     .on('end', () => {
-      res.end();
+      if (!isAborted) {
+        res.end();
+      }
     });
 }

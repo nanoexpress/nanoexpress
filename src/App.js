@@ -43,6 +43,7 @@ export default class App {
     }
 
     this._routeCalled = false;
+    this._optionsCalled = false;
 
     return this;
   }
@@ -83,7 +84,13 @@ export default class App {
     return this;
   }
   listen(port, host) {
-    const { _config: config, _app: app, _route: route, _routeCalled } = this;
+    const {
+      _config: config,
+      _app: app,
+      _route: route,
+      _routeCalled,
+      _optionsCalled
+    } = this;
 
     if (!_routeCalled && route._middlewares && route._middlewares.length > 0) {
       console.error(
@@ -91,6 +98,12 @@ export default class App {
       );
     } else if (config._notFoundHandler) {
       this.get('/*', config._notFoundHandler);
+    }
+
+    // Polyfill for plugins like CORS
+    // Detaching it from every method for performance reason
+    if (_routeCalled && !_optionsCalled) {
+      this.options('/*', () => {});
     }
 
     return new Promise((resolve, reject) => {
@@ -151,32 +164,22 @@ for (let i = 0, len = httpMethods.length; i < len; i++) {
     const { _app, _route } = this;
 
     if (fns.length > 0) {
-      const isRaw = fns.find((fn) => fn.isRaw === true);
       const schema = fns.find((fn) => fn.schema);
-
-      const _canApplyOptions =
-        method !== 'options' &&
-        method !== 'head' &&
-        method !== 'trace' &&
-        _route._middlewares &&
-        _route._middlewares.length;
 
       const preparedRouteFunction = _route._prepareMethod(
         method,
         path,
         schema,
-        fns.pop(),
-        isRaw,
-        _canApplyOptions
+        ...fns
       );
-
-      if (_canApplyOptions) {
-        _app.options(path, preparedRouteFunction);
-      }
 
       _app[method](path, preparedRouteFunction);
 
       this._routeCalled = true;
+
+      if (method === 'options') {
+        this._optionsCalled = true;
+      }
     }
     return this;
   };
