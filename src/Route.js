@@ -362,7 +362,7 @@ for (let i = 0, len = httpMethods.length; i < len; i++) {
         }
       }
 
-      _app.get(_path, this._prepareMethod(method, path, ...middlewares));
+      _app[method](_path, this._prepareMethod(method, path, ...middlewares));
     }
 
     return this;
