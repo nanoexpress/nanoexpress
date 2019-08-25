@@ -25,8 +25,6 @@ Nano-framework for Node.js powered by uWebSockets.js
 
 ## Benchmarks
 
-We [available](https://github.com/the-benchmarker/web-frameworks) in web-frameworks, but not this branch!
-
 | Library         | RPS   | Memory |
 | --------------- | ----- | ------ |
 | uWebSockets.js  | 2M    | 80Mb   |
