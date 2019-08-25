@@ -16,10 +16,6 @@
   "engines": {
     "node": ">=10.x"
   },
-  "exports": {
-    "./Route": "./src/Route.js",
-    "./static": "./src/static.js"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/dalisoft/nanoexpress.git"
