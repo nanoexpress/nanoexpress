@@ -71,7 +71,8 @@ export default class Route {
     const { _config, _baseUrl, _middlewares, _module, _rootLevel, _ajv } = this;
 
     const fetchMethod = method === 'any';
-    const fetchUrl = path.indexOf(':') !== -1 || (_module && !_rootLevel);
+    const fetchUrl =
+      path === '/*' || path.indexOf(':') !== -1 || (_module && !_rootLevel);
     let validation = null;
     let _direct = false;
     let _schema = null;
@@ -186,7 +187,7 @@ export default class Route {
       .filter((middleware) => typeof middleware === 'function');
 
     if (_config && _config.swagger && schema) {
-      prepareSwaggerDocs(_config.swagger, routeFunction.path, method, schema);
+      prepareSwaggerDocs(_config.swagger, path, method, schema);
     }
 
     if (!_config.strictPath && path) {
@@ -257,6 +258,18 @@ export default class Route {
       // by avoid re-reference items over again
       let reqPathLength = req.path.length;
 
+      if (!_config.strictPath && reqPathLength > 1) {
+        const dotIndex = req.path.lastIndexOf('.');
+        if (
+          req.path.charAt(reqPathLength - 1) !== '/' &&
+          (dotIndex === -1 ||
+            (dotIndex !== -1 && Math.abs(dotIndex - req.path.length)) > 5)
+        ) {
+          req.path += '/';
+          reqPathLength += 1;
+        }
+      }
+
       if (middlewares && middlewares.length > 0) {
         for (let i = 0, len = middlewares.length, middleware; i < len; i++) {
           middleware = middlewares[i];
@@ -271,18 +284,6 @@ export default class Route {
 
       if (finished || isAborted) {
         return;
-      }
-
-      if (!_config.strictPath && reqPathLength > 1) {
-        const dotIndex = req.path.lastIndexOf('.');
-        if (
-          req.path.charAt(reqPathLength - 1) !== '/' &&
-          (dotIndex === -1 ||
-            (dotIndex !== -1 && Math.abs(dotIndex - req.path.length)) > 5)
-        ) {
-          req.path += '/';
-          reqPathLength += 1;
-        }
       }
 
       if (_direct || !fetchUrl || req.path === path) {

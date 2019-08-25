@@ -84,21 +84,22 @@ export default class App {
     return this;
   }
   listen(port, host) {
-    const {
-      _config: config,
-      _app: app,
-      _route: route,
-      _routeCalled,
-      _optionsCalled
-    } = this;
+    const { _config: config, _app: app, _routeCalled, _optionsCalled } = this;
 
-    if (!_routeCalled && route._middlewares && route._middlewares.length > 0) {
+    if (!_routeCalled) {
       console.error(
         'nanoexpress [Server]: None of middleware will be called until you define route'
       );
-    } else if (config._notFoundHandler) {
-      this.get('/*', config._notFoundHandler);
     }
+
+    this.get(
+      '/*',
+      config._notFoundHandler ||
+        ((req, res) => {
+          res.statusCode = 404;
+          res.send({ code: 404, message: 'The route does not exist' });
+        })
+    );
 
     // Polyfill for plugins like CORS
     // Detaching it from every method for performance reason

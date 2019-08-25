@@ -10,6 +10,7 @@ export default function staticMiddleware(
 ) {
   return (req, res) => {
     let fileName = req.path;
+
     if (addPrettyUrl && req.path === '/') {
       fileName += index;
     }

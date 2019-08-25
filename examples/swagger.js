@@ -32,7 +32,6 @@ app.get(
       params: {
         description: 'Hello world parameters',
         type: 'object',
-        required: ['param1'],
         properties: {
           param1: { description: 'Param1', type: 'string' }
         }
