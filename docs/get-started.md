@@ -15,25 +15,13 @@ Thanks for choosing `nanoexpress` as backend server
 ### npm
 
 ```bash
-npm install dalisoft/nanoexpress#pro
+npm install dalisoft/nanoexpress#pro-esm
 ```
 
 ### yarn
 
 ```bash
-yarn add dalisoft/nanoexpress#pro
-```
-
-> **Note**: For **PRO** version you should do addinational steps to make it working properly
-
-```bash
-cd node_modules/nanoexpress
-npm i
-npm run build
-
-# below code is optional, but useful for docker builds
-rm -rf node_modules
-npm i --prod
+yarn add dalisoft/nanoexpress#pro-esm
 ```
 
 ## Let's create server
