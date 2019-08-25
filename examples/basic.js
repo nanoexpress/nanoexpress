@@ -1,8 +1,7 @@
 const nanoexpress = require('..');
 
 const app = nanoexpress({
-  strictPath: true,
-  rawRoute: true
+  strictPath: true
 });
 
 app.get(
