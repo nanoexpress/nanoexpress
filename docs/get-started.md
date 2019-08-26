@@ -16,12 +16,16 @@ Thanks for choosing `nanoexpress` as backend server
 
 ```bash
 npm install dalisoft/nanoexpress#pro
+# or
+npm install nanoexpress@{VER}-pro
 ```
 
 ### yarn
 
 ```bash
 yarn add dalisoft/nanoexpress#pro
+# or
+yarn add nanoexpress@{VER}-pro
 ```
 
 > **Note**: For **PRO** version you should do addinational steps to make it working properly
