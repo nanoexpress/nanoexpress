@@ -3,8 +3,11 @@ language: node_js
 notifications:
   email: false
 os:
+  - linux
   - osx
 node_js:
+  - '10'
+  - '11'
   - '12'
 install:
   - npm install
@@ -12,11 +15,3 @@ script:
   - npm run lint
   - npm test
   - npm run coveralls
-  - git clone --recursive https://github.com/dalisoft/nanoexpress.git
-  - git checkout pro
-  - npm run build
-  - cp build/*.js .
-  - git status
-  - git pull origin pro-cjs-dist
-  - git commit -a -m "[TravisCI] Updated Pro Distribute files" --allow-empty
-  - git push "https://dalisoft:$SECRET@github.com/dalisoft/nanoexpress" pro-cjs-dist
