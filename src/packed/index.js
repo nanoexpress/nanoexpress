@@ -1,3 +1,1 @@
-const middlewares = require('./middlewares');
-
-module.exports = { middlewares };
+export * from './middlewares/index.js';

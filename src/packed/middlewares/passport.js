@@ -1,7 +1,7 @@
-const passportHttpRequest = require('passport/lib/http/request');
-const passport = require('passport');
+import passportHttpRequest from 'passport/lib/http/request';
+import passport from 'passport';
 
-module.exports = (config) => {
+export default (config) => {
   const initialize = passport.initialize(config);
   return (req, res, next) => {
     Object.assign(req, passportHttpRequest);

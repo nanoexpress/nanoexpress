@@ -1,4 +1,4 @@
-module.exports = (config = {}) => {
+export default (config = {}) => {
   if (config.title === undefined) {
     config.title = 'nanoexpress - ReDoc';
   }

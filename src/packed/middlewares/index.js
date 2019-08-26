@@ -1,4 +1,3 @@
-const passportInitialize = require('./passport');
-const reDoc = require('./redoc');
-
-module.exports = { passportInitialize, reDoc };
+export { default as passportInitialize } from './passport.js';
+export { default as reDoc } from './redoc.js';
+export { default as bodyParser } from './body-parser.js';
