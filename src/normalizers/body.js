@@ -2,14 +2,14 @@ import { Readable } from 'stream';
 
 export default (req, res) =>
   new Promise((resolve) => {
+    if (!res || !res.onData) {
+      return resolve();
+    }
+
     const stream = new Readable();
     stream._read = () => true;
     req.pipe = stream.pipe.bind(stream);
     req.stream = stream;
-
-    if (!res || !res.onData) {
-      return undefined;
-    }
 
     let isAborted = false;
     /* Register error cb */
