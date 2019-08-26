@@ -1,18 +1,17 @@
 import { Readable } from 'stream';
-import { parse } from 'querystring';
 
-export default async (req, res) => {
-  const stream = new Readable();
-  stream._read = () => true;
-  req.pipe = stream.pipe.bind(stream);
-  req.stream = stream;
+export default (req, res) =>
+  new Promise((resolve) => {
+    const stream = new Readable();
+    stream._read = () => true;
+    req.pipe = stream.pipe.bind(stream);
+    req.stream = stream;
 
-  if (!res || !res.onData) {
-    return undefined;
-  }
+    if (!res || !res.onData) {
+      return undefined;
+    }
 
-  let isAborted = false;
-  let body = await new Promise((resolve) => {
+    let isAborted = false;
     /* Register error cb */
     res.onAborted(() => {
       if (res.stream) {
@@ -49,23 +48,3 @@ export default async (req, res) => {
       }
     });
   });
-
-  if (!body) {
-    return undefined;
-  }
-
-  const { headers } = req;
-
-  if (headers) {
-    const contentType = headers['content-type'];
-    if (contentType) {
-      if (contentType.indexOf('/json') !== -1) {
-        body = JSON.parse(body);
-      } else if (contentType.indexOf('/x-www-form-urlencoded') !== -1) {
-        body = parse(req.body);
-      }
-    }
-  }
-
-  return body;
-};

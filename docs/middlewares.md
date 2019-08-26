@@ -11,7 +11,7 @@ Built-in middlewares implemented at layer-level for performance reason and enabl
 | Alternative                                                                           | Implement level | Which libraries uses                                                   |
 | ------------------------------------------------------------------------------------- | --------------- | ---------------------------------------------------------------------- |
 | [cookie](https://github.com/jshttp/cookie)                                            | Layer level     | [cookie](https://github.com/jshttp/cookie)                             |
-| [body-parser](https://github.com/expressjs/body-parser)                               | Layer level     | Node.js builtin [querystring](https://nodejs.org/api/querystring.html) |
+| [body-parser](https://github.com/expressjs/body-parser)                               | Packed level    | Node.js builtin [querystring](https://nodejs.org/api/querystring.html) |
 | [express-ws](https://github.com/HenningM/express-ws)                                  | Core level      | [Core](https://github.com/uNetworking/uWebSockets.js) library          |
 | [express-serializer](https://github.com/MediaComem/express-serializer)                | Layer level     | [fast-json-stringify](https://github.com/fastify/fast-json-stringify)  |
 | [express-ajv](https://bitbucket.org/netgenes/express-ajv)                             | Layer level     | [ajv](https://ajv.js.org)                                              |
@@ -34,12 +34,13 @@ app.use(middlewares.passportInitialize()); // or app.use(passportInitialize());
 #### Packed middlewares
 
 - `passport`
-- `redoc`
+- `reDoc`
 - `static`
+- `bodyParser`
 
 ### Tested Express/Connect like Middlewares
 
-- `body-parser` (yes, if you don't want built-in)
+- `body-parser` (yes, if you don't want packed)
 - `express-fileupload`
 - `cors` (yes, `express` `cors` middleware)
 - `express-jwt`

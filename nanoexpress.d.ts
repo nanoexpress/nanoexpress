@@ -47,11 +47,11 @@ declare namespace nanoexpress {
   export interface HttpRequest extends HttpRequestBasic {
     path: string;
     url: string;
-    headers: HttpRequestHeaders;
-    cookies: HttpRequestCookies;
-    query: HttpRequestQueries;
-    params: HttpRequestParams;
-    body?: HttpRequestBody;
+    headers?: HttpRequestHeaders;
+    cookies?: HttpRequestCookies;
+    query?: HttpRequestQueries;
+    params?: HttpRequestParams;
+    body?: string | HttpRequestBody;
     __response?: HttpResponse;
   }
 
