@@ -1,4 +1,4 @@
-const uWS = require('uWebSockets.js');
+import uWS from 'uWebSockets.js';
 
 import wsHandler from './handler/ws.js';
 import { httpMethods } from './helpers/index.js';

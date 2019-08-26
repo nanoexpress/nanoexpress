@@ -206,6 +206,7 @@ export default class Route {
     }
 
     let finished = false;
+    const rawPath = path;
 
     return async (res, req) => {
       isAborted = false;
@@ -213,11 +214,10 @@ export default class Route {
         isAborted = true;
       });
 
-      req.rawPath = path;
+      req.rawPath = rawPath;
       req.method = fetchMethod ? req.getMethod() : method;
       req.path = fetchUrl ? req.getUrl() : path;
       req.baseUrl = _baseUrl || req.baseUrl;
-      req.rawPath = path || req.path;
 
       // Aliases for polyfill
       req.url = req.path;
@@ -253,6 +253,9 @@ export default class Route {
           req.cookies = cookies(req, _schema && _schema.cookies);
         }
         if (!_schema || _schema.params !== false) {
+          if (req.path !== path) {
+            path = req.path;
+          }
           req.params = params(req, _schema && _schema.params);
         }
         if (!_schema || _schema.query !== false) {
@@ -271,6 +274,9 @@ export default class Route {
           (dotIndex === -1 ||
             (dotIndex !== -1 && Math.abs(dotIndex - req.path.length)) > 5)
         ) {
+          if (req.path === path) {
+            path += '/';
+          }
           req.path += '/';
           reqPathLength += 1;
         }
