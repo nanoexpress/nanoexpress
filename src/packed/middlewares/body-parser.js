@@ -1,4 +1,4 @@
-import { parse } from 'querystring';
+const qs = require('querystring');
 
 module.exports = ({ json = true, urlEncoded = true } = {}) => {
   return (req, res, next) => {
@@ -13,7 +13,7 @@ module.exports = ({ json = true, urlEncoded = true } = {}) => {
           urlEncoded &&
           contentType.indexOf('/x-www-form-urlencoded') !== -1
         ) {
-          req.body = parse(req.body);
+          req.body = qs.parse(req.body);
         }
       }
     }
