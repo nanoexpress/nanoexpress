@@ -6,7 +6,6 @@
   "main": "src/nanoexpress.mjs",
   "typings": "nanoexpress.d.ts",
   "scripts": {
-    "watch-dev": "NODE_ENV=development rollup -c -w",
     "lint": "eslint ./src",
     "test": "jest --config jest.config.js",
     "coverage": "npm run test --coverage",
