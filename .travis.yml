@@ -3,11 +3,8 @@ language: node_js
 notifications:
   email: false
 os:
-  - linux
   - osx
 node_js:
-  - '10'
-  - '11'
   - '12'
 install:
   - npm install
