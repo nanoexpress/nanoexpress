@@ -1,4 +1,4 @@
-import nanoexpress from '../src/nanoexpress.mjs';
+import nanoexpress from '../src/nanoexpress.js';
 const Route = require('../build/Route');
 
 const app = nanoexpress();

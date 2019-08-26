@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import nanoexpress from '../src/nanoexpress.mjs';
+import nanoexpress from '../src/nanoexpress.js';
 const expressSession = require('../node_modules/express-session');
 
 const app = nanoexpress();

@@ -3,7 +3,7 @@
   "version": "0.2.1",
   "description": "Nano-framework for Node.js powered by uWebSockets.js",
   "type": "module",
-  "main": "src/nanoexpress.mjs",
+  "main": "src/nanoexpress.js",
   "typings": "nanoexpress.d.ts",
   "scripts": {
     "lint": "eslint ./src",
