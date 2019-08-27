@@ -233,6 +233,9 @@ export default class Route {
         _onAbortedCallbacks.length = 0;
       }
     };
+    const attachOnAborted = (fn) => {
+      _onAbortedCallbacks.push(fn);
+    };
 
     return async (res, req) => {
       isAborted = false;
@@ -249,7 +252,7 @@ export default class Route {
       req.baseUrl = _baseUrl || '';
 
       // Some callbacks which need for your
-      req._onAbortedCallbacks = _onAbortedCallbacks;
+      req.onAborted = attachOnAborted;
 
       // Aliases for future usage and easy-access
       if (!isRaw) {
@@ -289,7 +292,7 @@ export default class Route {
           req.query = queries(req, _schema && _schema.query);
         }
         if (bodyAllowedMethod && (!_schema || _schema.body !== false)) {
-          const bodyResponse = await body(req, res, _onAbortedCallbacks);
+          const bodyResponse = await body(req, res, attachOnAborted);
 
           if (bodyResponse) {
             req.body = bodyResponse;

@@ -1,14 +1,14 @@
 import { Readable } from 'stream';
 
-export default (req, res, _onAbortedCallbacks) => {
+export default (req, res, onAborted) => {
   if (!res || !res.onData) {
     return undefined;
   }
 
   let isAborted = false;
   /* Register error cb */
-  if (_onAbortedCallbacks) {
-    _onAbortedCallbacks.push(() => {
+  if (onAborted) {
+    onAborted(() => {
       if (res.stream) {
         res.stream.destroy();
       }

@@ -24,10 +24,10 @@ export default async function(
     cache = false
   } = {}
 ) {
-  const { headers = {}, _onAbortedCallbacks } = res.__request;
+  const { headers = {}, onAborted } = res.__request;
 
   let isAborted = false;
-  _onAbortedCallbacks.push(() => {
+  onAborted(() => {
     if (this.stream) {
       this.stream.destroy();
     }
