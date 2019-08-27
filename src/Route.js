@@ -44,6 +44,16 @@ export default class Route {
         middleware._config = this._config;
         middleware._app = this._app;
 
+        if (_middlewares && _middlewares.length > 0) {
+          if (middleware._middlewares) {
+            middleware._middlewares = _middlewares.concat(
+              middleware._middlewares
+            );
+          } else {
+            middleware._middlewares = _middlewares;
+          }
+        }
+
         if (typeof path === 'string') {
           middleware._baseUrl = path;
           middleware.path = path;
