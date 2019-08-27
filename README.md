@@ -1,4 +1,4 @@
-# nanoexpress Pro
+# nanoexpress Pro ESM
 
 [![Greenkeeper badge](https://badges.greenkeeper.io/dalisoft/nanoexpress.svg)](https://greenkeeper.io/)
 [![Travis](https://img.shields.io/travis/dalisoft/nanoexpress.svg)](http://github.com/dalisoft/nanoexpress)
@@ -11,6 +11,10 @@ Nano-framework for Node.js powered by uWebSockets.js
 ## Documentation available [here](https://github.com/dalisoft/nanoexpress/blob/pro-esm/docs/index.md)
 
 ## Warning
+
+- > This branch was deprecated because of there has published **PRO** version on `npm`
+- > **This branch has been expiremental and module exporting are not _STABLE_**
+- > No anymore support published to this branch
 
 - This library does not support HTTP2!
 - This branch (PRO) is differs from master/dev branches
