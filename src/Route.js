@@ -193,8 +193,9 @@ export default class Route {
                   if (_config._errorHandler) {
                     return _config._errorHandler(err, req, res);
                   }
-                  res.statusCode = err.code || err.status || 400;
-                  res.send(
+                  res.status(err.code || err.status || 400);
+                  res.setHeader('Content-Type', 'application/json');
+                  res.end(
                     `{"error":"${typeof err === 'string' ? err : err.message}"}`
                   );
                   resolve();
