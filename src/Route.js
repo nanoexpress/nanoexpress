@@ -3,6 +3,7 @@ import { HttpResponse } from './proto';
 import {
   prepareSwaggerDocs,
   prepareValidation,
+  prepareParams,
   processValidation,
   httpMethods
 } from './helpers';
@@ -92,6 +93,10 @@ export default class Route {
         middleware &&
         middleware.noMiddleware === true
     );
+    const onAborted = middlewares.find(
+      (middleware) =>
+        typeof middleware === 'object' && middleware && middleware.onAborted
+    );
     let schema = middlewares.find(
       (middleware) =>
         typeof middleware === 'object' &&
@@ -127,8 +132,9 @@ export default class Route {
     responseSchema = _schema && validation && validation.responseSchema;
 
     if (
-      routeFunction.then ||
-      routeFunction.constructor.name === 'AsyncFunction'
+      (routeFunction.then ||
+        routeFunction.constructor.name === 'AsyncFunction') &&
+      !/res\.(s?end|json)/g.test(routeFunction.toString())
     ) {
       const _oldRouteFunction = routeFunction;
       routeFunction = (req, res) => {
@@ -201,12 +207,24 @@ export default class Route {
 
     let finished = false;
     const rawPath = path;
+    const preparedParams = prepareParams(path);
+
+    const _onAbortedCallbacks = [];
+    const _handleOnAborted = () => {
+      isAborted = true;
+      if (onAborted) {
+        onAborted();
+      }
+      if (_onAbortedCallbacks.length > 0) {
+        for (let i = 0, len = _onAbortedCallbacks.length; i < len; i++) {
+          _onAbortedCallbacks[i]();
+        }
+      }
+    };
 
     return async (res, req) => {
       isAborted = false;
-      res.onAborted(() => {
-        isAborted = true;
-      });
+      res.onAborted(_handleOnAborted);
 
       req.rawPath = rawPath;
       req.method = fetchMethod ? req.getMethod() : method;
@@ -217,6 +235,9 @@ export default class Route {
       req.url = req.path;
       req.originalUrl = req.url;
       req.baseUrl = _baseUrl || '';
+
+      // Some callbacks which need for your
+      req._onAbortedCallbacks = _onAbortedCallbacks;
 
       // Aliases for future usage and easy-access
       if (!isRaw) {
@@ -250,7 +271,7 @@ export default class Route {
           if (req.path !== path) {
             path = req.path;
           }
-          req.params = params(req, _schema && _schema.params);
+          req.params = params(req, preparedParams);
         }
         if (!_schema || _schema.query !== false) {
           req.query = queries(req, _schema && _schema.query);
@@ -310,7 +331,7 @@ export default class Route {
           _schema !== false &&
           (!_schema || !_schema.body !== false)
         ) {
-          const bodyResponse = await body(req, res);
+          const bodyResponse = await body(req, res, _onAbortedCallbacks);
 
           if (isAborted) {
             return;

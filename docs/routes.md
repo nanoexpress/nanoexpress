@@ -81,6 +81,22 @@ app.get('/', { noMiddleware: true }, (req, res) => {
 });
 ```
 
+## onAborted example
+
+```js
+app.get(
+  '/',
+  {
+    onAborted: () => {
+      /* cancel your async task somehow */
+    }
+  },
+  (req, res) => {
+    // do something...
+  }
+);
+```
+
 ## Error handling example
 
 ```js

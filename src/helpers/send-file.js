@@ -24,8 +24,10 @@ export default async function(
     cache = false
   } = {}
 ) {
+  const { headers = {}, _onAbortedCallbacks } = res.__request;
+
   let isAborted = false;
-  this.onAborted(() => {
+  _onAbortedCallbacks.push(() => {
     if (this.stream) {
       this.stream.destroy();
     }
@@ -43,8 +45,6 @@ export default async function(
 
   mtime.setMilliseconds(0);
   const mtimeutc = mtime.toUTCString();
-
-  const { headers = {} } = res.__request;
 
   // handling last modified
   if (lastModified) {
