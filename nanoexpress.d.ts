@@ -229,6 +229,19 @@ declare namespace nanoexpress {
       ...middlewares: MiddlewareRoute[]
     ): nanoexpressApp;
 
+    patch(path: string, callback: HttpRoute): nanoexpressApp;
+    patch(
+      path: string,
+      options: RouteOption,
+      callback: HttpRoute
+    ): nanoexpressApp;
+    patch(path: string, ...middlewares: MiddlewareRoute[]): nanoexpressApp;
+    patch(
+      path: string,
+      options: RouteOption,
+      ...middlewares: MiddlewareRoute[]
+    ): nanoexpressApp;
+
     del(path: string, callback: HttpRoute): nanoexpressApp;
     del(
       path: string,
