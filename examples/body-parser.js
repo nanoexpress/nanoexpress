@@ -5,10 +5,10 @@ const app = nanoexpress();
 
 app.use(bodyParser({ json: true }));
 
-app.get('/', async () => 'ok');
+app.get('/', (req, res) => res.end('ok'));
 
-app.post('/', async (req) => {
-  return { status: 'ok', body: req.body };
+app.post('/', (req, res) => {
+  return res.send({ status: 'ok', body: req.body });
 });
 
 app.listen(4002);
