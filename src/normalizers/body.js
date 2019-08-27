@@ -7,12 +7,14 @@ export default (req, res, _onAbortedCallbacks) => {
 
   let isAborted = false;
   /* Register error cb */
-  _onAbortedCallbacks.push(() => {
-    if (res.stream) {
-      res.stream.destroy();
-    }
-    isAborted = true;
-  });
+  if (_onAbortedCallbacks) {
+    _onAbortedCallbacks.push(() => {
+      if (res.stream) {
+        res.stream.destroy();
+      }
+      isAborted = true;
+    });
+  }
 
   return new Promise((resolve) => {
     const stream = new Readable();
