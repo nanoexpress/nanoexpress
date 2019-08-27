@@ -157,6 +157,7 @@ export default class Route {
         return _oldRouteFunction(req, res)
           .then((data) => {
             if (!isAborted && data && data !== res) {
+              isAborted = true;
               return res.send(data);
             }
             return null;
@@ -167,7 +168,8 @@ export default class Route {
                 return _config._errorHandler(err, req, res);
               }
               res.status(err.code || err.status || 500);
-              return res.send({ error: err.message });
+              res.send({ error: err.message });
+              isAborted = true;
             }
             return null;
           });
@@ -177,36 +179,37 @@ export default class Route {
     middlewares = middlewares
       .map((middleware) => {
         if (middleware._module) {
-          // don't touch, it's Route module
+          return null;
         } else if (
           middleware.then ||
           middleware.constructor.name === 'AsyncFunction'
         ) {
-          // do nothing
+          return null;
         } else {
           const _oldMiddleware = middleware;
-          middleware = (req, res) =>
-            new Promise((resolve) => {
+          middleware = function(req, res) {
+            return new Promise((resolve) => {
               _oldMiddleware(req, res, (err, done) => {
                 if (err) {
                   if (_config._errorHandler) {
                     return _config._errorHandler(err, req, res);
                   }
-                  finished = true;
 
                   res.status(err.status || err.code || 400, true);
                   res.writeStatus(res.statusCode);
                   res.writeHeader('Content-Type', 'application/json');
 
+                  resolve();
                   res.end(
                     `{"error":"${typeof err === 'string' ? err : err.message}"}`
                   );
-                  resolve();
+                  isAborted = true;
                 } else {
                   resolve(done);
                 }
               });
             });
+          };
         }
         return middleware;
       })
@@ -225,7 +228,6 @@ export default class Route {
       }
     }
 
-    let finished = false;
     const rawPath = path;
     const preparedParams =
       (!_schema || _schema.params !== false) && prepareParams(path);
@@ -334,7 +336,7 @@ export default class Route {
           for (let i = 0, len = middlewares.length, middleware; i < len; i++) {
             middleware = middlewares[i];
 
-            if (isAborted || finished) {
+            if (isAborted) {
               break;
             }
 
@@ -342,7 +344,7 @@ export default class Route {
           }
         }
 
-        if (finished || isAborted) {
+        if (isAborted) {
           return;
         }
 
