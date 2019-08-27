@@ -114,9 +114,9 @@ export default class Route {
         typeof middleware.schema === 'object'
     );
 
-    middlewares = middlewares.filter(
-      (middleware) => typeof middleware === 'function'
-    );
+    middlewares = middlewares
+      .filter((middleware) => typeof middleware === 'function')
+      .filter((middleware, i, self) => self.indexOf(middleware) === i);
 
     if (_middlewares && _middlewares.length > 0) {
       middlewares = _middlewares.concat(middlewares);
