@@ -189,12 +189,15 @@ export default class Route {
             new Promise((resolve) => {
               _oldMiddleware(req, res, (err, done) => {
                 if (err) {
-                  finished = true;
                   if (_config._errorHandler) {
                     return _config._errorHandler(err, req, res);
                   }
-                  res.status(err.code || err.status || 400);
-                  res.setHeader('Content-Type', 'application/json');
+                  finished = true;
+
+                  res.status(err.status || err.code || 400, true);
+                  res.writeStatus(res.statusCode);
+                  res.writeHeader('Content-Type', 'application/json');
+
                   res.end(
                     `{"error":"${typeof err === 'string' ? err : err.message}"}`
                   );
