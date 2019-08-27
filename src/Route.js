@@ -328,7 +328,7 @@ export default class Route {
           for (let i = 0, len = middlewares.length, middleware; i < len; i++) {
             middleware = middlewares[i];
 
-            if (finished) {
+            if (isAborted || finished) {
               break;
             }
 
