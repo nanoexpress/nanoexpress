@@ -278,13 +278,7 @@ export default class Route {
         if (!_schema || _schema.query !== false) {
           req.query = queries(req, _schema && _schema.query);
         }
-        if (
-          !isRaw &&
-          bodyAllowedMethod &&
-          res.onData &&
-          _schema !== false &&
-          (!_schema || !_schema.body !== false)
-        ) {
+        if (bodyAllowedMethod && (!_schema || !_schema.body !== false)) {
           const bodyResponse = await body(req, res, _onAbortedCallbacks);
 
           if (bodyResponse) {
