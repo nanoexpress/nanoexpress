@@ -46,11 +46,17 @@ export default class Route {
 
         if (_middlewares && _middlewares.length > 0) {
           if (middleware._middlewares) {
-            middleware._middlewares = _middlewares.concat(
-              middleware._middlewares
-            );
+            if (middleware._middlewares !== _middlewares) {
+              middleware._middlewares = _middlewares
+                .concat(middleware._middlewares)
+                .filter(
+                  (middleware, i, self) => self.indexOf(middleware) === i
+                );
+            }
           } else {
-            middleware._middlewares = _middlewares;
+            middleware._middlewares = _middlewares.filter(
+              (middleware, i, self) => self.indexOf(middleware) === i
+            );
           }
         }
 
