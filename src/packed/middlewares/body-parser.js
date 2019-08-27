@@ -4,7 +4,7 @@ module.exports = ({ json = true, urlEncoded = true } = {}) => {
   return (req, res, next) => {
     const { headers, body } = req;
 
-    if (headers) {
+    if (headers && body) {
       const contentType = headers['content-type'];
       if (contentType) {
         if (json && contentType.indexOf('/json') !== -1) {

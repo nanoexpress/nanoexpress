@@ -278,54 +278,6 @@ export default class Route {
         if (!_schema || _schema.query !== false) {
           req.query = queries(req, _schema && _schema.query);
         }
-      }
-
-      // Caching value may improve performance
-      // by avoid re-reference items over again
-      let reqPathLength = req.path.length;
-
-      if (!_config.strictPath && reqPathLength > 1) {
-        const dotIndex = req.path.lastIndexOf('.');
-        if (
-          req.path.charAt(reqPathLength - 1) !== '/' &&
-          (dotIndex === -1 ||
-            (dotIndex !== -1 && Math.abs(dotIndex - req.path.length)) > 5)
-        ) {
-          if (req.path === path) {
-            path += '/';
-          }
-          req.path += '/';
-          reqPathLength += 1;
-        }
-      }
-
-      if (middlewares && middlewares.length > 0) {
-        for (let i = 0, len = middlewares.length, middleware; i < len; i++) {
-          middleware = middlewares[i];
-
-          if (finished) {
-            break;
-          }
-
-          await middleware(req, res);
-        }
-      }
-
-      if (finished || isAborted) {
-        return;
-      }
-
-      if (_direct || !fetchUrl || req.path === path) {
-        if (
-          !isRaw &&
-          (!res._modifiedEnd &&
-            (!res.writeHead.notModified ||
-              (res.statusCode && res.statusCode !== 200) ||
-              res._headers))
-        ) {
-          res.modifyEnd();
-        }
-
         if (
           !isRaw &&
           bodyAllowedMethod &&
@@ -335,25 +287,57 @@ export default class Route {
         ) {
           const bodyResponse = await body(req, res, _onAbortedCallbacks);
 
-          if (isAborted) {
-            return;
-          }
           if (bodyResponse) {
             req.body = bodyResponse;
           }
+        }
 
+        // Caching value may improve performance
+        // by avoid re-reference items over again
+        let reqPathLength = req.path.length;
+
+        if (!_config.strictPath && reqPathLength > 1) {
+          const dotIndex = req.path.lastIndexOf('.');
           if (
-            isAborted ||
-            (!isRaw &&
-              validation &&
-              validation.validationStringify &&
-              processValidation(req, res, _config, validation))
+            req.path.charAt(reqPathLength - 1) !== '/' &&
+            (dotIndex === -1 ||
+              (dotIndex !== -1 && Math.abs(dotIndex - req.path.length)) > 5)
           ) {
-            return;
+            if (req.path === path) {
+              path += '/';
+            }
+            req.path += '/';
+            reqPathLength += 1;
+          }
+        }
+
+        if (!isAborted && middlewares && middlewares.length > 0) {
+          for (let i = 0, len = middlewares.length, middleware; i < len; i++) {
+            middleware = middlewares[i];
+
+            if (finished) {
+              break;
+            }
+
+            await middleware(req, res);
+          }
+        }
+
+        if (finished || isAborted) {
+          return;
+        }
+
+        if (_direct || !fetchUrl || req.path === path) {
+          if (
+            !isRaw &&
+            (!res._modifiedEnd &&
+              (!res.writeHead.notModified ||
+                (res.statusCode && res.statusCode !== 200) ||
+                res._headers))
+          ) {
+            res.modifyEnd();
           }
 
-          return routeFunction(req, res);
-        } else {
           if (
             isAborted ||
             (!isRaw &&
