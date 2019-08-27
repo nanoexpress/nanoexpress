@@ -260,7 +260,6 @@ export default class Route {
       req.url = req.path;
       req.originalUrl = req.url;
       req.baseUrl = _baseUrl || '';
-      req.originalUrl = req.url;
 
       // Some callbacks which need for your
       req.onAborted = attachOnAborted;
@@ -325,6 +324,8 @@ export default class Route {
               path += '/';
             }
             req.path += '/';
+            req.originalUrl += '/';
+            req.url += '/';
             reqPathLength += 1;
           }
         }
