@@ -207,7 +207,8 @@ export default class Route {
 
     let finished = false;
     const rawPath = path;
-    const preparedParams = prepareParams(path);
+    const preparedParams =
+      (!_schema || _schema.params !== false) && prepareParams(path);
 
     const _onAbortedCallbacks = [];
     const _handleOnAborted = () => {
@@ -219,6 +220,7 @@ export default class Route {
         for (let i = 0, len = _onAbortedCallbacks.length; i < len; i++) {
           _onAbortedCallbacks[i]();
         }
+        _onAbortedCallbacks.length = 0;
       }
     };
 
