@@ -2,7 +2,7 @@ export default function send(result) {
   if (!result) {
     result = '';
   } else if (typeof result === 'object') {
-    this.setHeader('Content-Type', 'application/json');
+    this.setHeader('Content-Type', 'application/json; charset=utf-8');
 
     const { fastJson } = this;
 

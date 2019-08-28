@@ -61,7 +61,7 @@ export default (req, res, config, { validationStringify, validation } = {}) => {
         }
       }
       res.writeHeader('400 Bad Request');
-      res.writeHeader('Content-Type', 'application/json');
+      res.writeHeader('Content-Type', 'application/json; charset=utf-8');
       return res.end(validationStringify(errors));
     }
   }

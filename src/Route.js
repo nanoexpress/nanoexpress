@@ -197,7 +197,10 @@ export default class Route {
 
                   res.status(err.status || err.code || 400, true);
                   res.writeStatus(res.statusCode);
-                  res.writeHeader('Content-Type', 'application/json');
+                  res.writeHeader(
+                    'Content-Type',
+                    'application/json; charset=utf-8'
+                  );
 
                   resolve();
                   res.end(
