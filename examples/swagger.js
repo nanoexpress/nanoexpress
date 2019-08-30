@@ -1,5 +1,6 @@
 const nanoexpress = require('..');
-const reDoc = require('../src/packed/middlewares/redoc');
+// const reDoc = require('../src/packed/middlewares/redoc');
+const swaggerUi = require('../src/packed/middlewares/swagger-ui');
 
 const app = nanoexpress({
   swagger: {
@@ -55,6 +56,6 @@ app.get(
   async () => ({ hello: 'world' })
 );
 
-app.use(reDoc());
+app.use(swaggerUi());
 
 app.listen(4040);

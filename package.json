@@ -1,6 +1,6 @@
 {
   "name": "nanoexpress",
-  "version": "1.1.17-pro",
+  "version": "1.2.0-pro",
   "description": "Nano-framework for Node.js powered by uWebSockets.js",
   "main": "build/nanoexpress.js",
   "module": "src/nanoexpress.js",
@@ -59,6 +59,7 @@
     "rollup-plugin-node-resolve": "^5.2.0"
   },
   "peerDependencies": {
-    "passport": "^0.4.0"
+    "passport": "^0.4.0",
+    "swagger-ui-dist": "^3.23.6"
   }
 }
