@@ -25,6 +25,10 @@ export default async function(
   } = {}
 ) {
   let isAborted = false;
+  const res = this;
+
+  const { headers = {}, onAborted } = res.__request;
+
   onAborted(() => {
     if (this.stream) {
       this.stream.destroy();
@@ -32,8 +36,6 @@ export default async function(
     isAborted = true;
   });
 
-  const res = this;
-  const { headers = {}, onAborted } = res.__request;
   const stat = await fsStat(path);
   const { mtime } = stat;
   let { size } = stat;

@@ -15,8 +15,10 @@ module.exports = (config = {}) => {
       config.url = `http://${req.getHeader('host')}/docs/swagger.json`;
     }
 
-    if (req.path.indexOf('/swagger-ui') === 0) {
-      res.sendFile(`${config.fsPath}${req.path}`);
+    if (req.path.indexOf('/swagger-ui') !== -1) {
+      res.sendFile(
+        `${config.fsPath}${req.path.substr(req.path.lastIndexOf('/'))}`
+      );
     } else if (req.path === config.path) {
       res.end(`
       <!-- HTML for static distribution bundle build -->
