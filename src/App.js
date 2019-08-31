@@ -45,6 +45,8 @@ export default class App {
     this._routeCalled = false;
     this._optionsCalled = false;
 
+    this._console = config.console || console;
+
     return this;
   }
   activateDocs() {
@@ -84,7 +86,13 @@ export default class App {
     return this;
   }
   listen(port, host) {
-    const { _config: config, _app: app, _routeCalled, _optionsCalled } = this;
+    const {
+      _config: config,
+      _app: app,
+      _routeCalled,
+      _optionsCalled,
+      _console: console
+    } = this;
 
     if (!_routeCalled) {
       console.error(
@@ -143,7 +151,7 @@ export default class App {
     });
   }
   close() {
-    const { _config: config } = this;
+    const { _config: config, _console: console } = this;
 
     if (this._instance) {
       config.host = null;
