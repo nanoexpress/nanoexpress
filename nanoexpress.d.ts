@@ -46,9 +46,11 @@ declare namespace nanoexpress {
     emit(name: string, ...args: any[]);
   }
   export interface HttpRequest extends HttpRequestBasic {
+    method: string;
     path: string;
     baseUrl: string;
     url: string;
+    originalUrl: string;
     headers?: HttpRequestHeaders;
     cookies?: HttpRequestCookies;
     query?: HttpRequestQueries;
@@ -67,8 +69,10 @@ declare namespace nanoexpress {
     expires?: number | string;
   }
   export interface HttpResponse extends HttpResponseBasic {
+    type(type: string): HttpResponse;
     status(code: number): HttpResponse;
     setHeader(key: string, value: string | number): HttpResponse;
+    header(key: string, value: string | number): HttpResponse;
     hasHeader(key: string): HttpResponse;
     removeHeader(key: string): HttpResponse;
     applyHeadersAndStatus(): HttpResponse;
@@ -79,6 +83,7 @@ declare namespace nanoexpress {
     redirect(code: number | string, path?: string): HttpResponse;
     send(result: string | object | any[]): HttpResponse;
     json(result: object | any[]): HttpResponse;
+    sendFile(filename: string, config?: StreamConfig): Promise<HttpResponse>;
     setCookie(
       key: string,
       value: string,
@@ -155,10 +160,20 @@ declare namespace nanoexpress {
     };
   }
 
+  interface StreamCompressionOptions {
+    priority: string[];
+  }
+  interface StreamConfig {
+    lastModified?: boolean;
+    compress?: boolean;
+    compressionOptions?: StreamCompressionOptions;
+    cache?: boolean;
+  }
+
   export interface StaticOptions {
     index?: string;
     addPrettyUrl?: boolean;
-    streamConfig?: object;
+    streamConfig?: StreamConfig;
   }
 
   interface validationErrorItems {
