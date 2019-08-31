@@ -91,11 +91,13 @@ export default class App {
       _app: app,
       _routeCalled,
       _optionsCalled,
-      _console: console
+      _console
     } = this;
 
     if (!_routeCalled) {
-      console.error(
+      const _errorContext = _console.error ? _console : console;
+
+      _errorContext.error(
         'nanoexpress [Server]: None of middleware will be called until you define route'
       );
     }
@@ -117,7 +119,9 @@ export default class App {
 
     return new Promise((resolve, reject) => {
       if (port === undefined) {
-        console.log('[Server]: PORT is required');
+        const _errorContext = _console.error ? _console : console;
+
+        _errorContext.error('[Server]: PORT is required');
         return undefined;
       }
       port = Number(port);
@@ -132,15 +136,21 @@ export default class App {
         }
 
         if (token) {
+          const _doneContext = _console.done ? _console : console;
+
           this._instance = token;
-          console.log(
+          _doneContext.done(
             `[Server]: started successfully at [${
               config.host
             }:${port}] in [${Date.now() - this.time}ms]`
           );
           resolve(this);
         } else {
-          console.log(`[Server]: failed to host at [${config.host}:${port}]`);
+          const _errorContext = _console.error ? _console : console;
+
+          _errorContext.error(
+            `[Server]: failed to host at [${config.host}:${port}]`
+          );
           reject(
             new Error(`[Server]: failed to host at [${config.host}:${port}]`)
           );
@@ -151,17 +161,21 @@ export default class App {
     });
   }
   close() {
-    const { _config: config, _console: console } = this;
+    const { _config: config, _console } = this;
 
     if (this._instance) {
+      const _doneContext = _console.done ? _console : console;
+
       config.host = null;
       config.port = null;
       uWS.us_listen_socket_close(this._instance);
       this._instance = null;
-      console.log('[Server]: stopped successfully');
+      _doneContext.done('[Server]: stopped successfully');
       return true;
     } else {
-      console.log('[Server]: Error, failed while stopping');
+      const _errorContext = _console.error ? _console : console;
+
+      _errorContext.error('[Server]: Error, failed while stopping');
       return false;
     }
   }
