@@ -7,6 +7,9 @@ export default class Config {
   get swagger() {
     return this._options.swagger;
   }
+  get console() {
+    return this._options.console;
+  }
   constructor(options = {}) {
     this._options = options;
 
