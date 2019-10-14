@@ -1,6 +1,6 @@
 {
   "name": "nanoexpress",
-  "version": "1.2.5-pro",
+  "version": "1.2.6-pro",
   "description": "Nano-framework for Node.js powered by uWebSockets.js",
   "main": "build/nanoexpress.js",
   "module": "src/nanoexpress.js",
@@ -42,20 +42,20 @@
     "@dalisoft/events": "^0.0.x",
     "ajv": "^6.10.2",
     "cookie": "^0.x",
-    "fast-json-stringify": "^1.x",
+    "fast-json-stringify": "^1.15.5",
     "uWebSockets.js": "github:uNetworking/uWebSockets.js#binaries"
   },
   "devDependencies": {
     "@babel/core": "^7.6.0",
     "@babel/preset-env": "^7.6.0",
-    "coveralls": "^3.0.6",
-    "eslint": "^6.2.2",
-    "husky": "^3.0.4",
+    "coveralls": "^3.0.7",
+    "eslint": "^6.5.1",
+    "husky": "^3.0.9",
     "jest": "^24.9.0",
-    "lint-staged": "^9.2.3",
+    "lint-staged": "^9.4.2",
     "prettier": "^1.17.1",
-    "rollup": "^1.20.2",
-    "rollup-plugin-commonjs": "^10.0.2",
+    "rollup": "^1.23.1",
+    "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-node-resolve": "^5.2.0"
   },
   "peerDependencies": {

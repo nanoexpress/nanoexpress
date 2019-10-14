@@ -136,10 +136,10 @@ export default class App {
         }
 
         if (token) {
-          const _doneContext = _console.done ? _console : console;
+          const _debugContext = _console.debug ? _console : console;
 
           this._instance = token;
-          _doneContext.done(
+          _debugContext.debug(
             `[Server]: started successfully at [${
               config.host
             }:${port}] in [${Date.now() - this.time}ms]`
@@ -164,13 +164,13 @@ export default class App {
     const { _config: config, _console } = this;
 
     if (this._instance) {
-      const _doneContext = _console.done ? _console : console;
+      const _debugContext = _console.debug ? _console : console;
 
       config.host = null;
       config.port = null;
       uWS.us_listen_socket_close(this._instance);
       this._instance = null;
-      _doneContext.done('[Server]: stopped successfully');
+      _debugContext.debug('[Server]: stopped successfully');
       return true;
     } else {
       const _errorContext = _console.error ? _console : console;

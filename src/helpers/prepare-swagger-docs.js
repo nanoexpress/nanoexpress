@@ -41,7 +41,10 @@ export default function swaggerDocsGenerator(
     let schemaItem = schema[typeName];
     const schemaKeys = Object.keys(schemaItem).every(isHttpCode);
 
-    if (
+    if (typeName === 'security') {
+      methodInstance[typeName] = schema[typeName];
+      continue;
+    } else if (
       typeName === 'query' ||
       typeName === 'params' ||
       typeName === 'headers'
