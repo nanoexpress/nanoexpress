@@ -94,6 +94,15 @@ export default class App {
       _console
     } = this;
 
+    if (typeof port === 'string') {
+      if (port.indexOf('.') !== -1) {
+        const _host = host;
+
+        host = port;
+        port = _host || undefined;
+      }
+    }
+
     if (!_routeCalled) {
       const _errorContext = _console.error ? _console : console;
 
@@ -125,7 +134,8 @@ export default class App {
         return undefined;
       }
       port = Number(port);
-      app.listen(port, host, (token) => {
+
+      const onListenHandler = (token) => {
         if (typeof host === 'string') {
           config.host = host;
         } else {
@@ -157,7 +167,13 @@ export default class App {
           config.host = null;
           config.port = null;
         }
-      });
+      };
+
+      if (host) {
+        app.listen(host, port, onListenHandler);
+      } else {
+        app.listen(port, onListenHandler);
+      }
     });
   }
   close() {
