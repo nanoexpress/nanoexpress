@@ -85,6 +85,12 @@ export default class App {
 
     return this;
   }
+  // TODO:
+  // Beta `app.publish` method
+  // when i will i have time, i will improve this wrapping
+  publish(topic, string, isBinary, compress) {
+    this._app.publish(topic, string, isBinary, compress);
+  }
   listen(port, host) {
     const {
       _config: config,
