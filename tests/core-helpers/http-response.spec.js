@@ -7,6 +7,14 @@ class Response {
     this.buffer = '';
     this.headers = {};
   }
+  getRemoteAddress() {
+    const ipBuffer = new Uint8Array(4);
+
+    ipBuffer[0] = 127;
+    ipBuffer[3] = 1;
+
+    return ipBuffer;
+  }
   end(result) {
     this.buffer = result;
   }
@@ -18,6 +26,17 @@ class Response {
   }
 }
 Object.assign(Response.prototype, HttpResponse);
+
+// Add private method
+Response.prototype.getIP = HttpResponse._getResponseIP;
+
+describe('http response getIP', () => {
+  const fakeRes = new Response();
+
+  it('res.send', () => {
+    expect(fakeRes.getIP()).toBe('127.0.0.1');
+  });
+});
 
 describe('http response send', () => {
   const fakeRes = new Response();
