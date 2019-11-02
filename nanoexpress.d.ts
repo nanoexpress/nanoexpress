@@ -325,6 +325,13 @@ declare namespace nanoexpress {
     ws(path: string, fn: WsRoute): nanoexpressApp;
     ws(path: string, options: WebSocketOptions, fn: WsRoute): nanoexpressApp;
 
+    publish(
+      topic: string,
+      message: string,
+      isBinary?: boolean,
+      compress?: boolean
+    ): nanoexpressApp;
+
     listen(port: number, host?: string): Promise<nanoexpressApp>;
     close(): boolean;
     setErrorHandler(
