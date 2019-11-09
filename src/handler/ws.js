@@ -32,7 +32,9 @@ export default (path, options = {}, fn, ajv) => {
   const fetchUrl = path === '/*' || path.indexOf(':') !== -1;
   const rawPath = path;
   const preparedParams =
-    ((fetchUrl && !schema) || schema.params !== false) && prepareParams(path);
+    path.indexOf(':') !== -1 &&
+    (!schema || schema.params !== false) &&
+    prepareParams(path);
 
   return {
     ...options,
