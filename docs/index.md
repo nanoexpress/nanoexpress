@@ -14,6 +14,23 @@ For example please see [this](https://github.com/dalisoft/nanoexpress/tree/pro/e
 - This branch (PRO) is differs from master/dev branches
 - This branch is paid for commercial products if sources are closed
 
+## Why PRO
+
+- Support future development of nanoexpress from commercial projects
+- Testing myself for re-factoring code and how performance changes
+
+## Differences
+
+### PRO and non-PRO versions are almost same except
+
+- Performance on PRO is much faster
+- Stability on PRO version is much better
+- Features on PRO version is more and better
+- Logic and API are much closer to Express on PRO version
+- License for PRO version is GPL-3.0 licensed, but non-pro is Apache-2.0
+
+Both versions are maintaining, supporting and documentated
+
 ## Table of Contents
 
 - [Getting Started](./get-started.md)
