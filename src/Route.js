@@ -330,8 +330,12 @@ export default class Route {
               path += '/';
             }
             req.path += '/';
-            req.originalUrl += '/';
-            req.url += '/';
+
+            if (_config.enableUrlNormalize) {
+              req.originalUrl += '/';
+              req.url += '/';
+            }
+
             reqPathLength += 1;
           }
         }
@@ -355,10 +359,10 @@ export default class Route {
         if (_direct || !fetchUrl || req.path === path) {
           if (
             !isRaw &&
-            (!res._modifiedEnd &&
-              (!res.writeHead.notModified ||
-                (res.statusCode && res.statusCode !== 200) ||
-                res._headers))
+            !res._modifiedEnd &&
+            (!res.writeHead.notModified ||
+              (res.statusCode && res.statusCode !== 200) ||
+              res._headers)
           ) {
             res.modifyEnd();
           }

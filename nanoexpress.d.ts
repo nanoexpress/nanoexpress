@@ -21,6 +21,7 @@ declare namespace nanoexpress {
     configureAjv(ajv: Ajv): Ajv;
     swagger?: SwaggerOptions;
     strictPath?: boolean;
+    enableUrlNormalize?: boolean;
   }
 
   export interface HttpRequestHeaders {

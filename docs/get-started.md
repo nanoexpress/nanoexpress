@@ -52,6 +52,7 @@ There has few options which you can configure
 
 - `swagger: SwaggerObject` - Configures Swagger autodocumentation with your any schema for you
 - `strictPath: boolean` - Improves performance little (1%), but disables path normalising
+- `enableUrlNormalize: boolean` - Allows `url` and `originalUrl` normalising
 - `https: { key_file_name: string, cert_file_name: string }` - Option to enable SSL (https) mode
 - `console: CustomConsole { log, error }` - Your custom console class object for nice-looking logs :)
 
