@@ -9,7 +9,7 @@ module.exports = (app) => {
     app.ws(
       path,
       options,
-      (ws) => {
+      (req, ws) => {
         ws.on(
           'message',
           ({
