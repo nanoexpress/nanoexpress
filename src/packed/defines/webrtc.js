@@ -32,7 +32,7 @@ module.exports = (app) => {
             case 'offer': {
               const connection = connections[targetId];
 
-              if (connection !== null) {
+              if (connection) {
                 connection.targetId = ws.id;
                 ws.targetId = targetId;
 
@@ -49,7 +49,7 @@ module.exports = (app) => {
             case 'answer':
             case 'candidate': {
               const connection = connections[ws.targetId];
-              if (connection !== null) {
+              if (connection) {
                 connection.send(
                   JSON.stringify({
                     action,
@@ -63,7 +63,7 @@ module.exports = (app) => {
               const { targetId: wsId } = ws;
               const connection = connections[wsId];
 
-              if (connection !== null) {
+              if (connection) {
                 connection.send(JSON.stringify({ action: 'close' }));
 
                 ws.id = null;
@@ -93,7 +93,7 @@ module.exports = (app) => {
 
           const targetConnection = connections[targetId];
 
-          if (targetConnection !== null) {
+          if (targetConnection) {
             targetConnection.send(JSON.stringify({ action: 'close' }));
 
             // Clean target user too
