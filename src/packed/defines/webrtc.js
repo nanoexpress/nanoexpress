@@ -15,12 +15,12 @@ module.exports = (app) => {
           ({ action, error, credentials: { id, targetId } = {}, payload }) => {
             switch (action) {
             case 'register': {
-              if (connections[id] !== null) {
+              if (connections[id]) {
                 ws.send(
                   JSON.stringify({ action: 'register', success: false })
                 );
               } else {
-                connections[id] = { id, ws };
+                connections[id] = ws;
                 ws.id = id;
 
                 ws.send(
@@ -33,9 +33,10 @@ module.exports = (app) => {
               const connection = connections[targetId];
 
               if (connection !== null) {
-                connection.targetId = targetId;
+                connection.targetId = ws.id;
+                ws.targetId = targetId;
 
-                connections.ws.send(
+                connection.send(
                   JSON.stringify({
                     action,
                     credentials: { sourceId: connection.id },
@@ -47,12 +48,9 @@ module.exports = (app) => {
             }
             case 'answer':
             case 'candidate': {
-              const connection = connections[targetId];
-
+              const connection = connections[ws.targetId];
               if (connection !== null) {
-                connection.targetId = targetId;
-
-                connection.ws.send(
+                connection.send(
                   JSON.stringify({
                     action,
                     payload
@@ -62,13 +60,16 @@ module.exports = (app) => {
               break;
             }
             case 'close': {
-              const connection = connections[targetId];
+              const { targetId: wsId } = ws;
+              const connection = connections[wsId];
 
               if (connection !== null) {
-                connection.ws.send(JSON.stringify({ action: 'close' }));
+                connection.send(JSON.stringify({ action: 'close' }));
 
-                connection.ws = null;
+                ws.id = null;
+                ws.targetId = null;
                 connection.id = null;
+                connection.targetId = null;
               }
               break;
             }
@@ -85,19 +86,19 @@ module.exports = (app) => {
           }
         );
         ws.on('close', () => {
-          const connection = connections[ws.id];
+          const { id, targetId } = ws;
 
-          if (connection !== null) {
-            connections[connection.id] = null;
-            delete connections[connection.id];
+          connections[id] = null;
+          delete connections[id];
 
-            const targetConnection = connections[connections.targetId];
+          const targetConnection = connections[targetId];
 
-            if (targetConnection !== null) {
-              targetConnection.send(JSON.stringify({ action: 'close' }));
-              connections[connections.targetId] = null;
-              delete connections[connections.targetId];
-            }
+          if (targetConnection !== null) {
+            targetConnection.send(JSON.stringify({ action: 'close' }));
+
+            // Clean target user too
+            connections[targetId] = null;
+            delete connections[targetId];
           }
         });
       },
