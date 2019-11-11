@@ -65,11 +65,6 @@ module.exports = (app) => {
 
               if (connection) {
                 connection.send(JSON.stringify({ action: 'close' }));
-
-                ws.id = null;
-                ws.targetId = null;
-                connection.id = null;
-                connection.targetId = null;
               }
               break;
             }
@@ -90,6 +85,10 @@ module.exports = (app) => {
 
           connections[id] = null;
           delete connections[id];
+
+          ws.id = null;
+          ws.targetId = null;
+          ws = null;
 
           const targetConnection = connections[targetId];
 
