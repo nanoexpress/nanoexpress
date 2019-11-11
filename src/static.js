@@ -1,8 +1,37 @@
 import fs from 'fs';
 import { join } from 'path';
-import util from 'util';
-const readFile = util.promisify(fs.readFile);
 import { getMime } from './helpers/mime';
+
+const prepareStaticFilesAndFolders = (path) =>
+  fs
+    .readdirSync(path)
+    .map((file) => {
+      const resolved = join(path, file);
+
+      if (fs.lstatSync(resolved).isDirectory()) {
+        return {
+          files: prepareStaticFilesAndFolders(resolved),
+          reduce: true
+        };
+      }
+
+      const streamable = getMime(resolved);
+
+      return {
+        file,
+        resolved,
+        streamable,
+        raw: streamable ? null : fs.readFileSync(resolved)
+      };
+    })
+    .reduce((list, item) => {
+      if (item.reduce) {
+        list = list.concat(item.files);
+      } else {
+        list.push(item);
+      }
+      return list;
+    }, []);
 
 export default function staticMiddleware(
   path,
@@ -13,35 +42,25 @@ export default function staticMiddleware(
     streamConfig
   } = {}
 ) {
-  return (req, res) => {
+  const items = prepareStaticFilesAndFolders(path);
+
+  return (req, res, next) => {
     let fileName = req.path;
 
     if (forcePretty || (addPrettyUrl && req.path === '/')) {
       fileName += index;
     }
 
-    const fileResolved = join(path, fileName);
-
-    const isStreamableResource = getMime(req.path);
-
-    if (isStreamableResource) {
-      return res.sendFile(fileResolved, streamConfig).catch(() => {
-        res.writeStatus('404 Not Found');
-        res.end('');
-      });
-    } else {
-      let isAborted = false;
-      res.onAborted(() => {
-        isAborted = true;
-      });
-      return readFile(fileResolved, 'utf-8').then((data) => {
-        if (!isAborted) {
-          if (fileResolved.endsWith(index)) {
-            res.writeHeader('Content-Type', 'text/html');
-          }
-          res.end(data);
+    for (const { file, streamable, resolved, raw } of items) {
+      if (fileName.indexOf(file) !== -1) {
+        if (streamable) {
+          return res.sendFile(resolved, streamConfig);
+        } else {
+          return res.end(raw);
         }
-      });
+      }
     }
+
+    next();
   };
 }
