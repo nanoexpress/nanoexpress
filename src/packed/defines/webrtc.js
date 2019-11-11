@@ -12,12 +12,7 @@ module.exports = (app) => {
       (req, ws) => {
         ws.on(
           'message',
-          ({
-            action,
-            error,
-            credentials: { id, targetId },
-            payload: { offer, answer, candidate }
-          }) => {
+          ({ action, error, credentials: { id, targetId } = {}, payload }) => {
             switch (action) {
             case 'register': {
               if (connections[id] !== null) {
@@ -37,33 +32,23 @@ module.exports = (app) => {
                 connection.targetId = targetId;
 
                 connections.ws.send({
-                  action: 'offer',
+                  action,
                   credentials: { sourceId: connection.id },
-                  payload: { offer }
+                  payload
                 });
               }
               break;
             }
-            case 'answer': {
+            case 'answer':
+            case 'candidate': {
               const connection = connections[targetId];
 
               if (connection !== null) {
                 connection.targetId = targetId;
 
                 connection.ws.send({
-                  action: 'answer',
-                  payload: { answer }
-                });
-              }
-              break;
-            }
-            case 'candidate': {
-              const connection = connections[targetId];
-
-              if (connection !== null) {
-                connection.ws.send({
-                  action: 'candidate',
-                  payload: { candidate }
+                  action,
+                  payload
                 });
               }
               break;
@@ -75,8 +60,7 @@ module.exports = (app) => {
                 connection.ws.send({ action: 'close' });
 
                 connection.ws = null;
-                connection.credentials = null;
-                connections.payload = null;
+                connection.id = null;
               }
               break;
             }
