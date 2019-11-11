@@ -109,5 +109,7 @@ module.exports = (app) => {
       },
       ajv
     );
+
+    return app;
   };
 };
