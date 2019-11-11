@@ -173,6 +173,7 @@ declare namespace nanoexpress {
   export interface StaticOptions {
     index?: string;
     addPrettyUrl?: boolean;
+    forcePretty?: boolean;
     streamConfig?: StreamConfig;
   }
 

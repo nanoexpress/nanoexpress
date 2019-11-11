@@ -6,12 +6,17 @@ import { getMime } from './helpers/mime';
 
 export default function staticMiddleware(
   path,
-  { index = 'index.html', addPrettyUrl = true, streamConfig } = {}
+  {
+    index = 'index.html',
+    forcePretty = false,
+    addPrettyUrl = true,
+    streamConfig
+  } = {}
 ) {
   return (req, res) => {
     let fileName = req.path;
 
-    if (addPrettyUrl && req.path === '/') {
+    if (forcePretty || (addPrettyUrl && req.path === '/')) {
       fileName += index;
     }
 
