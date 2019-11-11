@@ -328,6 +328,10 @@ declare namespace nanoexpress {
     ws(path: string, fn: WsRoute): nanoexpressApp;
     ws(path: string, options: WebSocketOptions, fn: WsRoute): nanoexpressApp;
 
+    webrtc(): nanoexpressApp;
+    webrtc(path: string): nanoexpressApp;
+    webrtc(path: string, options: WebSocketOptions): nanoexpressApp;
+
     publish(
       topic: string,
       message: string,
