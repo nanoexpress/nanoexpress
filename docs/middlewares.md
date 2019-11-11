@@ -101,4 +101,4 @@ app.get('/my-route', corsPerRoute, (req, res) => {
 
 [&laquo; Getting started](./get-started.md)
 
-[WebSocket &raquo;](./websocket.md)
+[Defines &raquo;](./defines.md)
