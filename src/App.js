@@ -75,6 +75,11 @@ export default class App {
 
     return this;
   }
+  define(callback) {
+    callback(this);
+
+    return this;
+  }
   ws(path, options, wsConfig) {
     this._app.ws(
       path,

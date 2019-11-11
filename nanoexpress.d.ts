@@ -190,6 +190,8 @@ declare namespace nanoexpress {
     host: string | null;
     port: number | null;
     address: string;
+
+    define(callback: (app: nanoexpressApp) => void): nanoexpressApp;
     use(middleware: MiddlewareRoute): nanoexpressApp;
     use(path: string, middleware: MiddlewareRoute): nanoexpressApp;
     use(path: string, ...middlewares: MiddlewareRoute[]): nanoexpressApp;
