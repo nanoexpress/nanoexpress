@@ -222,12 +222,17 @@ export default class Route {
       prepareSwaggerDocs(_config.swagger, path, method, schema);
     }
 
+    let originalUrl = path;
     if (!_config.strictPath && path) {
       if (
         path.charAt(path.length - 1) !== '/' &&
         Math.abs(path.lastIndexOf('.') - path.length) > 5
       ) {
         path += '/';
+
+        if (_config.enableUrlNormalize) {
+          originalUrl += '/';
+        }
       }
     }
 
@@ -262,8 +267,8 @@ export default class Route {
       req.baseUrl = _baseUrl || req.baseUrl;
 
       // Aliases for polyfill
-      req.url = req.path;
-      req.originalUrl = req.url;
+      req.url = originalUrl;
+      req.originalUrl = originalUrl;
       req.baseUrl = _baseUrl || '';
 
       // Some callbacks which need for your
