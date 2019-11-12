@@ -21,6 +21,8 @@ For example please see [this](https://github.com/dalisoft/nanoexpress/tree/pro/e
 
 ## Differences
 
+About approximate price look [here](https://github.com/dalisoft/nanoexpress/issues/29)
+
 ### PRO and non-PRO versions are almost same except
 
 - Performance on PRO is much faster

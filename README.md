@@ -16,8 +16,6 @@ Nano-framework for Node.js powered by uWebSockets.js
 - This branch (PRO) is differs from master/dev branches
 - This branch is paid for commercial products if sources are closed
 
-## For Price, look [here](https://github.com/dalisoft/nanoexpress/issues/29)
-
 ## Requires
 
 - Node.js v10 or greater
