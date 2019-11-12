@@ -128,14 +128,16 @@ export default class App {
       this.options('/*', () => {});
     }
 
-    const notFoundHandler =
-      config._notFoundHandler ||
-      ((req, res) => {
-        res.statusCode = 404;
-        res.send({ code: 404, message: 'The route does not exist' });
-      });
-    notFoundHandler.handler = 2;
-    this.get('/*', notFoundHandler);
+    if (!this._anyRouteCalled) {
+      const notFoundHandler =
+        config._notFoundHandler ||
+        ((req, res) => {
+          res.statusCode = 404;
+          res.send({ code: 404, message: 'The route does not exist' });
+        });
+      notFoundHandler.handler = 2;
+      this.get('/*', notFoundHandler);
+    }
 
     return new Promise((resolve, reject) => {
       if (port === undefined) {
@@ -211,7 +213,7 @@ export default class App {
 for (let i = 0, len = httpMethods.length; i < len; i++) {
   const method = httpMethods[i];
   App.prototype[method] = function(path, ...fns) {
-    const { _app, _route } = this;
+    const { _app, _route, _anyRouteCalled } = this;
 
     if (fns.length > 0) {
       const preparedRouteFunction = _route._prepareMethod(method, path, ...fns);
@@ -219,6 +221,10 @@ for (let i = 0, len = httpMethods.length; i < len; i++) {
       _app[method](path, preparedRouteFunction);
 
       this._routeCalled = true;
+
+      if (!_anyRouteCalled && method !== 'options') {
+        this._anyRouteCalled = path === '/*';
+      }
 
       if (method === 'options') {
         this._optionsCalled = true;
