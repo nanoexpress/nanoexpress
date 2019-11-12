@@ -6,7 +6,7 @@ app.setErrorHandler((err, req, res) => {
   res.end(err.message);
 });
 
-app.setNotFoundHandler((res) => {
+app.setNotFoundHandler((req, res) => {
   res.end('you accessing to missing route??');
 });
 

@@ -94,6 +94,7 @@ export default class Route {
     let _direct = false;
     let _schema = null;
     let isAborted = false;
+    let isNotFoundHandler = false;
     const bodyAllowedMethod =
       method === 'post' || method === 'put' || method === 'del';
     let responseSchema;
@@ -147,7 +148,9 @@ export default class Route {
     // eslint-disable-next-line prefer-const
     responseSchema = _schema && validation && validation.responseSchema;
 
+    isNotFoundHandler = routeFunction.handler === 2;
     if (
+      method !== 'options' &&
       (routeFunction.then ||
         routeFunction.constructor.name === 'AsyncFunction') &&
       !/res\.(s?end|json)/g.test(routeFunction.toString())
@@ -345,7 +348,12 @@ export default class Route {
           }
         }
 
-        if (!isAborted && middlewares && middlewares.length > 0) {
+        if (
+          !isAborted &&
+          !isNotFoundHandler &&
+          middlewares &&
+          middlewares.length > 0
+        ) {
           for (let i = 0, len = middlewares.length, middleware; i < len; i++) {
             middleware = middlewares[i];
 
@@ -357,7 +365,7 @@ export default class Route {
           }
         }
 
-        if (isAborted) {
+        if (isAborted || method === 'options') {
           return;
         }
 

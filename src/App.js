@@ -122,20 +122,20 @@ export default class App {
       );
     }
 
-    this.get(
-      '/*',
-      config._notFoundHandler ||
-        ((req, res) => {
-          res.statusCode = 404;
-          res.send({ code: 404, message: 'The route does not exist' });
-        })
-    );
-
     // Polyfill for plugins like CORS
     // Detaching it from every method for performance reason
     if (_routeCalled && !_optionsCalled) {
       this.options('/*', () => {});
     }
+
+    const notFoundHandler =
+      config._notFoundHandler ||
+      ((req, res) => {
+        res.statusCode = 404;
+        res.send({ code: 404, message: 'The route does not exist' });
+      });
+    notFoundHandler.handler = 2;
+    this.get('/*', notFoundHandler);
 
     return new Promise((resolve, reject) => {
       if (port === undefined) {
