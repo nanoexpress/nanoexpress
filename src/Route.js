@@ -149,34 +149,35 @@ export default class Route {
     responseSchema = _schema && validation && validation.responseSchema;
 
     isNotFoundHandler = routeFunction.handler === 2;
-    if (
-      method !== 'options' &&
-      (routeFunction.then ||
-        routeFunction.constructor.name === 'AsyncFunction') &&
-      !/res\.(s?end|json)/g.test(routeFunction.toString())
-    ) {
-      const _oldRouteFunction = routeFunction;
-      routeFunction = (req, res) => {
-        return _oldRouteFunction(req, res)
-          .then((data) => {
-            if (!isAborted && data && data !== res) {
-              isAborted = true;
-              return res.send(data);
-            }
-            return null;
-          })
-          .catch((err) => {
-            if (!isAborted) {
-              if (_config._errorHandler) {
-                return _config._errorHandler(err, req, res);
+    if (method !== 'options') {
+      if (
+        (routeFunction.then ||
+          routeFunction.constructor.name === 'AsyncFunction') &&
+        !/res\.(s?end|json)/g.test(routeFunction.toString())
+      ) {
+        const _oldRouteFunction = routeFunction;
+        routeFunction = (req, res) => {
+          return _oldRouteFunction(req, res)
+            .then((data) => {
+              if (!isAborted && data && data !== res) {
+                isAborted = true;
+                return res.send(data);
               }
-              res.status(err.code || err.status || 500);
-              res.send({ error: err.message });
-              isAborted = true;
-            }
-            return null;
-          });
-      };
+              return null;
+            })
+            .catch((err) => {
+              if (!isAborted) {
+                if (_config._errorHandler) {
+                  return _config._errorHandler(err, req, res);
+                }
+                res.status(err.code || err.status || 500);
+                res.send({ error: err.message });
+                isAborted = true;
+              }
+              return null;
+            });
+        };
+      }
     }
 
     middlewares = middlewares

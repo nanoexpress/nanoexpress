@@ -99,6 +99,8 @@ app.get(
 
 ## Error handling example
 
+Note: Don't forget convert your route to `Async` for to be handled!
+
 ```js
 app.setErrorHandler((err, req, res) => {
   if (checkSomething(err)) {
@@ -115,7 +117,7 @@ Also available these methods
 
 ## Known Issues
 
-Ooops, there no known issues yet
+- Sync functions errors doesn't handled, you make that function `Async` to be handled by `nanoexpress Pro`
 
 [&laquo; Websocket](./websocket.md)
 
