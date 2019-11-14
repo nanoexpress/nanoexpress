@@ -413,7 +413,9 @@ for (let i = 0, len = httpMethods.length; i < len; i++) {
           path.charAt(path.length - 1) !== '/' &&
           Math.abs(path.lastIndexOf('.') - path.length) > 5
         ) {
-          _path += '/';
+          if (_config.enableUrlNormalize) {
+            _path += '/';
+          }
         }
       }
 
