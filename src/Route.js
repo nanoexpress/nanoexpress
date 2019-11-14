@@ -238,6 +238,13 @@ export default class Route {
         }
       }
     }
+    if (
+      !_config.enableUrlNormalize &&
+      !_config.strictPath &&
+      originalUrl.endsWith('/')
+    ) {
+      originalUrl = originalUrl.substr(0, originalUrl.length - 1);
+    }
 
     const rawPath = path;
     const preparedParams =
@@ -413,9 +420,7 @@ for (let i = 0, len = httpMethods.length; i < len; i++) {
           path.charAt(path.length - 1) !== '/' &&
           Math.abs(path.lastIndexOf('.') - path.length) > 5
         ) {
-          if (_config.enableUrlNormalize) {
-            _path += '/';
-          }
+          _path += '/';
         }
       }
 
