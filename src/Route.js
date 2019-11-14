@@ -180,7 +180,11 @@ export default class Route {
     }
 
     middlewares = middlewares
+      .filter((middleware, index, self) => self.indexOf(middleware) === index)
       .map((middleware) => {
+        if (middleware.override && isNotFoundHandler) {
+          isNotFoundHandler = false;
+        }
         if (middleware._module) {
           return null;
         } else if (

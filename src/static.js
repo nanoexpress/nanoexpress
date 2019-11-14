@@ -44,7 +44,7 @@ export default function staticMiddleware(
 ) {
   const items = prepareStaticFilesAndFolders(path);
 
-  return (req, res, next) => {
+  const fn = (req, res, next) => {
     let fileName = req.path;
 
     if (forcePretty || (addPrettyUrl && req.path === '/')) {
@@ -63,4 +63,7 @@ export default function staticMiddleware(
 
     next();
   };
+  fn.override = true;
+
+  return fn;
 }
