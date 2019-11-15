@@ -1,3 +1,3 @@
-import webRTC from './webrtc';
+import webRTC from './webrtc.js';
 
 export { webRTC };

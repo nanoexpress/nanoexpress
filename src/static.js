@@ -1,6 +1,6 @@
 import fs from 'fs';
 import { join } from 'path';
-import { getMime } from './helpers/mime';
+import { getMime } from './helpers/mime.js';
 
 const prepareStaticFilesAndFolders = (path) =>
   fs
