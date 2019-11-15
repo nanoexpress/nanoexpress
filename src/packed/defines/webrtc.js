@@ -2,7 +2,7 @@
 // https://flaviocopes.com/webrtc/
 // thank you
 
-module.exports = (app) => {
+export default (app) => {
   app.webrtc = (path = '/webrtc', options = {}, ajv) => {
     const connections = {};
 

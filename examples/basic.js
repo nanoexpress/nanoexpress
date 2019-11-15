@@ -7,7 +7,7 @@ const app = nanoexpress({
 app.get(
   '/',
   {
-    isRaw: true
+    isStrictRaw: true
   },
   (req, res) => {
     res.end('hello world');

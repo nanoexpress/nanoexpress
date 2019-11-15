@@ -1,3 +1,3 @@
-const webRTC = require('./webrtc');
+import webRTC from './webrtc';
 
-module.exports = { webRTC };
+export { webRTC };

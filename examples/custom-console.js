@@ -1,4 +1,4 @@
-const nanoexpress = require('..');
+import nanoexpress from '../src/nanoexpress.js';
 
 const log = (...texts) => {
   console.log('\x1b[0m%s', ...texts, '\x1b[0m');

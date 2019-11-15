@@ -65,6 +65,8 @@ app.post('/', (req, res) => {
 
 Note: _Body-parsing, schema validating are unavailable here, but RPS are higher by 5-10%_
 
+Note #2: The more strict and performant way, try `{ isStrictRaw: true }`
+
 ```js
 app.get('/', { isRaw: true }, (req, res) => {
   // do something...

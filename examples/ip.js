@@ -1,4 +1,4 @@
-const nanoexpress = require('..');
+import nanoexpress from '../src/nanoexpress.js';
 
 const app = nanoexpress();
 

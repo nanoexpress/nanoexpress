@@ -1,6 +1,7 @@
 import nanoexpress from '../src/nanoexpress.js';
-const graphqlHTTP = require('../node_modules/express-graphql');
-const { buildSchema } = require('../node_modules/graphql');
+import expressGraphql from 'express-graphql';
+
+import { buildSchema } from 'graphql';
 
 // Construct a schema, using GraphQL schema language
 var schema = buildSchema(`
@@ -18,7 +19,7 @@ const app = nanoexpress();
 
 app.post(
   '/graphql',
-  graphqlHTTP({
+  expressGraphql({
     schema,
     rootValue: root,
     graphiql: false
@@ -27,7 +28,7 @@ app.post(
 
 app.get(
   '/graphql',
-  graphqlHTTP({
+  expressGraphql({
     schema,
     rootValue: root,
     graphiql: true

@@ -1,5 +1,5 @@
-import { headers, cookies, queries, params } from '../normalizers';
-import { prepareParams } from '../helpers';
+import { headers, cookies, queries, params } from '../normalizers/index.js';
+import { prepareParams } from '../helpers/index.js';
 
 import Events from '@dalisoft/events';
 

@@ -1,6 +1,6 @@
-const { absolutePath } = require('swagger-ui-dist');
+import { absolutePath } from 'swagger-ui-dist';
 
-module.exports = (config = {}) => {
+export default (config = {}) => {
   if (config.title === undefined) {
     config.title = 'nanoexpress - Swagger UI';
   }

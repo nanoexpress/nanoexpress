@@ -1,5 +1,5 @@
 import nanoexpress from '../src/nanoexpress.js';
-const cors = require('../node_modules/cors');
+import cors from 'cors';
 
 const app = nanoexpress();
 

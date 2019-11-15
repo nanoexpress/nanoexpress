@@ -1,6 +1,6 @@
 import { parse } from 'querystring';
 
-module.exports = ({ json = true, urlEncoded = true } = {}) => {
+export default ({ json = true, urlEncoded = true } = {}) => {
   return (req, res, next) => {
     const { headers, body } = req;
 

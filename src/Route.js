@@ -110,6 +110,12 @@ export default class Route {
         middleware &&
         middleware.isRaw === true
     );
+    const isStrictRaw = middlewares.find(
+      (middleware) =>
+        typeof middleware === 'object' &&
+        middleware &&
+        middleware.isStrictRaw === true
+    );
     const noMiddleware = middlewares.find(
       (middleware) =>
         typeof middleware === 'object' &&
@@ -149,90 +155,94 @@ export default class Route {
       schema = null;
     }
 
-    _schema = (schema && schema.schema) || undefined;
-    validation = _schema && prepareValidation(_ajv, _schema);
-    // eslint-disable-next-line prefer-const
-    responseSchema = _schema && validation && validation.responseSchema;
+    if (!isRaw && !isStrictRaw) {
+      _schema = (schema && schema.schema) || undefined;
+      validation = _schema && prepareValidation(_ajv, _schema);
+      // eslint-disable-next-line prefer-const
+      responseSchema = _schema && validation && validation.responseSchema;
 
-    isNotFoundHandler = routeFunction.handler === 2;
-    if (
-      method !== 'options' &&
-      (routeFunction.then ||
-        routeFunction.constructor.name === 'AsyncFunction') &&
-      !/res\.(s?end|json)/g.test(routeFunction.toString())
-    ) {
-      const _oldRouteFunction = routeFunction;
-      routeFunction = (req, res) => {
-        return _oldRouteFunction(req, res)
-          .then((data) => {
-            if (!isAborted && data && data !== res) {
-              isAborted = true;
-              return res.send(data);
-            }
-            return null;
-          })
-          .catch((err) => {
-            if (!isAborted) {
-              if (_config._errorHandler) {
-                return _config._errorHandler(err, req, res);
+      isNotFoundHandler = routeFunction.handler === 2;
+      if (
+        method !== 'options' &&
+        (routeFunction.then ||
+          routeFunction.constructor.name === 'AsyncFunction') &&
+        !/res\.(s?end|json)/g.test(routeFunction.toString())
+      ) {
+        const _oldRouteFunction = routeFunction;
+        routeFunction = (req, res) => {
+          return _oldRouteFunction(req, res)
+            .then((data) => {
+              if (!isAborted && data && data !== res) {
+                isAborted = true;
+                return res.send(data);
               }
-              res.status(err.code || err.status || 500);
-              res.send({ error: err.message });
-              isAborted = true;
-            }
-            return null;
-          });
-      };
-    }
-
-    middlewares = middlewares
-      .filter((middleware, index, self) => self.indexOf(middleware) === index)
-      .map((middleware) => {
-        if (middleware.override && isNotFoundHandler) {
-          isNotFoundHandler = false;
-        }
-        if (middleware._module) {
-          return null;
-        } else if (
-          middleware.then ||
-          middleware.constructor.name === 'AsyncFunction'
-        ) {
-          return null;
-        } else {
-          const _oldMiddleware = middleware;
-          middleware = function(req, res) {
-            return new Promise((resolve) => {
-              _oldMiddleware(req, res, (err, done) => {
-                if (err) {
-                  if (_config._errorHandler) {
-                    return _config._errorHandler(err, req, res);
-                  }
-
-                  res.status(err.status || err.code || 400, true);
-                  res.writeStatus(res.statusCode);
-                  res.writeHeader(
-                    'Content-Type',
-                    'application/json; charset=utf-8'
-                  );
-
-                  resolve();
-                  res.end(
-                    `{"error":"${typeof err === 'string' ? err : err.message}"}`
-                  );
-                  isAborted = true;
-                } else {
-                  resolve(done);
+              return null;
+            })
+            .catch((err) => {
+              if (!isAborted) {
+                if (_config._errorHandler) {
+                  return _config._errorHandler(err, req, res);
                 }
-              });
+                res.status(err.code || err.status || 500);
+                res.send({ error: err.message });
+                isAborted = true;
+              }
+              return null;
             });
-          };
-        }
-        return middleware;
-      })
-      .filter((middleware) => typeof middleware === 'function');
+        };
+      }
 
-    if (_config && _config.swagger && schema) {
-      prepareSwaggerDocs(_config.swagger, path, method, schema);
+      middlewares = middlewares
+        .filter((middleware, index, self) => self.indexOf(middleware) === index)
+        .map((middleware) => {
+          if (middleware.override && isNotFoundHandler) {
+            isNotFoundHandler = false;
+          }
+          if (middleware._module) {
+            return null;
+          } else if (
+            middleware.then ||
+            middleware.constructor.name === 'AsyncFunction'
+          ) {
+            return null;
+          } else {
+            const _oldMiddleware = middleware;
+            middleware = function(req, res) {
+              return new Promise((resolve) => {
+                _oldMiddleware(req, res, (err, done) => {
+                  if (err) {
+                    if (_config._errorHandler) {
+                      return _config._errorHandler(err, req, res);
+                    }
+
+                    res.status(err.status || err.code || 400, true);
+                    res.writeStatus(res.statusCode);
+                    res.writeHeader(
+                      'Content-Type',
+                      'application/json; charset=utf-8'
+                    );
+
+                    resolve();
+                    res.end(
+                      `{"error":"${
+                        typeof err === 'string' ? err : err.message
+                      }"}`
+                    );
+                    isAborted = true;
+                  } else {
+                    resolve(done);
+                  }
+                });
+              });
+            };
+          }
+          return middleware;
+        })
+        .filter((middleware) => typeof middleware === 'function');
+
+      if (_config && _config.swagger && schema) {
+        prepareSwaggerDocs(_config.swagger, path, method, schema);
+      }
     }
 
     let originalUrl = path;
@@ -277,66 +287,81 @@ export default class Route {
       _onAbortedCallbacks.push(fn);
     };
 
-    return async (res, req) => {
-      isAborted = false;
-      res.onAborted(_handleOnAborted);
+    return isStrictRaw
+      ? (res, req) => {
+        req.rawPath = rawPath;
+        req.method = fetchMethod ? req.getMethod() : method;
+        req.path = fetchUrl ? req.getUrl() : path;
+        req.baseUrl = _baseUrl || req.baseUrl;
 
-      req.rawPath = rawPath;
-      req.method = fetchMethod ? req.getMethod() : method;
-      req.path = fetchUrl ? req.getUrl() : path;
-      req.baseUrl = _baseUrl || req.baseUrl;
+        // Aliases for polyfill
+        req.url = originalUrl;
+        req.originalUrl = originalUrl;
+        req.baseUrl = _baseUrl || '';
 
-      // Aliases for polyfill
-      req.url = originalUrl;
-      req.originalUrl = originalUrl;
-      req.baseUrl = _baseUrl || '';
-
-      // Some callbacks which need for your
-      req.onAborted = attachOnAborted;
-
-      // Aliases for future usage and easy-access
-      if (!isRaw) {
-        req.__response = res;
-        res.__request = req;
-
-        // Extending proto
-        const { __proto__ } = res;
-        for (const newMethod in HttpResponse) {
-          __proto__[newMethod] = HttpResponse[newMethod];
-        }
-        req.getIP = res._getResponseIP;
-        res.writeHead.notModified = true;
+        return routeFunction(req, res);
       }
+      : async (res, req) => {
+        isAborted = false;
+        !isRaw && res.onAborted(_handleOnAborted);
 
-      // Default HTTP Raw Status Code Integer
-      res.rawStatusCode = 200;
+        req.rawPath = rawPath;
+        req.method = fetchMethod ? req.getMethod() : method;
+        req.path = fetchUrl ? req.getUrl() : path;
+        req.baseUrl = _baseUrl || req.baseUrl;
 
-      // Assign schemas
-      if (responseSchema) {
-        res.fastJson = responseSchema;
-      }
+        // Aliases for polyfill
+        req.url = originalUrl;
+        req.originalUrl = originalUrl;
+        req.baseUrl = _baseUrl || '';
 
-      if (!isRaw && _schema !== false) {
-        if (!_schema || _schema.headers !== false) {
-          req.headers = headers(req, _schema && _schema.headers);
-        }
-        if (!_schema || _schema.cookies !== false) {
-          req.cookies = cookies(req, _schema && _schema.cookies);
-        }
-        if (!_schema || _schema.params !== false) {
-          if (req.path !== path) {
-            path = req.path;
+        // Some callbacks which need for your
+        req.onAborted = attachOnAborted;
+
+        // Aliases for future usage and easy-access
+        if (!isRaw) {
+          req.__response = res;
+          res.__request = req;
+
+          // Extending proto
+          const { __proto__ } = res;
+          for (const newMethod in HttpResponse) {
+            __proto__[newMethod] = HttpResponse[newMethod];
           }
-          req.params = params(req, preparedParams);
+          req.getIP = res._getResponseIP;
+          res.writeHead.notModified = true;
         }
-        if (!_schema || _schema.query !== false) {
-          req.query = queries(req, _schema && _schema.query);
-        }
-        if (bodyAllowedMethod && (!_schema || _schema.body !== false)) {
-          const bodyResponse = await body(req, res, attachOnAborted);
 
-          if (bodyResponse) {
-            req.body = bodyResponse;
+        // Default HTTP Raw Status Code Integer
+        res.rawStatusCode = 200;
+
+        // Assign schemas
+        if (responseSchema) {
+          res.fastJson = responseSchema;
+        }
+
+        if (!isRaw && _schema !== false) {
+          if (!_schema || _schema.headers !== false) {
+            req.headers = headers(req, _schema && _schema.headers);
+          }
+          if (!_schema || _schema.cookies !== false) {
+            req.cookies = cookies(req, _schema && _schema.cookies);
+          }
+          if (!_schema || _schema.params !== false) {
+            if (req.path !== path) {
+              path = req.path;
+            }
+            req.params = params(req, preparedParams);
+          }
+          if (!_schema || _schema.query !== false) {
+            req.query = queries(req, _schema && _schema.query);
+          }
+          if (bodyAllowedMethod && (!_schema || _schema.body !== false)) {
+            const bodyResponse = await body(req, res, attachOnAborted);
+
+            if (bodyResponse) {
+              req.body = bodyResponse;
+            }
           }
         }
 
@@ -348,8 +373,8 @@ export default class Route {
           const dotIndex = req.path.lastIndexOf('.');
           if (
             req.path.charAt(reqPathLength - 1) !== '/' &&
-            (dotIndex === -1 ||
-              (dotIndex !== -1 && Math.abs(dotIndex - req.path.length)) > 5)
+              (dotIndex === -1 ||
+                (dotIndex !== -1 && Math.abs(dotIndex - req.path.length)) > 5)
           ) {
             if (req.path === path) {
               path += '/';
@@ -366,12 +391,17 @@ export default class Route {
         }
 
         if (
-          !isAborted &&
-          !isNotFoundHandler &&
-          middlewares &&
-          middlewares.length > 0
+          !isRaw &&
+            !isAborted &&
+            !isNotFoundHandler &&
+            middlewares &&
+            middlewares.length > 0
         ) {
-          for (let i = 0, len = middlewares.length, middleware; i < len; i++) {
+          for (
+            let i = 0, len = middlewares.length, middleware;
+            i < len;
+            i++
+          ) {
             middleware = middlewares[i];
 
             if (isAborted) {
@@ -389,28 +419,27 @@ export default class Route {
         if (_direct || !fetchUrl || req.path === path) {
           if (
             !isRaw &&
-            !res._modifiedEnd &&
-            (!res.writeHead.notModified ||
-              (res.statusCode && res.statusCode !== 200) ||
-              res._headers)
+              !res._modifiedEnd &&
+              (!res.writeHead.notModified ||
+                (res.statusCode && res.statusCode !== 200) ||
+                res._headers)
           ) {
             res.modifyEnd();
           }
 
           if (
             isAborted ||
-            (!isRaw &&
-              validation &&
-              validation.validationStringify &&
-              processValidation(req, res, _config, validation))
+              (!isRaw &&
+                validation &&
+                validation.validationStringify &&
+                processValidation(req, res, _config, validation))
           ) {
             return;
           }
 
           return routeFunction(req, res);
         }
-      }
-    };
+      };
   }
 }
 

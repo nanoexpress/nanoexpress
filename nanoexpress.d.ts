@@ -139,6 +139,7 @@ declare namespace nanoexpress {
   interface RouteOption {
     schema?: Schema;
     isRaw?: boolean;
+    isStrictRaw?: boolean;
     noMiddleware?: boolean;
     onAborted?: () => any;
   }

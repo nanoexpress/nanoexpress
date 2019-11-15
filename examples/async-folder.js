@@ -1,7 +1,8 @@
-const path = require('path');
-const fs = require('fs');
 import nanoexpress from '../src/nanoexpress.js';
-const util = require('util');
+
+import path from 'path';
+import fs from 'fs';
+import util from 'util';
 const fsReadDir = util.promisify(fs.readdir);
 
 const app = nanoexpress();
