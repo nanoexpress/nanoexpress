@@ -20,6 +20,8 @@ declare namespace nanoexpress {
     ajv?: AjvOptions;
     configureAjv(ajv: Ajv): Ajv;
     swagger?: SwaggerOptions;
+    strictPath?: boolean;
+    enableUrlNormalize?: boolean;
   }
 
   export interface HttpRequestHeaders {
@@ -45,8 +47,11 @@ declare namespace nanoexpress {
     emit(name: string, ...args: any[]);
   }
   export interface HttpRequest extends HttpRequestBasic {
+    method: string;
     path: string;
+    baseUrl: string;
     url: string;
+    originalUrl: string;
     headers?: HttpRequestHeaders;
     cookies?: HttpRequestCookies;
     query?: HttpRequestQueries;
@@ -65,8 +70,10 @@ declare namespace nanoexpress {
     expires?: number | string;
   }
   export interface HttpResponse extends HttpResponseBasic {
+    type(type: string): HttpResponse;
     status(code: number): HttpResponse;
     setHeader(key: string, value: string | number): HttpResponse;
+    header(key: string, value: string | number): HttpResponse;
     hasHeader(key: string): HttpResponse;
     removeHeader(key: string): HttpResponse;
     applyHeadersAndStatus(): HttpResponse;
@@ -77,7 +84,7 @@ declare namespace nanoexpress {
     redirect(code: number | string, path?: string): HttpResponse;
     send(result: string | object | any[]): HttpResponse;
     json(result: object | any[]): HttpResponse;
-    cork(fn: Function): HttpResponse;
+    sendFile(filename: string, config?: StreamConfig): Promise<HttpResponse>;
     setCookie(
       key: string,
       value: string,
@@ -89,13 +96,14 @@ declare namespace nanoexpress {
     __request?: HttpRequest;
   }
 
-  type HttpRoute = (
+  type HttpRoute = (req: HttpRequest, res: HttpResponse) => nanoexpressApp;
+
+  type MiddlewareRoute = (
     req: HttpRequest,
     res: HttpResponse,
-    next?: Function,
-    config?: object,
-    previousMiddlewareResult?: any
-  ) => any;
+    next?: (err: Error | null | undefined, done: boolean | undefined) => any
+  ) => nanoexpressApp;
+
   type WsRoute = (req: HttpRequest, ws: WebSocket) => any;
 
   export interface AppRoute {
@@ -128,10 +136,11 @@ declare namespace nanoexpress {
     idleTimeout?: number;
     schema?: Schema;
   }
-  interface MiddlewareOption {
+  interface RouteOption {
     schema?: Schema;
     isRaw?: boolean;
-    direct?: boolean;
+    noMiddleware?: boolean;
+    onAborted?: () => any;
   }
 
   export interface AppRoute {
@@ -152,13 +161,22 @@ declare namespace nanoexpress {
     };
   }
 
+  interface StreamCompressionOptions {
+    priority: string[];
+  }
+  interface StreamConfig {
+    lastModified?: boolean;
+    compress?: boolean;
+    compressionOptions?: StreamCompressionOptions;
+    cache?: boolean;
+  }
+
   export interface StaticOptions {
     index?: string;
     addPrettyUrl?: boolean;
-    streamConfig?: object;
+    forcePretty?: boolean;
+    streamConfig?: StreamConfig;
   }
-
-  interface Middleware extends MiddlewareOption, HttpRoute {}
 
   interface validationErrorItems {
     type: string;
@@ -173,22 +191,155 @@ declare namespace nanoexpress {
     host: string | null;
     port: number | null;
     address: string;
-    static(
-      route: string,
-      folderPath: string,
-      staticOptions?: StaticOptions
+
+    define(callback: (app: nanoexpressApp) => void): nanoexpressApp;
+    use(middleware: MiddlewareRoute): nanoexpressApp;
+    use(path: string, middleware: MiddlewareRoute): nanoexpressApp;
+    use(path: string, ...middlewares: MiddlewareRoute[]): nanoexpressApp;
+    use(...middlewares: MiddlewareRoute[]): nanoexpressApp;
+
+    use(middleware: PromiseLike<MiddlewareRoute>): PromiseLike<any>;
+    use(
+      path: string,
+      middleware: PromiseLike<MiddlewareRoute>
+    ): PromiseLike<any>;
+    use(
+      path: string,
+      ...middlewares: PromiseLike<MiddlewareRoute>[]
+    ): PromiseLike<any>;
+    use(...middlewares: PromiseLike<MiddlewareRoute>[]): PromiseLike<any>;
+
+    get(path: string, callback: HttpRoute): nanoexpressApp;
+    get(
+      path: string,
+      options: RouteOption,
+      callback: HttpRoute
     ): nanoexpressApp;
-    use(path: string | Middleware, ...fns: Middleware[]): nanoexpressApp;
-    get(path: string | Middleware, ...fns: Middleware[]): nanoexpressApp;
-    post(path: string | Middleware, ...fns: Middleware[]): nanoexpressApp;
-    put(path: string | Middleware, ...fns: Middleware[]): nanoexpressApp;
-    patch(path: string | Middleware, ...fns: Middleware[]): nanoexpressApp;
-    del(path: string | Middleware, ...fns: Middleware[]): nanoexpressApp;
-    options(path: string | Middleware, ...fns: Middleware[]): nanoexpressApp;
-    head(path: string | Middleware, ...fns: Middleware[]): nanoexpressApp;
-    trace(path: string | Middleware, ...fns: Middleware[]): nanoexpressApp;
-    any(path: string | Middleware, ...fns: Middleware[]): nanoexpressApp;
-    ws(path: string, options: WebSocketOptions, fn?: WsRoute): nanoexpressApp;
+    get(path: string, ...middlewares: MiddlewareRoute[]): nanoexpressApp;
+    get(
+      path: string,
+      options: RouteOption,
+      ...middlewares: MiddlewareRoute[]
+    ): nanoexpressApp;
+
+    post(path: string, callback: HttpRoute): nanoexpressApp;
+    post(
+      path: string,
+      options: RouteOption,
+      callback: HttpRoute
+    ): nanoexpressApp;
+    post(path: string, ...middlewares: MiddlewareRoute[]): nanoexpressApp;
+    post(
+      path: string,
+      options: RouteOption,
+      ...middlewares: MiddlewareRoute[]
+    ): nanoexpressApp;
+
+    put(path: string, callback: HttpRoute): nanoexpressApp;
+    put(
+      path: string,
+      options: RouteOption,
+      callback: HttpRoute
+    ): nanoexpressApp;
+    put(path: string, ...middlewares: MiddlewareRoute[]): nanoexpressApp;
+    put(
+      path: string,
+      options: RouteOption,
+      ...middlewares: MiddlewareRoute[]
+    ): nanoexpressApp;
+
+    patch(path: string, callback: HttpRoute): nanoexpressApp;
+    patch(
+      path: string,
+      options: RouteOption,
+      callback: HttpRoute
+    ): nanoexpressApp;
+    patch(path: string, ...middlewares: MiddlewareRoute[]): nanoexpressApp;
+    patch(
+      path: string,
+      options: RouteOption,
+      ...middlewares: MiddlewareRoute[]
+    ): nanoexpressApp;
+
+    del(path: string, callback: HttpRoute): nanoexpressApp;
+    del(
+      path: string,
+      options: RouteOption,
+      callback: HttpRoute
+    ): nanoexpressApp;
+    del(path: string, ...middlewares: MiddlewareRoute[]): nanoexpressApp;
+    del(
+      path: string,
+      options: RouteOption,
+      ...middlewares: MiddlewareRoute[]
+    ): nanoexpressApp;
+
+    options(path: string, callback: HttpRoute): nanoexpressApp;
+    options(
+      path: string,
+      options: RouteOption,
+      callback: HttpRoute
+    ): nanoexpressApp;
+    options(path: string, ...middlewares: MiddlewareRoute[]): nanoexpressApp;
+    options(
+      path: string,
+      options: RouteOption,
+      ...middlewares: MiddlewareRoute[]
+    ): nanoexpressApp;
+
+    any(path: string, callback: HttpRoute): nanoexpressApp;
+    any(
+      path: string,
+      options: RouteOption,
+      callback: HttpRoute
+    ): nanoexpressApp;
+    any(path: string, ...middlewares: MiddlewareRoute[]): nanoexpressApp;
+    any(
+      path: string,
+      options: RouteOption,
+      ...middlewares: MiddlewareRoute[]
+    ): nanoexpressApp;
+
+    head(path: string, callback: HttpRoute): nanoexpressApp;
+    head(
+      path: string,
+      options: RouteOption,
+      callback: HttpRoute
+    ): nanoexpressApp;
+    head(path: string, ...middlewares: MiddlewareRoute[]): nanoexpressApp;
+    head(
+      path: string,
+      options: RouteOption,
+      ...middlewares: MiddlewareRoute[]
+    ): nanoexpressApp;
+
+    trace(path: string, callback: HttpRoute): nanoexpressApp;
+    trace(
+      path: string,
+      options: RouteOption,
+      callback: HttpRoute
+    ): nanoexpressApp;
+    trace(path: string, ...middlewares: MiddlewareRoute[]): nanoexpressApp;
+    trace(
+      path: string,
+      options: RouteOption,
+      ...middlewares: MiddlewareRoute[]
+    ): nanoexpressApp;
+
+    ws(path: string, fn: WsRoute): nanoexpressApp;
+    ws(path: string, options: WebSocketOptions, fn: WsRoute): nanoexpressApp;
+
+    webrtc(): nanoexpressApp;
+    webrtc(path: string): nanoexpressApp;
+    webrtc(path: string, options: WebSocketOptions): nanoexpressApp;
+
+    publish(
+      topic: string,
+      message: string,
+      isBinary?: boolean,
+      compress?: boolean
+    ): nanoexpressApp;
+
     listen(port: number, host?: string): Promise<nanoexpressApp>;
     close(): boolean;
     setErrorHandler(

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      nanoexpress - WebRTC Demo
+    </title>
+  </head>
+  <body>
+    <main>
+      <div id="login">
+        <label for="username">Login</label>
+        <input id="username" placeholder="Login" required="" autofocus="" />
+        <button id="login">Login</button>
+      </div>
+      <div id="call">
+        <video id="local" autoplay></video>
+        <video id="remote" autoplay></video>
+        <div>
+          <input id="username-to-call" placeholder="Username to call" />
+          <button id="call">Call</button>
+          <button id="close-call">Close call</button>
+        </div>
+      </div>
+    </main>
+    <script src="https://unpkg.com/@dalisoft/args"></script>
+    <script src="https://unpkg.com/@dalisoft/events"></script>
+    <script src="https://unpkg.com/@dalisoft/ws-events-sync@1/ws-events-sync.min.js"></script>
+    <script>
+      const ws = new WebSocket('ws://localhost:4044/webrtc');
+      ws.onopen = () => {
+        console.log('Connected to the signaling server');
+      };
+      ws.onerror = (err) => {
+        console.error(err);
+      };
+      ws.onmessage = (msg) => {
+        console.log('Got message', msg.data);
+        const data = JSON.parse(msg.data);
+        switch (data.action) {
+          case 'register':
+            handleLogin(data.success);
+            break;
+          case 'offer':
+            handleOffer(data.payload.offer, data.credentials.sourceId);
+            break;
+          case 'answer':
+            handleAnswer(data.payload.answer);
+            break;
+          case 'candidate':
+            handleCandidate(data.payload.candidate);
+            break;
+          case 'close':
+            handleClose();
+            break;
+          default:
+            break;
+        }
+      };
+      let connection = null;
+      let name = null;
+      let to = null;
+      const sendMessage = (message) => {
+        if (to) {
+          if (message.credentials) {
+            message.credentials.targetId = to;
+          } else {
+            message.credentials = { targetId: to };
+          }
+        }
+        ws.send(JSON.stringify(message));
+      };
+      document.querySelector('div#call').style.display = 'none';
+      document
+        .querySelector('button#login')
+        .addEventListener('click', (event) => {
+          username = document.querySelector('input#username').value;
+          if (username.length < 0) {
+            alert('Please enter a username 🙂');
+            return;
+          }
+          sendMessage({
+            action: 'register',
+            credentials: { id: username }
+          });
+        });
+      const handleLogin = async (success) => {
+        if (success === false) {
+          alert('😞 Username already taken');
+        } else {
+          document.querySelector('div#login').style.display = 'none';
+          document.querySelector('div#call').style.display = 'block';
+          let localStream;
+          try {
+            localStream = await navigator.mediaDevices.getUserMedia({
+              video: true,
+              audio: false
+            });
+          } catch (error) {
+            alert(`${error.name}`);
+            console.error(error);
+          }
+          document.querySelector('video#local').srcObject = localStream;
+          const configuration = {
+            iceServers: [{ url: 'stun:stun2.1.google.com:19302' }]
+          };
+          connection = new RTCPeerConnection(configuration);
+          connection.addStream(localStream);
+          connection.onaddstream = (event) => {
+            document.querySelector('video#remote').srcObject = event.stream;
+          };
+          connection.onicecandidate = (event) => {
+            if (event.candidate) {
+              sendMessage({
+                action: 'candidate',
+                payload: { candidate: event.candidate }
+              });
+            }
+          };
+        }
+      };
+      document.querySelector('button#call').addEventListener('click', () => {
+        const callToUsername = document.querySelector('input#username-to-call')
+          .value;
+        if (callToUsername.length === 0) {
+          alert('Enter a username 😉');
+          return;
+        }
+        to = callToUsername;
+        connection.createOffer(
+          (offer) => {
+            sendMessage({
+              action: 'offer',
+              payload: { offer }
+            });
+            connection.setLocalDescription(offer);
+          },
+          (error) => {
+            alert('Error when creating an offer');
+            console.error(error);
+          }
+        );
+      });
+      const handleOffer = (offer, username) => {
+        to = username;
+        connection.setRemoteDescription(new RTCSessionDescription(offer));
+        connection.createAnswer(
+          (answer) => {
+            connection.setLocalDescription(answer);
+            sendMessage({
+              action: 'answer',
+              payload: { answer }
+            });
+          },
+          (error) => {
+            alert('Error when creating an answer');
+            console.error(error);
+          }
+        );
+      };
+      const handleAnswer = (answer) => {
+        connection.setRemoteDescription(new RTCSessionDescription(answer));
+      };
+      const handleCandidate = (candidate) => {
+        connection.addIceCandidate(new RTCIceCandidate(candidate));
+      };
+      document
+        .querySelector('button#close-call')
+        .addEventListener('click', () => {
+          sendMessage({
+            action: 'close'
+          });
+          handleClose();
+        });
+      const handleClose = () => {
+        to = null;
+        document.querySelector('video#remote').src = null;
+        connection.close();
+        connection.onicecandidate = null;
+        connection.onaddstream = null;
+      };
+    </script>
+  </body>
+</html>

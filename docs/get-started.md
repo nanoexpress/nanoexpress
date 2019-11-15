@@ -15,13 +15,17 @@ Thanks for choosing `nanoexpress` as backend server
 ### npm
 
 ```bash
-npm install dalisoft/nanoexpress#pro-esm
+npm install dalisoft/nanoexpress#pro
+# or
+npm install nanoexpress@{VER}-pro
 ```
 
 ### yarn
 
 ```bash
-yarn add dalisoft/nanoexpress#pro-esm
+yarn add dalisoft/nanoexpress#pro
+# or
+yarn add nanoexpress@{VER}-pro
 ```
 
 ## Let's create server
@@ -46,8 +50,11 @@ Special route are
 
 There has few options which you can configure
 
+- `swagger: SwaggerObject` - Configures Swagger autodocumentation with your any schema for you
 - `strictPath: boolean` - Improves performance little (1%), but disables path normalising
+- `enableUrlNormalize: boolean` - Allows `url` and `originalUrl` normalising
 - `https: { key_file_name: string, cert_file_name: string }` - Option to enable SSL (https) mode
+- `console: CustomConsole { log, error }` - Your custom console class object for nice-looking logs :)
 
 ### [Basic](../examples/basic.js) server
 

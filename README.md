@@ -20,8 +20,6 @@ Nano-framework for Node.js powered by uWebSockets.js
 - This branch (PRO) is differs from master/dev branches
 - This branch is paid for commercial products if sources are closed
 
-## For Price, look [here](https://github.com/dalisoft/nanoexpress/issues/29)
-
 ## Requires
 
 - Node.js v10 or greater
@@ -38,6 +36,8 @@ Nano-framework for Node.js powered by uWebSockets.js
 | express         | 654K  | 430Mb  |
 
 Benchmarked on my macBook Pro 2012 13" (Core i5, 8Gb RAM) performance.
+
+You can see live benchmark results at [here](https://github.com/the-benchmarker/web-frameworks#results)
 
 **Note**: _Real-world app memory/rps may differs from these numbers and these numbers are in my macBook_
 

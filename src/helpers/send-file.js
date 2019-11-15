@@ -25,14 +25,17 @@ export default async function(
   } = {}
 ) {
   let isAborted = false;
-  this.onAborted(() => {
+  const res = this;
+
+  const { headers = {}, onAborted } = res.__request;
+
+  onAborted(() => {
     if (this.stream) {
       this.stream.destroy();
     }
     isAborted = true;
   });
 
-  const res = this;
   const stat = await fsStat(path);
   const { mtime } = stat;
   let { size } = stat;
@@ -43,8 +46,6 @@ export default async function(
 
   mtime.setMilliseconds(0);
   const mtimeutc = mtime.toUTCString();
-
-  const { headers = {} } = res.__request;
 
   // handling last modified
   if (lastModified) {

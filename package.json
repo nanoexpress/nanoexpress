@@ -1,6 +1,6 @@
 {
-  "name": "nanoexpress",
-  "version": "1.0.0-pro-esm",
+  "name": "nanoexpress-pro",
+  "version": "1.4.18",
   "description": "Nano-framework for Node.js powered by uWebSockets.js",
   "type": "module",
   "main": "src/nanoexpress.js",
@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dalisoft/nanoexpress.git"
+    "url": "git+https://github.com/dalisoft/nanoexpress.git#pro"
   },
   "keywords": [
     "nano",
@@ -38,17 +38,24 @@
     "@dalisoft/events": "^0.0.x",
     "ajv": "^6.10.2",
     "cookie": "^0.x",
-    "fast-json-stringify": "^1.x",
+    "fast-json-stringify": "^1.15.6",
     "uWebSockets.js": "github:uNetworking/uWebSockets.js#binaries"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.5",
-    "@babel/preset-env": "^7.4.5",
-    "coveralls": "^3.0.6",
-    "eslint": "^6.2.2",
-    "husky": "^3.0.4",
+    "@babel/core": "^7.7.2",
+    "@babel/preset-env": "^7.7.1",
+    "coveralls": "^3.0.7",
+    "eslint": "^6.6.0",
+    "husky": "^3.0.9",
     "jest": "^24.9.0",
-    "lint-staged": "^9.2.3",
-    "prettier": "^1.17.1"
+    "lint-staged": "^9.4.2",
+    "prettier": "^1.19.1",
+    "rollup": "^1.26.3",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0"
+  },
+  "peerDependencies": {
+    "passport": "^0.4.0",
+    "swagger-ui-dist": "^3.23.6"
   }
 }

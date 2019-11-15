@@ -46,6 +46,6 @@ app.ws(
 );
 ```
 
-[&laquo; Middlewares](./middlewares.md)
+[&laquo; Defines](./defines.md)
 
-[Routes &raquo;](./routes.md)
+[WebRTC &raquo;](./webrtc.md)

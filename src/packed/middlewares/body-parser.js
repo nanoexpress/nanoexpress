@@ -1,22 +1,29 @@
 import { parse } from 'querystring';
 
-export default ({ json = true, urlEncoded = true } = {}) => {
+module.exports = ({ json = true, urlEncoded = true } = {}) => {
   return (req, res, next) => {
     const { headers, body } = req;
 
-    if (headers) {
+    let error = null;
+
+    if (headers && body) {
       const contentType = headers['content-type'];
       if (contentType) {
-        if (json && contentType.indexOf('/json') !== -1) {
-          req.body = JSON.parse(body);
-        } else if (
-          urlEncoded &&
-          contentType.indexOf('/x-www-form-urlencoded') !== -1
-        ) {
-          req.body = parse(req.body);
+        try {
+          if (json && contentType.indexOf('/json') !== -1) {
+            req.body = JSON.parse(body);
+          } else if (
+            urlEncoded &&
+            contentType.indexOf('/x-www-form-urlencoded') !== -1
+          ) {
+            req.body = parse(req.body);
+          }
+        } catch (e) {
+          error = e;
         }
       }
     }
-    next();
+
+    next(error);
   };
 };

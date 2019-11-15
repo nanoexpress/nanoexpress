@@ -1,5 +1,6 @@
 /* globals describe, it, expect */
 import { headers, cookies, params, queries, body } from '../../src/normalizers';
+import { prepareParams } from '../../src/helpers';
 
 describe('headers normalize', () => {
   it('header normalize non-empty', () => {
@@ -37,7 +38,9 @@ describe('params normalize', () => {
       }
     };
 
-    expect(params(fakeReq)).toStrictEqual({
+    const preparedParams = prepareParams(fakeReq.rawPath);
+
+    expect(params(fakeReq, preparedParams)).toStrictEqual({
       p1: 'paramValue1',
       p2: 'paramValue2'
     });

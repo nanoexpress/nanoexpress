@@ -9,6 +9,7 @@ import { HttpResponse } from './proto/index.js';
 import {
   prepareSwaggerDocs,
   prepareValidation,
+  prepareParams,
   processValidation,
   httpMethods
 } from './helpers/index.js';
@@ -49,6 +50,22 @@ export default class Route {
         middleware._config = this._config;
         middleware._app = this._app;
 
+        if (_middlewares && _middlewares.length > 0) {
+          if (middleware._middlewares) {
+            if (middleware._middlewares !== _middlewares) {
+              middleware._middlewares = _middlewares
+                .concat(middleware._middlewares)
+                .filter(
+                  (middleware, i, self) => self.indexOf(middleware) === i
+                );
+            }
+          } else {
+            middleware._middlewares = _middlewares.filter(
+              (middleware, i, self) => self.indexOf(middleware) === i
+            );
+          }
+        }
+
         if (typeof path === 'string') {
           middleware._baseUrl = path;
           middleware.path = path;
@@ -83,6 +100,7 @@ export default class Route {
     let _direct = false;
     let _schema = null;
     let isAborted = false;
+    let isNotFoundHandler = false;
     const bodyAllowedMethod =
       method === 'post' || method === 'put' || method === 'del';
     let responseSchema;
@@ -98,6 +116,10 @@ export default class Route {
         middleware &&
         middleware.noMiddleware === true
     );
+    const onAborted = middlewares.find(
+      (middleware) =>
+        typeof middleware === 'object' && middleware && middleware.onAborted
+    );
     let schema = middlewares.find(
       (middleware) =>
         typeof middleware === 'object' &&
@@ -105,9 +127,9 @@ export default class Route {
         typeof middleware.schema === 'object'
     );
 
-    middlewares = middlewares.filter(
-      (middleware) => typeof middleware === 'function'
-    );
+    middlewares = middlewares
+      .filter((middleware) => typeof middleware === 'function')
+      .filter((middleware, i, self) => self.indexOf(middleware) === i);
 
     if (_middlewares && _middlewares.length > 0) {
       middlewares = _middlewares.concat(middlewares);
@@ -132,15 +154,19 @@ export default class Route {
     // eslint-disable-next-line prefer-const
     responseSchema = _schema && validation && validation.responseSchema;
 
+    isNotFoundHandler = routeFunction.handler === 2;
     if (
-      routeFunction.then ||
-      routeFunction.constructor.name === 'AsyncFunction'
+      method !== 'options' &&
+      (routeFunction.then ||
+        routeFunction.constructor.name === 'AsyncFunction') &&
+      !/res\.(s?end|json)/g.test(routeFunction.toString())
     ) {
       const _oldRouteFunction = routeFunction;
       routeFunction = (req, res) => {
         return _oldRouteFunction(req, res)
           .then((data) => {
             if (!isAborted && data && data !== res) {
+              isAborted = true;
               return res.send(data);
             }
             return null;
@@ -151,7 +177,8 @@ export default class Route {
                 return _config._errorHandler(err, req, res);
               }
               res.status(err.code || err.status || 500);
-              return res.send({ error: err.message });
+              res.send({ error: err.message });
+              isAborted = true;
             }
             return null;
           });
@@ -159,34 +186,46 @@ export default class Route {
     }
 
     middlewares = middlewares
+      .filter((middleware, index, self) => self.indexOf(middleware) === index)
       .map((middleware) => {
+        if (middleware.override && isNotFoundHandler) {
+          isNotFoundHandler = false;
+        }
         if (middleware._module) {
-          // don't touch, it's Route module
+          return null;
         } else if (
           middleware.then ||
           middleware.constructor.name === 'AsyncFunction'
         ) {
-          // do nothing
+          return null;
         } else {
           const _oldMiddleware = middleware;
-          middleware = (req, res) =>
-            new Promise((resolve) => {
+          middleware = function(req, res) {
+            return new Promise((resolve) => {
               _oldMiddleware(req, res, (err, done) => {
                 if (err) {
-                  finished = true;
                   if (_config._errorHandler) {
                     return _config._errorHandler(err, req, res);
                   }
-                  res.statusCode = err.code || err.status || 400;
-                  res.send(
+
+                  res.status(err.status || err.code || 400, true);
+                  res.writeStatus(res.statusCode);
+                  res.writeHeader(
+                    'Content-Type',
+                    'application/json; charset=utf-8'
+                  );
+
+                  resolve();
+                  res.end(
                     `{"error":"${typeof err === 'string' ? err : err.message}"}`
                   );
-                  resolve();
+                  isAborted = true;
                 } else {
                   resolve(done);
                 }
               });
             });
+          };
         }
         return middleware;
       })
@@ -196,23 +235,51 @@ export default class Route {
       prepareSwaggerDocs(_config.swagger, path, method, schema);
     }
 
+    let originalUrl = path;
     if (!_config.strictPath && path) {
       if (
         path.charAt(path.length - 1) !== '/' &&
         Math.abs(path.lastIndexOf('.') - path.length) > 5
       ) {
         path += '/';
+
+        if (_config.enableUrlNormalize) {
+          originalUrl += '/';
+        }
       }
     }
+    if (
+      !_config.enableUrlNormalize &&
+      !_config.strictPath &&
+      originalUrl.endsWith('/')
+    ) {
+      originalUrl = originalUrl.substr(0, originalUrl.length - 1);
+    }
 
-    let finished = false;
     const rawPath = path;
+    const preparedParams =
+      (!_schema || _schema.params !== false) && prepareParams(path);
+
+    const _onAbortedCallbacks = [];
+    const _handleOnAborted = () => {
+      isAborted = true;
+      if (onAborted) {
+        onAborted();
+      }
+      if (_onAbortedCallbacks.length > 0) {
+        for (let i = 0, len = _onAbortedCallbacks.length; i < len; i++) {
+          _onAbortedCallbacks[i]();
+        }
+        _onAbortedCallbacks.length = 0;
+      }
+    };
+    const attachOnAborted = (fn) => {
+      _onAbortedCallbacks.push(fn);
+    };
 
     return async (res, req) => {
       isAborted = false;
-      res.onAborted(() => {
-        isAborted = true;
-      });
+      res.onAborted(_handleOnAborted);
 
       req.rawPath = rawPath;
       req.method = fetchMethod ? req.getMethod() : method;
@@ -220,9 +287,12 @@ export default class Route {
       req.baseUrl = _baseUrl || req.baseUrl;
 
       // Aliases for polyfill
-      req.url = req.path;
-      req.originalUrl = req.url;
+      req.url = originalUrl;
+      req.originalUrl = originalUrl;
       req.baseUrl = _baseUrl || '';
+
+      // Some callbacks which need for your
+      req.onAborted = attachOnAborted;
 
       // Aliases for future usage and easy-access
       if (!isRaw) {
@@ -234,6 +304,7 @@ export default class Route {
         for (const newMethod in HttpResponse) {
           __proto__[newMethod] = HttpResponse[newMethod];
         }
+        req.getIP = res._getResponseIP;
         res.writeHead.notModified = true;
       }
 
@@ -256,87 +327,76 @@ export default class Route {
           if (req.path !== path) {
             path = req.path;
           }
-          req.params = params(req, _schema && _schema.params);
+          req.params = params(req, preparedParams);
         }
         if (!_schema || _schema.query !== false) {
           req.query = queries(req, _schema && _schema.query);
         }
-      }
+        if (bodyAllowedMethod && (!_schema || _schema.body !== false)) {
+          const bodyResponse = await body(req, res, attachOnAborted);
 
-      // Caching value may improve performance
-      // by avoid re-reference items over again
-      let reqPathLength = req.path.length;
-
-      if (!_config.strictPath && reqPathLength > 1) {
-        const dotIndex = req.path.lastIndexOf('.');
-        if (
-          req.path.charAt(reqPathLength - 1) !== '/' &&
-          (dotIndex === -1 ||
-            (dotIndex !== -1 && Math.abs(dotIndex - req.path.length)) > 5)
-        ) {
-          if (req.path === path) {
-            path += '/';
-          }
-          req.path += '/';
-          reqPathLength += 1;
-        }
-      }
-
-      if (middlewares && middlewares.length > 0) {
-        for (let i = 0, len = middlewares.length, middleware; i < len; i++) {
-          middleware = middlewares[i];
-
-          if (finished) {
-            break;
-          }
-
-          await middleware(req, res);
-        }
-      }
-
-      if (finished || isAborted) {
-        return;
-      }
-
-      if (_direct || !fetchUrl || req.path === path) {
-        if (
-          !isRaw &&
-          (!res._modifiedEnd &&
-            (!res.writeHead.notModified ||
-              (res.statusCode && res.statusCode !== 200) ||
-              res._headers))
-        ) {
-          res.modifyEnd();
-        }
-
-        if (
-          !isRaw &&
-          bodyAllowedMethod &&
-          res.onData &&
-          _schema !== false &&
-          (!_schema || !_schema.body !== false)
-        ) {
-          const bodyResponse = await body(req, res);
-
-          if (isAborted) {
-            return;
-          }
           if (bodyResponse) {
             req.body = bodyResponse;
           }
+        }
 
+        // Caching value may improve performance
+        // by avoid re-reference items over again
+        let reqPathLength = req.path.length;
+
+        if (!_config.strictPath && reqPathLength > 1) {
+          const dotIndex = req.path.lastIndexOf('.');
           if (
-            isAborted ||
-            (!isRaw &&
-              validation &&
-              validation.validationStringify &&
-              processValidation(req, res, _config, validation))
+            req.path.charAt(reqPathLength - 1) !== '/' &&
+            (dotIndex === -1 ||
+              (dotIndex !== -1 && Math.abs(dotIndex - req.path.length)) > 5)
           ) {
-            return;
+            if (req.path === path) {
+              path += '/';
+            }
+            req.path += '/';
+
+            if (_config.enableUrlNormalize) {
+              req.originalUrl += '/';
+              req.url += '/';
+            }
+
+            reqPathLength += 1;
+          }
+        }
+
+        if (
+          !isAborted &&
+          !isNotFoundHandler &&
+          middlewares &&
+          middlewares.length > 0
+        ) {
+          for (let i = 0, len = middlewares.length, middleware; i < len; i++) {
+            middleware = middlewares[i];
+
+            if (isAborted) {
+              break;
+            }
+
+            await middleware(req, res);
+          }
+        }
+
+        if (isAborted || method === 'options') {
+          return;
+        }
+
+        if (_direct || !fetchUrl || req.path === path) {
+          if (
+            !isRaw &&
+            !res._modifiedEnd &&
+            (!res.writeHead.notModified ||
+              (res.statusCode && res.statusCode !== 200) ||
+              res._headers)
+          ) {
+            res.modifyEnd();
           }
 
-          return routeFunction(req, res);
-        } else {
           if (
             isAborted ||
             (!isRaw &&

@@ -1,30 +1,35 @@
 import { Readable } from 'stream';
 
-export default (req, res) =>
-  new Promise((resolve) => {
-    if (!res || !res.onData) {
-      return resolve();
-    }
+export default (req, res, onAborted) => {
+  if (!res || !res.onData) {
+    return undefined;
+  }
 
+  let isAborted = false;
+  /* Register error cb */
+  if (onAborted) {
+    onAborted(() => {
+      if (res.stream) {
+        res.stream.destroy();
+      }
+      isAborted = true;
+    });
+  }
+
+  return new Promise((resolve) => {
     const stream = new Readable();
     stream._read = () => true;
     req.pipe = stream.pipe.bind(stream);
     req.stream = stream;
 
-    let isAborted = false;
-    /* Register error cb */
-    res.onAborted(() => {
-      if (res.stream) {
-        res.stream.destroy();
-      }
-      isAborted = true;
-      resolve();
-    });
+    if (isAborted) {
+      return resolve();
+    }
 
     let buffer;
     res.onData((chunkPart, isLast) => {
       if (isAborted) {
-        return;
+        return resolve();
       }
       const chunk = Buffer.from(chunkPart);
       stream.push(
@@ -48,3 +53,4 @@ export default (req, res) =>
       }
     });
   });
+};

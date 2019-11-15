@@ -1,4 +1,5 @@
-import { headers, cookies, queries, params } from '../normalizers/index.js';
+import { headers, cookies, queries, params } from '../normalizers';
+import { prepareParams } from '../helpers';
 
 import Events from '@dalisoft/events';
 
@@ -11,7 +12,7 @@ export default (path, options = {}, fn, ajv) => {
   }
 
   let validator = null;
-  const { schema } = options;
+  const { schema, isRaw } = options;
 
   Object.assign(
     options,
@@ -28,39 +29,40 @@ export default (path, options = {}, fn, ajv) => {
     }
   }
 
+  const fetchUrl = path === '/*' || path.indexOf(':') !== -1;
+  const rawPath = path;
+  const preparedParams =
+    path.indexOf(':') !== -1 &&
+    (!schema || schema.params !== false) &&
+    prepareParams(path);
+
   return {
     ...options,
     open: (ws, req) => {
-      req.rawPath = path;
-      req.path = req.getUrl();
+      req.rawPath = rawPath;
+      req.path = fetchUrl ? req.getUrl() : path;
       req.baseUrl = '';
       req.originalUrl = req.path;
       req.url = req.path;
 
-      if (!req.headers) {
-        req.headers =
-          !schema || schema.headers !== false
-            ? headers(req, req.headers, schema && schema.headers)
-            : req.headers;
+      if (!isRaw && schema !== false) {
+        if (!schema || schema.headers !== false) {
+          req.headers = headers(req, schema && schema.headers);
+        }
+        if (!schema || schema.cookies !== false) {
+          req.cookies = cookies(req, schema && schema.cookies);
+        }
+        if (!schema || schema.params !== false) {
+          if (req.path !== path) {
+            path = req.path;
+          }
+          req.params = params(req, preparedParams);
+        }
+        if (!schema || schema.query !== false) {
+          req.query = queries(req, schema && schema.query);
+        }
       }
-      if (!req.cookies) {
-        req.cookies =
-          !schema || schema.cookies !== false
-            ? cookies(req, req.cookies, schema && schema.cookies)
-            : req.cookies;
-      }
-      if (!req.params) {
-        req.params =
-          !schema || schema.params !== false
-            ? params(req, req.params, schema && schema.params)
-            : req.params;
-      }
-      if (!req.query) {
-        req.query =
-          !schema || schema.query !== false
-            ? queries(req, req.query, schema && schema.query)
-            : req.query;
-      }
+
       if (!ws.___events) {
         ws.on = __wsProto__.on;
         ws.once = __wsProto__.once;

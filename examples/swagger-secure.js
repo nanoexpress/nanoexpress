@@ -1,6 +1,6 @@
-import nanoexpress from '../src/nanoexpress.js';
+const nanoexpress = require('..');
 // const reDoc = require('../src/packed/middlewares/redoc');
-import swaggerUi from '../src/packed/middlewares/swagger-ui.js';
+const swaggerUi = require('../src/packed/middlewares/swagger-ui');
 
 const app = nanoexpress({
   swagger: {
@@ -11,7 +11,18 @@ const app = nanoexpress({
       description: 'An Swagger example'
     },
     host: 'localhost:4000',
-    basePath: '/'
+    basePath: '/',
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          description: 'Auth token',
+          scheme: 'bearer',
+          bearerFormat: 'JWT'
+        }
+      }
+    },
+    security: [{ bearerAuth: [] }]
   }
 });
 
@@ -35,13 +46,6 @@ app.get(
         type: 'object',
         properties: {
           param1: { description: 'Param1', type: 'string' }
-        }
-      },
-      body: {
-        description: 'Hello world body',
-        type: 'object',
-        properties: {
-          body1: { type: 'string' }
         }
       },
       response: {

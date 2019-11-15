@@ -7,6 +7,9 @@ export default class Config {
   get swagger() {
     return this._options.swagger;
   }
+  get console() {
+    return this._options.console;
+  }
   constructor(options = {}) {
     this._options = options;
 
@@ -17,6 +20,7 @@ export default class Config {
 
     this.configureAjv = options.configureAjv;
     this.strictPath = options.strictPath;
+    this.enableUrlNormalize = options.enableUrlNormalize;
 
     if (options.configureAjv) {
       this.ajv = options.configureAjv(this.ajv);

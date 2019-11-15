@@ -8,14 +8,13 @@ Built-in middlewares implemented at layer-level for performance reason and enabl
 
 ### All of these things are already implemented in `nanoexpress`
 
-| Alternative                                                                           | Implement level | Which libraries uses                                                   |
-| ------------------------------------------------------------------------------------- | --------------- | ---------------------------------------------------------------------- |
-| [cookie](https://github.com/jshttp/cookie)                                            | Layer level     | [cookie](https://github.com/jshttp/cookie)                             |
-| [body-parser](https://github.com/expressjs/body-parser)                               | Packed level    | Node.js builtin [querystring](https://nodejs.org/api/querystring.html) |
-| [express-ws](https://github.com/HenningM/express-ws)                                  | Core level      | [Core](https://github.com/uNetworking/uWebSockets.js) library          |
-| [express-serializer](https://github.com/MediaComem/express-serializer)                | Layer level     | [fast-json-stringify](https://github.com/fastify/fast-json-stringify)  |
-| [express-ajv](https://bitbucket.org/netgenes/express-ajv)                             | Layer level     | [ajv](https://ajv.js.org)                                              |
-| [express-declarative-routing](https://github.com/cheesun/express-declarative-routing) | Layer level     | My own implementation                                                  |
+| Alternative                                                            | Implement level | Which libraries uses                                                   |
+| ---------------------------------------------------------------------- | --------------- | ---------------------------------------------------------------------- |
+| [cookie](https://github.com/jshttp/cookie)                             | Layer level     | [cookie](https://github.com/jshttp/cookie)                             |
+| [body-parser](https://github.com/expressjs/body-parser)                | Packed level    | Node.js builtin [querystring](https://nodejs.org/api/querystring.html) |
+| [express-ws](https://github.com/HenningM/express-ws)                   | Core level      | [Core](https://github.com/uNetworking/uWebSockets.js) library          |
+| [express-serializer](https://github.com/MediaComem/express-serializer) | Layer level     | [fast-json-stringify](https://github.com/fastify/fast-json-stringify)  |
+| [express-ajv](https://bitbucket.org/netgenes/express-ajv)              | Layer level     | [ajv](https://ajv.js.org)                                              |
 
 ## In-box Middlewares
 
@@ -33,7 +32,7 @@ app.use(middlewares.passportInitialize()); // or app.use(passportInitialize());
 
 #### Packed middlewares
 
-- `passport` (requires `passport` module)
+- `passport`
 - `reDoc`
 - `static`
 - `bodyParser`
@@ -102,4 +101,4 @@ app.get('/my-route', corsPerRoute, (req, res) => {
 
 [&laquo; Getting started](./get-started.md)
 
-[WebSocket &raquo;](./websocket.md)
+[Defines &raquo;](./defines.md)

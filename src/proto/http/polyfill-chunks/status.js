@@ -1,7 +1,7 @@
 import http from 'http';
 
-export default function status(code) {
-  if (this.modifyEnd && !this._modifiedEnd) {
+export default function status(code, notModify) {
+  if (!notModify && this.modifyEnd && !this._modifiedEnd) {
     this.modifyEnd();
   }
 
