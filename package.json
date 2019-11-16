@@ -42,7 +42,7 @@
   },
   "homepage": "https://github.com/dalisoft/nanoexpress#readme",
   "dependencies": {
-    "@dalisoft/events": "^0.0.x",
+    "@dalisoft/events": "^0.2.0",
     "ajv": "^6.10.2",
     "cookie": "^0.x",
     "fast-json-stringify": "^1.15.6",
