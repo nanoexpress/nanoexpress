@@ -1,10 +1,10 @@
 import { getMime } from './mime.js';
 import stream2Buffer from './stream-to-buffer.js';
-import fs from 'fs';
+import { stat, createReadStream } from 'fs';
 import zlib from 'zlib';
-import util from 'util';
+import { promisify } from 'util';
 
-const fsStat = util.promisify(fs.stat);
+const fsStat = promisify(stat);
 
 const compressions = {
   br: zlib.createBrotliCompress,
@@ -80,7 +80,7 @@ export default async function(
     end = 0;
   }
 
-  let readStream = fs.createReadStream(path, { start, end });
+  let readStream = createReadStream(path, { start, end });
   this.stream = readStream;
   // Compression;
   let compressed = false;

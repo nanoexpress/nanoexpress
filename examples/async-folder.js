@@ -1,9 +1,9 @@
 import nanoexpress from '../src/nanoexpress.js';
 
 import path from 'path';
-import fs from 'fs';
-import util from 'util';
-const fsReadDir = util.promisify(fs.readdir);
+import { readdir } from 'fs';
+import { promisify } from 'util';
+const fsReadDir = promisify(readdir);
 
 const app = nanoexpress();
 const port = 4000;

@@ -1,14 +1,13 @@
-import fs from 'fs';
+import { readdirSync, readFileSync, lstatSync } from 'fs';
 import { join } from 'path';
 import { getMime } from './helpers/mime.js';
 
 const prepareStaticFilesAndFolders = (path) =>
-  fs
-    .readdirSync(path)
+  readdirSync(path)
     .map((file) => {
       const resolved = join(path, file);
 
-      if (fs.lstatSync(resolved).isDirectory()) {
+      if (lstatSync(resolved).isDirectory()) {
         return {
           files: prepareStaticFilesAndFolders(resolved),
           reduce: true
@@ -21,7 +20,7 @@ const prepareStaticFilesAndFolders = (path) =>
         file,
         resolved,
         streamable,
-        raw: streamable ? null : fs.readFileSync(resolved)
+        raw: streamable ? null : readFileSync(resolved)
       };
     })
     .reduce((list, item) => {
