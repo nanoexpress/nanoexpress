@@ -12,6 +12,11 @@
     "coveralls": "npm run coverage && cat ./tests/coverage/lcov.info | coveralls",
     "prepublishOnly": "npm run lint"
   },
+  "exports": {
+    "static": "./src/static",
+    "Route": "./src/Route.js",
+    "default": "./src/nanoexpress.js"
+  },
   "engines": {
     "node": ">=12"
   },
