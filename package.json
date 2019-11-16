@@ -13,7 +13,9 @@
     "prepublishOnly": "npm run lint"
   },
   "exports": {
-    "static": "./src/static",
+    "static": "./src/static.js",
+    "defines": "./src/packed/defines/index.js",
+    "middlewares": "./src/packed/middlewares/index.js",
     "Route": "./src/Route.js",
     "default": "./src/nanoexpress.js"
   },
