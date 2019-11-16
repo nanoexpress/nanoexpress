@@ -17,7 +17,7 @@
     "defines": "./src/packed/defines/index.js",
     "middlewares": "./src/packed/middlewares/index.js",
     "Route": "./src/Route.js",
-    ".": "./src/nanoexpress.js"
+    "default": "./src/nanoexpress.js"
   },
   "engines": {
     "node": ">=12"
