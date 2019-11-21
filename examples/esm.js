@@ -1,8 +1,6 @@
 import nanoexpress from '../src/nanoexpress.js';
 
-const app = nanoexpress({
-  strictPath: true
-});
+const app = nanoexpress();
 
 app.get(
   '/',

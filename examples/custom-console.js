@@ -17,7 +17,6 @@ const info = (...texts) => {
 };
 
 const app = nanoexpress({
-  strictPath: true,
   console: {
     log,
     error,

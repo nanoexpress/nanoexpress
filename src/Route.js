@@ -153,6 +153,10 @@ export default class Route {
       schema = null;
     }
 
+    if (!fetchUrl && path.length > 1 && path.charAt(path.length - 1) === '/') {
+      path = path.substr(0, path.length - 1);
+    }
+
     if (!isRaw && !isStrictRaw) {
       _schema = (schema && schema.schema) || undefined;
       validation = _schema && prepareValidation(_ajv, _schema);
@@ -243,28 +247,10 @@ export default class Route {
       }
     }
 
-    if (!_config.strictPath && path) {
-      if (
-        path.charAt(path.length - 1) !== '/' &&
-        Math.abs(path.lastIndexOf('.') - path.length) > 5
-      ) {
-        path += '/';
-
-        if (_config.enableUrlNormalize) {
-          originalUrl += '/';
-        }
-      }
-    }
-    if (
-      !_config.enableUrlNormalize &&
-      !_config.strictPath &&
-      originalUrl.length > 1 &&
-      originalUrl.endsWith('/')
-    ) {
+    if (originalUrl.length > 1 && originalUrl.endsWith('/')) {
       originalUrl = originalUrl.substr(0, originalUrl.length - 1);
     }
 
-    const rawPath = path;
     const preparedParams =
       (!_schema || _schema.params !== false) && prepareParams(path);
 
@@ -287,7 +273,6 @@ export default class Route {
 
     return isStrictRaw
       ? (res, req) => {
-        req.rawPath = rawPath;
         req.method = fetchMethod ? req.getMethod().toUpperCase() : method;
         req.path = fetchUrl ? req.getUrl().substr(_baseUrl.length) : path;
         req.baseUrl = _baseUrl || req.baseUrl;
@@ -296,7 +281,8 @@ export default class Route {
         const reqPathLength = req.path.length;
 
         if (
-          reqPathLength.length > 1 &&
+          fetchUrl &&
+            reqPathLength.length > 1 &&
             req.path.charAt(reqPathLength - 1) === '/'
         ) {
           req.path = req.path.substr(0, reqPathLength - 1);
@@ -321,7 +307,8 @@ export default class Route {
         const reqPathLength = req.path.length;
 
         if (
-          reqPathLength.length > 1 &&
+          fetchUrl &&
+            reqPathLength.length > 1 &&
             req.path.charAt(reqPathLength - 1) === '/'
         ) {
           req.path = req.path.substr(0, reqPathLength - 1);
@@ -438,7 +425,7 @@ export default class Route {
 for (let i = 0, len = httpMethods.length; i < len; i++) {
   const method = httpMethods[i];
   Route.prototype[method] = function(path, ...middlewares) {
-    const { _baseUrl, _module, _app, _config } = this;
+    const { _baseUrl, _module, _app } = this;
 
     let originalUrl = path;
     if (middlewares.length > 0) {
@@ -446,18 +433,8 @@ for (let i = 0, len = httpMethods.length; i < len; i++) {
         originalUrl = _baseUrl + path;
       }
 
-      let _originalUrl = originalUrl;
-      if (!_config.strictPath && path) {
-        if (
-          path.charAt(path.length - 1) !== '/' &&
-          Math.abs(path.lastIndexOf('.') - path.length) > 5
-        ) {
-          _originalUrl += '/';
-        }
-      }
-
       _app[method](
-        _originalUrl,
+        originalUrl + '/',
         this._prepareMethod(
           method.toUpperCase(),
           { path, originalUrl },

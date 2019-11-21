@@ -19,8 +19,6 @@ export default class Config {
     this.ajv = new Ajv(options.ajv);
 
     this.configureAjv = options.configureAjv;
-    this.strictPath = options.strictPath;
-    this.enableUrlNormalize = options.enableUrlNormalize;
 
     if (options.configureAjv) {
       this.ajv = options.configureAjv(this.ajv);
