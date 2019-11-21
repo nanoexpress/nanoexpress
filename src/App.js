@@ -216,7 +216,11 @@ for (let i = 0, len = httpMethods.length; i < len; i++) {
     const { _app, _route, _anyRouteCalled } = this;
 
     if (fns.length > 0) {
-      const preparedRouteFunction = _route._prepareMethod(method, path, ...fns);
+      const preparedRouteFunction = _route._prepareMethod(
+        method.toUpperCase(),
+        { path, originalUrl: path },
+        ...fns
+      );
 
       _app[method](path, preparedRouteFunction);
 
