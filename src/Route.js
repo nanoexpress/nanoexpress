@@ -92,7 +92,7 @@ export default class Route {
     // eslint-disable-next-line no-unused-vars
     const { _config, _baseUrl, _middlewares, _module, _rootLevel, _ajv } = this;
 
-    const fetchMethod = method === 'any';
+    const fetchMethod = method.toUpperCase() === 'ANY';
     const fetchUrl = path === '/*' || path.indexOf(':') !== -1;
     let validation = null;
     let _direct = false;
@@ -100,7 +100,7 @@ export default class Route {
     let isAborted = false;
     let isNotFoundHandler = false;
     const bodyAllowedMethod =
-      method === 'post' || method === 'put' || method === 'del';
+      method === 'POST' || method === 'PUT' || method === 'DEL';
     let responseSchema;
     const isRaw = middlewares.find(
       (middleware) =>
@@ -404,7 +404,7 @@ export default class Route {
           }
         }
 
-        if (isAborted || method === 'options') {
+        if (isAborted || method === 'OPTIONS') {
           return;
         }
 
