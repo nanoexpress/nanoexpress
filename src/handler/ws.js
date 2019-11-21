@@ -30,7 +30,6 @@ export default (path, options = {}, fn, ajv) => {
   }
 
   const fetchUrl = path === '/*' || path.indexOf(':') !== -1;
-  const rawPath = path;
   const preparedParams =
     path.indexOf(':') !== -1 &&
     (!schema || schema.params !== false) &&
@@ -39,11 +38,14 @@ export default (path, options = {}, fn, ajv) => {
   return {
     ...options,
     open: (ws, req) => {
-      req.rawPath = rawPath;
-      req.path = fetchUrl ? req.getUrl() : path;
+      req.path = path;
+      req.url = path;
       req.baseUrl = '';
-      req.originalUrl = req.path;
-      req.url = req.path;
+      req.originalUrl = fetchUrl ? req.getUrl() : path;
+
+      if (req.path.charAt(req.path.length - 1) === '/') {
+        req.path = req.path.substr(0, req.path.length - 1);
+      }
 
       if (!isRaw && schema !== false) {
         if (!schema || schema.headers !== false) {
