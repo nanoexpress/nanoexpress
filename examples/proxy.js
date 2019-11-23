@@ -7,7 +7,7 @@ const app = nanoexpress();
 app
   .define(proxy)
   .proxy('/proxy', {
-    url: 'http://jsonplaceholder.typicode.com',
+    url: 'http://localhost:3005',
     method: 'GET'
   })
   .get('/health', (req, res) => res.send({ status: 'ok' }));
