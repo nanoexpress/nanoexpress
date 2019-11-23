@@ -93,7 +93,7 @@ export default class Route {
     const { _config, _baseUrl, _middlewares, _module, _rootLevel, _ajv } = this;
 
     const fetchMethod = method.toUpperCase() === 'ANY';
-    const fetchUrl = path === '/*' || path.indexOf(':') !== -1;
+    const fetchUrl = path.indexOf('*') !== -1 || path.indexOf(':') !== -1;
     let validation = null;
     let _direct = false;
     let _schema = null;
