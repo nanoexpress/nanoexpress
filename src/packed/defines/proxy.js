@@ -35,7 +35,8 @@ const prepareProxy = (
   wsInstance
 ) => {
   const isAny = method === undefined;
-  const proxyPathLen = path.length;
+  const fetchUrl = url.indexOf('*') !== -1 || url.indexOf(':') !== -1;
+  const proxyPathLen = fetchUrl ? path.length : 0;
   const disallowedHeaders = restrictedHeaders.map((header) =>
     header.toLowerCase()
   );
@@ -68,7 +69,7 @@ const prepareProxy = (
     });
 
     // Fetch needed methods and configure
-    const httpUrl = url + req.getUrl().substr(proxyPathLen);
+    const httpUrl = fetchUrl ? url + req.getUrl().substr(proxyPathLen) : url;
 
     config.method = isAny ? req.getMethod() : method;
 
@@ -121,7 +122,8 @@ const prepareProxy = (
         config.method = 'ws';
 
         const wsUrl =
-          url.replace(/http/, 'ws') + req.getUrl().substr(proxyPathLen);
+          url.replace(/http/, 'ws') +
+          (fetchUrl ? req.getUrl().substr(proxyPathLen) : '');
 
         ws.instance = new wsInstance(wsUrl);
 

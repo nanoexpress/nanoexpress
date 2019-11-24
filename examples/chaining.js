@@ -17,13 +17,4 @@ nanoexpress()
   .get('/user/:id', (req, res) => {
     return res.end(`User: ${req.params.id}`);
   })
-  .ws('/', (req, ws) => {
-    ws.send('connected ;)');
-
-    ws.on('message', (data) => {
-      if (data === 'ping') {
-        ws.send('pong');
-      }
-    });
-  })
   .listen(3005);
