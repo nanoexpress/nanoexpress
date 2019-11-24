@@ -6,11 +6,14 @@ const app = nanoexpress();
 
 app
   .define(proxy)
-  .proxy('/proxy', {
-    url: 'https://jsonplaceholder.typicode.com/todos/1',
-    method: 'GET'
-  },
-  // ws // If you want proxy WebSocket too)
+  .proxy(
+    '/proxy',
+    {
+      url: 'https://jsonplaceholder.typicode.com/todos/1',
+      method: 'GET'
+    }
+    // ws // If you want proxy WebSocket too)
+  )
   .get('/health', (req, res) => res.send({ status: 'ok' }));
 
 app.listen(4044);
