@@ -9,8 +9,10 @@ const httpRequest = (agent, url, config) =>
     agent[config.method](url, config, (response) => {
       let buff;
       response.on('data', (chunk) => {
+        chunk = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+
         if (!buff) {
-          buff = Buffer.from(chunk);
+          buff = chunk;
         } else {
           buff = Buffer.concat([buff, chunk]);
         }
@@ -30,7 +32,12 @@ const prepareProxy = (
     url,
     method,
     enableHeadersProxy = false,
-    restrictedHeaders = ['Host', 'Content-Length', 'uWebSockets']
+    restrictedHeaders = [
+      'Host',
+      'Content-Length',
+      'uWebSockets',
+      'Accept-Encoding'
+    ]
   } = {},
   wsInstance
 ) => {
@@ -80,8 +87,6 @@ const prepareProxy = (
           config.headers[key] = value;
         }
       });
-    } else {
-      config.headers.connection = req.getHeader('connection');
     }
 
     const { data, headers } = await httpRequest(agent, httpUrl, config);

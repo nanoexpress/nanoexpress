@@ -11,6 +11,7 @@ app
     {
       url: 'https://jsonplaceholder.typicode.com/todos/1',
       method: 'GET'
+      // enableHeadersProxy: true
     }
     // ws // If you want proxy WebSocket too)
   )
