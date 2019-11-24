@@ -58,6 +58,7 @@
   },
   "peerDependencies": {
     "passport": "^0.4.0",
-    "swagger-ui-dist": "^3.23.6"
+    "swagger-ui-dist": "^3.23.6",
+    "ws": "^7.2.0"
   }
 }

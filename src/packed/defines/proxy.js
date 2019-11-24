@@ -4,100 +4,159 @@ import https from 'https';
 http.globalAgent.keepAlive = true;
 https.globalAgent.keepAlive = true;
 
-export default (app) => {
-  const disallowedHeaders = [
-    'Host',
-    'Content-Length',
-    'uWebSockets'
-  ].map((header) => header.toLowerCase());
-  app.proxy = (path, { url, method, enableHeadersProxy = false } = {}) => {
-    const isAny = method === undefined;
-    const proxyPathLen = path.length;
-    const isHttps = url.indexOf('https') === 0;
+const httpRequest = (agent, url, config) =>
+  new Promise((resolve, reject) => {
+    agent[config.method](url, config, (response) => {
+      let buff;
+      response.on('data', (chunk) => {
+        if (!buff) {
+          buff = Buffer.from(chunk);
+        } else {
+          buff = Buffer.concat([buff, chunk]);
+        }
+      });
+      response.on('end', () => {
+        response.data = buff;
 
-    if (method) {
-      method = method.toLowerCase();
+        resolve(response);
+      });
+      response.on('error', reject);
+    });
+  });
+
+const prepareProxy = (
+  path,
+  {
+    url,
+    method,
+    enableHeadersProxy = false,
+    restrictedHeaders = ['Host', 'Content-Length', 'uWebSockets']
+  } = {},
+  wsInstance
+) => {
+  const isAny = method === undefined;
+  const proxyPathLen = path.length;
+  const disallowedHeaders = restrictedHeaders.map((header) =>
+    header.toLowerCase()
+  );
+
+  // Prepared object to return
+  const prepared = {
+    isAny
+  };
+
+  const ssl = url.indexOf('https:') === 0;
+  const agent = ssl ? https : http;
+
+  if (method) {
+    method = method.toLowerCase();
+  }
+
+  // HTTP Request configuration
+  const config = {
+    url,
+    method,
+    headers: {}
+  };
+
+  prepared.method = isAny ? 'any' : method;
+  prepared.http = async (res, req) => {
+    // Allow waiting for request finishing
+    let isAborted = false;
+    res.onAborted(() => {
+      isAborted = true;
+    });
+
+    // Fetch needed methods and configure
+    const httpUrl = url + req.getUrl().substr(proxyPathLen);
+
+    config.method = isAny ? req.getMethod() : method;
+
+    // Proxy headers too if it's defined
+    if (enableHeadersProxy) {
+      req.forEach((key, value) => {
+        if (disallowedHeaders.indexOf(key) === -1) {
+          config.headers[key] = value;
+        }
+      });
+    } else {
+      config.headers.connection = req.getHeader('connection');
     }
 
-    const request = isHttps ? https : http;
+    const { data, headers } = await httpRequest(agent, httpUrl, config);
 
-    // Config settings
-    const config = {
-      url,
-      method,
-      headers: {}
-    };
+    if (isAborted) {
+      return;
+    }
 
-    const proxyHandler = (fetchUrl) => (res, req) => {
-      if (isAny) {
-        config.method = req.getMethod();
+    res.experimental_cork(() => {
+      if (isAborted) {
+        return;
       }
-      if (fetchUrl) {
-        config.url += req.getUrl().substr(proxyPathLen);
-      }
-
-      let isAborted = false;
 
       if (enableHeadersProxy) {
-        req.forEach((key, value) => {
-          if (disallowedHeaders.indexOf(key) === -1) {
-            config.headers[key] = value;
+        for (const key in headers) {
+          const value = headers[key];
+
+          if (disallowedHeaders.indexOf(key) !== -1) {
+            continue;
           }
-        });
-      } else {
-        config.headers.connection = req.getHeader('connection');
+
+          if (typeof value === 'string') {
+            res.writeHeader(key, value);
+          } else if (value.splice) {
+            for (let i = 0, len = value.length; i < len; i++) {
+              res.writeHeader(key, value[i]);
+            }
+          }
+        }
       }
 
-      res.onAborted(() => {
-        isAborted = true;
-      });
+      res.end(data);
+    });
+  };
+  if (wsInstance) {
+    prepared.ws = {
+      open(ws, req) {
+        config.method = 'ws';
 
-      return new Promise((resolve) =>
-        request[config.method](config.url, config, (response) => {
-          const { headers: responseHeaders } = response;
+        const wsUrl =
+          url.replace(/http/, 'ws') + req.getUrl().substr(proxyPathLen);
 
-          if (isAborted) {
-            return;
-          }
+        ws.instance = new wsInstance(wsUrl);
 
-          if (enableHeadersProxy) {
-            for (const key in responseHeaders) {
-              const value = responseHeaders[key];
+        ws.instance.on('message', (data) => {
+          ws.send(data);
+        });
 
-              if (disallowedHeaders.indexOf(key) !== -1) {
-                continue;
-              }
+        ws.instance.emit('open');
+      },
+      message(ws, message, isBinary) {
+        if (!isBinary) {
+          message = Buffer.from(message).toString('utf-8');
+        }
 
-              if (typeof value === 'string') {
-                res.writeHeader(key, value);
-              } else if (value.splice) {
-                for (let i = 0, len = value.length; i < len; i++) {
-                  res.writeHeader(key, value[i]);
-                }
-              }
-            }
-          }
-
-          let buff;
-          response.on('data', (chunk) => {
-            if (isAborted) {
-              return;
-            } else if (!buff) {
-              buff = Buffer.from(chunk);
-            } else {
-              buff = Buffer.concat([buff, chunk]);
-            }
-          });
-          response.on('end', () => {
-            res.end(buff);
-            resolve();
-          });
-        })
-      );
+        ws.instance.send(message);
+      },
+      close(ws, code, reason) {
+        ws.instance.close(code, reason);
+      }
     };
+  }
 
-    app._app[isAny ? 'any' : method](`${path}`, proxyHandler(false));
-    app._app[isAny ? 'any' : method](`${path}/*`, proxyHandler(true));
+  return prepared;
+};
+
+export default (app) => {
+  app.proxy = (path, config, wsInstance) => {
+    const { ws, http, method } = prepareProxy(path, config, wsInstance);
+
+    if (http) {
+      app._app[method](path, http);
+    }
+    if (ws) {
+      app._app.ws(path, ws);
+    }
     return app;
   };
 };
