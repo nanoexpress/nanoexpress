@@ -167,7 +167,6 @@ declare namespace nanoexpress {
     lastModified?: boolean;
     compress?: boolean;
     compressionOptions?: StreamCompressionOptions;
-    cache?: boolean;
   }
 
   export interface StaticOptions {

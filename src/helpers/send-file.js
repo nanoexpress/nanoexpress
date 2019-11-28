@@ -1,10 +1,6 @@
 import { getMime } from './mime.js';
-import stream2Buffer from './stream-to-buffer.js';
-import { stat, createReadStream } from 'fs';
+import { statSync, createReadStream } from 'fs';
 import zlib from 'zlib';
-import { promisify } from 'util';
-
-const fsStat = promisify(stat);
 
 const compressions = {
   br: zlib.createBrotliCompress,
@@ -13,15 +9,14 @@ const compressions = {
 };
 const bytes = 'bytes=';
 
-export default async function(
+export default function(
   path,
   {
     lastModified = true,
     compress = false,
     compressionOptions = {
-      priority: ['br', 'gzip', 'deflate']
-    },
-    cache = false
+      priority: ['gzip', 'br', 'deflate']
+    }
   } = {}
 ) {
   let isAborted = false;
@@ -30,13 +25,10 @@ export default async function(
   const { headers = {}, onAborted } = res.__request;
 
   onAborted(() => {
-    if (this.stream) {
-      this.stream.destroy();
-    }
     isAborted = true;
   });
 
-  const stat = await fsStat(path);
+  const stat = statSync(path);
   const { mtime } = stat;
   let { size } = stat;
 
@@ -81,7 +73,6 @@ export default async function(
   }
 
   let readStream = createReadStream(path, { start, end });
-  this.stream = readStream;
   // Compression;
   let compressed = false;
   if (compress) {
@@ -101,29 +92,7 @@ export default async function(
 
   res.writeHeaders(headers);
   // check cache
-  if (cache && !compressed) {
-    return cache.wrap(
-      `${path}_${mtimeutc}_${start}_${end}`,
-      (cb) => {
-        stream2Buffer(readStream)
-          .then((b) => cb(null, b.toString('utf-8')))
-          .catch(cb);
-      },
-      { ttl: 0 },
-      (err, string) => {
-        if (err) {
-          res.writeStatus('500 Internal server error');
-          res.end();
-          throw err;
-        }
-        if (isAborted) {
-          readStream.destroy();
-          return;
-        }
-        res.end(string);
-      }
-    );
-  } else if (compressed) {
+  if (compressed) {
     readStream.on('data', (buffer) => {
       res.write(
         buffer.buffer.slice(
@@ -138,14 +107,14 @@ export default async function(
         readStream.destroy();
         return;
       }
-      const chunk = buffer.buffer.slice(
-          buffer.byteOffset,
-          buffer.byteOffset + buffer.byteLength
-        ),
-        lastOffset = res.getWriteOffset();
+      buffer = buffer.buffer.slice(
+        buffer.byteOffset,
+        buffer.byteOffset + buffer.byteLength
+      );
+      const lastOffset = res.getWriteOffset();
 
       // First try
-      const [ok, done] = res.tryEnd(chunk, size);
+      const [ok, done] = res.tryEnd(buffer, size);
 
       if (done) {
         readStream.destroy();
@@ -154,7 +123,7 @@ export default async function(
         readStream.pause();
 
         // Save unsent chunk for later
-        res.ab = chunk;
+        res.ab = buffer;
         res.abOffset = lastOffset;
 
         // Register async handlers for drainage
