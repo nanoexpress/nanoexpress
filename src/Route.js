@@ -3,9 +3,10 @@ import {
   cookies,
   queries,
   params,
-  body
-} from './normalizers/index.js';
-import { HttpResponse } from './proto/index.js';
+  body,
+  pipe
+} from './request-proto/index.js';
+import { HttpResponse } from './response-proto/index.js';
 import {
   prepareSwaggerDocs,
   prepareValidation,
@@ -360,12 +361,29 @@ export default class Route {
           if (!_schema || _schema.query !== false) {
             req.query = queries(req, _schema && _schema.query);
           }
-          if (bodyAllowedMethod && (!_schema || _schema.body !== false)) {
-            const bodyResponse = await body(req, res, attachOnAborted);
+          if (
+            !isRaw &&
+              bodyAllowedMethod &&
+              res.onData &&
+              (!_schema || _schema.body !== false)
+          ) {
+            // Attach handler list for onData
+            const _onDataHandlers = [];
+            req._onDataHandlers = _onDataHandlers;
 
-            if (bodyResponse) {
-              req.body = bodyResponse;
-            }
+            body(req, res).then((body) => {
+              req.body = body;
+            });
+
+            res.onData((chunk, isLast) => {
+              chunk = Buffer.from(chunk);
+
+              for (const handler of _onDataHandlers) {
+                handler(chunk, isLast);
+              }
+            });
+
+            req.pipe = pipe;
           }
         }
 

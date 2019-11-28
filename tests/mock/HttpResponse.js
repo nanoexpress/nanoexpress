@@ -1,4 +1,4 @@
-import HttpResponseExtends from '../../src/proto/http/HttpResponse';
+import HttpResponseExtends from '../../src/response-proto/http/HttpResponse';
 
 class HttpResponse {
   constructor() {
