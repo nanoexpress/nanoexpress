@@ -23,5 +23,5 @@ export default (stream, headers) => {
     headers['Content-Encoding'] = encoding;
   }
 
-  return compression || stream;
+  return compression;
 };

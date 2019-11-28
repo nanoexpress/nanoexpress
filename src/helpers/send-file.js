@@ -4,11 +4,16 @@ import { statSync, createReadStream } from 'fs';
 
 export default function(path, lastModified = true) {
   const res = this;
-  const { headers } = res.__request;
+  const { headers, onAborted } = res.__request;
   const responseHeaders = {};
 
   const stat = statSync(path);
   let { size } = stat;
+  let isAborted = false;
+
+  onAborted(() => {
+    isAborted = true;
+  });
 
   // handling last modified
   if (lastModified) {
@@ -56,10 +61,84 @@ export default function(path, lastModified = true) {
     end = 0;
   }
 
+  let compressed = false;
+
   let readStream = createReadStream(path, { start, end });
-  readStream = compressStream(readStream, headers);
+
+  const compressedReadStream = compressStream(readStream, headers);
+
+  if (compressedReadStream) {
+    readStream = compressedReadStream;
+    compressed = true;
+  }
 
   res.writeHeaders(responseHeaders);
 
-  return res.pipe(readStream, size);
+  if (compressed) {
+    readStream.on('data', (buffer) => {
+      if (isAborted) {
+        readStream.destroy();
+        return;
+      }
+      res.write(
+        buffer.buffer.slice(
+          buffer.byteOffset,
+          buffer.byteOffset + buffer.byteLength
+        )
+      );
+    });
+  } else {
+    readStream.on('data', (buffer) => {
+      if (isAborted) {
+        readStream.destroy();
+        return;
+      }
+      buffer = buffer.buffer.slice(
+        buffer.byteOffset,
+        buffer.byteOffset + buffer.byteLength
+      );
+      const lastOffset = res.getWriteOffset();
+
+      // First try
+      const [ok, done] = res.tryEnd(buffer, size);
+
+      if (done) {
+        readStream.destroy();
+      } else if (!ok) {
+        // pause because backpressure
+        readStream.pause();
+
+        // Save unsent chunk for later
+        res.ab = buffer;
+        res.abOffset = lastOffset;
+
+        // Register async handlers for drainage
+        res.onWritable((offset) => {
+          const [ok, done] = res.tryEnd(
+            res.ab.slice(offset - res.abOffset),
+            size
+          );
+          if (done) {
+            readStream.destroy();
+          } else if (ok) {
+            readStream.resume();
+          }
+          return ok;
+        });
+      }
+    });
+  }
+  readStream
+    .on('error', () => {
+      if (!isAborted) {
+        res.writeStatus('500 Internal server error');
+        res.end();
+      }
+      readStream.destroy();
+    })
+    .on('end', () => {
+      if (!isAborted) {
+        res.end();
+      }
+    });
 }
