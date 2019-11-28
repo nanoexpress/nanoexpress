@@ -108,14 +108,10 @@ export default function(path, lastModified = true) {
         // pause because backpressure
         readStream.pause();
 
-        // Save unsent chunk for later
-        res.ab = buffer;
-        res.abOffset = lastOffset;
-
         // Register async handlers for drainage
         res.onWritable((offset) => {
           const [ok, done] = res.tryEnd(
-            res.ab.slice(offset - res.abOffset),
+            buffer.slice(offset - lastOffset),
             size
           );
           if (done) {
