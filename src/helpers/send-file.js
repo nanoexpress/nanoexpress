@@ -34,8 +34,8 @@ export default function(path, lastModified = true) {
   responseHeaders['content-type'] = getMime(path);
 
   // write data
-  let start = 0,
-    end = size - 1;
+  let start = 0;
+  let end = 0;
 
   if (headers && headers.range) {
     [start, end] = headers.range
