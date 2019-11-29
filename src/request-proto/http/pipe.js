@@ -13,5 +13,5 @@ export default function(stream) {
     }
   });
 
-  return stream;
+  return this;
 }
