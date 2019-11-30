@@ -7,7 +7,9 @@ app.use(bodyParser());
 app.get('/', async () => ({ hello: 'world' }));
 
 app.post('/', (req, res) => {
-  req.pipe(res);
+  console.log([req.body]);
+
+  res.end('got body');
 });
 
 app.listen(4000);

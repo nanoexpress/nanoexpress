@@ -1,13 +1,13 @@
-export default (req) => {
+export default function(req) {
   const { _onDataHandlers } = req;
-  return new Promise((resolveBody) => {
+  return new Promise((resolve) => {
     let buffer;
     _onDataHandlers.push((chunk, isLast) => {
       if (isLast) {
         if (buffer) {
-          resolveBody(Buffer.concat([buffer, chunk]).toString('utf8'));
+          resolve(Buffer.concat([buffer, chunk]).toString('utf8'));
         } else {
-          resolveBody(chunk.toString('utf8'));
+          resolve(chunk.toString('utf8'));
         }
       } else {
         if (buffer) {
@@ -18,4 +18,4 @@ export default (req) => {
       }
     });
   });
-};
+}
