@@ -65,7 +65,7 @@ export default (fn) => {
 
   if (lines.length > 0) {
     for (const line of lines) {
-      if (line.substr(0, 2) === '//') {
+      if (line.includes('//')) {
         continue;
       }
 
