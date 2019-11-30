@@ -45,15 +45,15 @@
     "@dalisoft/events": "^0.2.0",
     "ajv": "^6.10.2",
     "cookie": "^0.x",
-    "fast-json-stringify": "^1.15.6",
+    "fast-json-stringify": "^1.15.7",
     "uWebSockets.js": "github:uNetworking/uWebSockets.js#binaries"
   },
   "devDependencies": {
-    "coveralls": "^3.0.7",
-    "eslint": "^6.6.0",
+    "coveralls": "^3.0.9",
+    "eslint": "^6.7.1",
     "husky": "^3.0.9",
     "jest": "^24.9.0",
-    "lint-staged": "^9.4.2",
+    "lint-staged": "^9.5.0",
     "prettier": "^1.19.1"
   },
   "peerDependencies": {
