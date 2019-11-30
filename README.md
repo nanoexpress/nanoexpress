@@ -22,7 +22,7 @@ Nano-framework for Node.js powered by uWebSockets.js
 
 ## Requires
 
-- Node.js v10 or greater
+- Node.js v12 or greater
 - developer, already worked with nanoexpress before
 
 ## Benchmarks

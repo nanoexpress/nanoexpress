@@ -1,4 +1,4 @@
-import { headers, cookies, queries, params } from '../normalizers/index.js';
+import { headers, cookies, queries, params } from '../request-proto/index.js';
 import { prepareParams } from '../helpers/index.js';
 
 import Events from '@dalisoft/events';

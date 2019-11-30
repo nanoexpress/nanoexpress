@@ -18,6 +18,7 @@ Stability tip: _If you don't want crash of your application, please try always c
 
 ### Library-added methods
 
+- `pipe`
 - `send`
 - `json` (same as `send`, but for compatibility we keep this method)
 - `sendFile`

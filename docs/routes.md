@@ -73,6 +73,16 @@ app.get('/', { isRaw: true }, (req, res) => {
 });
 ```
 
+## Route-raw example
+
+Note: _Body-parsing, schema validating and polyfilled methods such as `path, url, method` are unavailable here, but RPS are higher by up to 25%_
+
+```js
+app.get('/', { forceRaw: true }, (req, res) => {
+  // do something...
+});
+```
+
 ## noMiddleware example
 
 Note: _All middlewares including globals will be disabled for this route_
