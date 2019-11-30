@@ -11,8 +11,9 @@ const HEADER_KEY_REGEX = /[;()]/g;
 const RETURN_TRIP_REGEX = /;/g;
 const CONTENT_SPACE_TRIM_REGEX = /\s+/g;
 const ARGUMENTS_MATCH_REG_EX = /\((req|res)\)/;
+const DIRECT_SIMPLE_ASYNC_REG_EX = /async?\s+\((.*)\)\s+=>?\s+(.*)/g;
 
-export default (fn) => {
+export default function compileRoute(fn) {
   const content = fn.toString().trim();
 
   // Don't parse dummy functions
@@ -23,6 +24,17 @@ export default (fn) => {
   const lines = content.split('\n');
 
   let argumentsLine = lines.shift().trim();
+
+  if (lines.length === 0) {
+    if (argumentsLine.includes('async () =>')) {
+      return compileRoute(
+        argumentsLine.replace(
+          DIRECT_SIMPLE_ASYNC_REG_EX,
+          '($1) => {\nres.end($2)\n}'
+        )
+      );
+    }
+  }
 
   let returnLine = lines.pop();
   let buffyReturnLine = '';
@@ -52,11 +64,11 @@ export default (fn) => {
       '(req, res) ' + argumentsLine.substr(argumentsLine.indexOf('()') + 2);
   }
 
-  if (returnLine === '}') {
+  if (returnLine === '}' && lines.length > 0) {
     buffyReturnLine = returnLine;
     returnLine = lines.pop();
   }
-  if (returnLine.includes('return')) {
+  if (returnLine && returnLine.includes('return')) {
     const tripLeft = returnLine.trim().substr(7);
     returnLine = `res.end(${tripLeft.replace(RETURN_TRIP_REGEX, '')})`;
   }
@@ -93,7 +105,9 @@ export default (fn) => {
       contentLines += '\n';
     }
   }
-  contentLines += returnLine;
+  if (returnLine) {
+    contentLines += returnLine;
+  }
 
   if (buffyReturnLine) {
     contentLines += '\n';
@@ -103,4 +117,4 @@ export default (fn) => {
   contentLines = contentLines.replace(CONTENT_SPACE_TRIM_REGEX, ' ');
 
   return eval(contentLines);
-};
+}

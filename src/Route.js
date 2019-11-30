@@ -280,13 +280,14 @@ export default class Route {
           _onAbortedCallbacks.length = 0;
         }
       });
+
     const attachOnAborted =
-      isShouldReduceTaks &&
+      !isShouldReduceTaks &&
       ((fn) => {
         _onAbortedCallbacks.push(fn);
       });
 
-    return isCanCompiled || isStrictRaw
+    return isShouldReduceTaks
       ? (res, req) => {
         req.method = fetchMethod ? req.getMethod().toUpperCase() : method;
         req.path = fetchUrl ? req.getUrl().substr(_baseUrl.length) : path;
