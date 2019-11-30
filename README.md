@@ -12,10 +12,6 @@ Nano-framework for Node.js powered by uWebSockets.js
 
 ## Warning
 
-- > This branch was deprecated because of there has published **PRO** version on `npm`
-- > **This branch has been expiremental and module exporting are not _STABLE_**
-- > No anymore support published to this branch
-
 - This library does not support HTTP2!
 - This branch (PRO) is differs from master/dev branches
 - This branch is paid for commercial products if sources are closed
