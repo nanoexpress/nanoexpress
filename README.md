@@ -13,7 +13,9 @@ Nano-framework for Node.js powered by uWebSockets.js
 ## Warning
 
 - This library does not support HTTP2!
-- This branch (PRO) is differs from master/dev branches
+- This branch (pro-esm) is differs from master/pro branches
+- This branch always be up-to-date
+- This branch gets new features faster than master/pro branches
 - This branch is paid for commercial products if sources are closed
 
 ## Requires
