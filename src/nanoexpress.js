@@ -7,7 +7,7 @@ import Config from './Config.js';
 const nanoexpress = (options = {}) => {
   let app;
 
-  if (options.https) {
+  if (options.https && options.isSSL !== false) {
     app = uWS.SSLApp(options.https);
   } else {
     app = uWS.App();

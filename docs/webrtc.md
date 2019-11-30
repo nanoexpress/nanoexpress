@@ -6,25 +6,25 @@ Note: Don't forget to import [WebRTC define](../src/packed/defines/webrtc.js)
 
 Note 2: First argument is optional and by default is `/webrtc`
 
-## Importing WebRTC
+## Importing webRTCServer
 
 ```js
-import { webRTC } from 'nanoexpress/src/packed/defines';
+import { webRTCServer } from 'nanoexpress/src/packed/defines';
 
-app.define(webRTC);
+app.define(webRTCServer);
 ```
 
 ## Just example
 
-To be working, just use `WebRTC` define made by nanoexpress developers.
+To be working, just use `webRTCServer` define made by nanoexpress developers.
 
 ```js
-app.webrtc('/webrtc');
+app.webRTCServer('/webrtc');
 ```
 
 ## Examples
 
-- [Simple WebRTC example](../examples/webrtc.js)
+- [Simple webRTCServer example](../examples/webrtc.js)
 
 [&laquo; WebSocket](./websocket.md)
 

@@ -2,7 +2,7 @@ import Ajv from 'ajv';
 
 export default class Config {
   get https() {
-    return this._options.https !== undefined;
+    return this._options.https !== undefined && this._options.isSSL !== false;
   }
   get swagger() {
     return this._options.swagger;

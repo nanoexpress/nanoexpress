@@ -18,6 +18,7 @@ declare namespace nanoexpress {
       cert_file_name: string;
       passphare: string;
     };
+    isSSL?: boolean;
     ajv?: AjvOptions;
     configureAjv(ajv: Ajv): Ajv;
     swagger?: SwaggerOptions;
@@ -323,9 +324,9 @@ declare namespace nanoexpress {
     ws(path: string, fn: WsRoute): nanoexpressApp;
     ws(path: string, options: WebSocketOptions, fn: WsRoute): nanoexpressApp;
 
-    webrtc(): nanoexpressApp;
-    webrtc(path: string): nanoexpressApp;
-    webrtc(path: string, options: WebSocketOptions): nanoexpressApp;
+    webRTCServer(): nanoexpressApp;
+    webRTCServer(path: string): nanoexpressApp;
+    webRTCServer(path: string, options: WebSocketOptions): nanoexpressApp;
 
     publish(
       topic: string,

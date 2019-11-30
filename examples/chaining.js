@@ -1,13 +1,11 @@
 import nanoexpress from '../src/nanoexpress.js';
 
-function one(req, res, next) {
+async function one(req) {
   req.one = true;
-  next();
 }
 
-function two(req, res, next) {
+async function two(req) {
   req.two = true;
-  next();
 }
 
 nanoexpress()

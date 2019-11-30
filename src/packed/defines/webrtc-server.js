@@ -3,7 +3,7 @@
 // thank you
 
 export default (app) => {
-  app.webrtc = (path = '/webrtc', options = {}, ajv) => {
+  app.webRTCServer = (path = '/webrtc', options = {}, ajv) => {
     const connections = {};
 
     app.ws(
