@@ -5,6 +5,12 @@ Note: _This method basically used for definint method methods for `app` instance
 ## Packed defines
 
 - [WebRTC](../src/packed/defines/webrtc.js)
+- [proxy](../src/packed/defines/proxy.js)
+
+## Demo of defines
+
+- [WebRTC](../examples/webrtc.js)
+- [proxy](../examples/proxy.js)
 
 ## How it works
 

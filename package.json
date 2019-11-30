@@ -1,6 +1,6 @@
 {
   "name": "nanoexpress-pro",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Nano-framework for Node.js powered by uWebSockets.js",
   "type": "module",
   "main": "src/nanoexpress.js",
@@ -58,6 +58,7 @@
   },
   "peerDependencies": {
     "passport": "^0.4.0",
-    "swagger-ui-dist": "^3.23.6"
+    "swagger-ui-dist": "^3.23.6",
+    "ws": "^7.2.0"
   }
 }

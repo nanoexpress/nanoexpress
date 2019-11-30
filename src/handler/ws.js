@@ -29,7 +29,7 @@ export default (path, options = {}, fn, ajv) => {
     }
   }
 
-  const fetchUrl = path === '/*' || path.indexOf(':') !== -1;
+  const fetchUrl = path.indexOf('*') !== -1 || path.indexOf(':') !== -1;
   const preparedParams =
     path.indexOf(':') !== -1 &&
     (!schema || schema.params !== false) &&
