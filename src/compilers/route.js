@@ -1,4 +1,4 @@
-import responseMethods from '../proto/http/HttpResponse.js';
+import responseMethods from '../response-proto/http/HttpResponse.js';
 
 const nonSimpleProps = ['params', 'query', 'cookies', 'body'].map(
   (prop) => `req.${prop}`

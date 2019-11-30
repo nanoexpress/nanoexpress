@@ -6,6 +6,7 @@ import {
   WebSocket as WebSocketBasic
 } from 'uWebSockets.js';
 import { Ajv, Options as AjvOptions } from 'ajv';
+import { Readable, Writable } from 'stream';
 
 declare namespace nanoexpress {
   export interface SwaggerOptions {
@@ -55,6 +56,8 @@ declare namespace nanoexpress {
     query?: HttpRequestQueries;
     params?: HttpRequestParams;
     body?: string | HttpRequestBody;
+    pipe(callback: (pipe: Writable) => void): HttpRequest;
+    onAborted(onAborted: () => void);
     __response?: HttpResponse;
   }
 
@@ -82,6 +85,7 @@ declare namespace nanoexpress {
     redirect(code: number | string, path?: string): HttpResponse;
     send(result: string | object | any[]): HttpResponse;
     json(result: object | any[]): HttpResponse;
+    pipe(callback: (pipe: Readable) => void): HttpResponse;
     sendFile(filename: string, lastModified?: boolean): Promise<HttpResponse>;
     setCookie(
       key: string,

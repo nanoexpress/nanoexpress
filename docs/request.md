@@ -8,6 +8,10 @@
 - `body`
 - `cookies`
 
+## Methods
+
+- `pipe`
+
 Performance tip: _If you want to your app be faster, please consider using [schemas](./schema.md) for serilization which improves RPS by 3-5%_
 
 Performance tip #2: _If you not using these properties, especially `body` and `headers`, your app response becomes faster, because these properties takes time for parse_

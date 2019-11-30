@@ -1,19 +1,13 @@
 import { getMime } from './mime.js';
-import compressStream from './compress-stream.js';
 import { statSync, createReadStream } from 'fs';
 
 export default function(path, lastModified = true) {
   const res = this;
-  const { headers, onAborted } = res.__request;
+  const { headers } = res.__request;
   const responseHeaders = {};
 
   const stat = statSync(path);
   let { size } = stat;
-  let isAborted = false;
-
-  onAborted(() => {
-    isAborted = true;
-  });
 
   // handling last modified
   if (lastModified) {
@@ -61,80 +55,7 @@ export default function(path, lastModified = true) {
     end = 0;
   }
 
-  let compressed = false;
-
-  let readStream = createReadStream(path, { start, end });
-
-  const compressedReadStream = compressStream(readStream, headers);
-
-  if (compressedReadStream) {
-    readStream = compressedReadStream;
-    compressed = true;
-  }
-
   res.writeHeaders(responseHeaders);
 
-  if (compressed) {
-    readStream.on('data', (buffer) => {
-      if (isAborted) {
-        readStream.destroy();
-        return;
-      }
-      res.write(
-        buffer.buffer.slice(
-          buffer.byteOffset,
-          buffer.byteOffset + buffer.byteLength
-        )
-      );
-    });
-  } else {
-    readStream.on('data', (buffer) => {
-      if (isAborted) {
-        readStream.destroy();
-        return;
-      }
-      buffer = buffer.buffer.slice(
-        buffer.byteOffset,
-        buffer.byteOffset + buffer.byteLength
-      );
-      const lastOffset = res.getWriteOffset();
-
-      // First try
-      const [ok, done] = res.tryEnd(buffer, size);
-
-      if (done) {
-        readStream.destroy();
-      } else if (!ok) {
-        // pause because backpressure
-        readStream.pause();
-
-        // Register async handlers for drainage
-        res.onWritable((offset) => {
-          const [ok, done] = res.tryEnd(
-            buffer.slice(offset - lastOffset),
-            size
-          );
-          if (done) {
-            readStream.destroy();
-          } else if (ok) {
-            readStream.resume();
-          }
-          return ok;
-        });
-      }
-    });
-  }
-  readStream
-    .on('error', () => {
-      if (!isAborted) {
-        res.writeStatus('500 Internal server error');
-        res.end();
-      }
-      readStream.destroy();
-    })
-    .on('end', () => {
-      if (!isAborted) {
-        res.end();
-      }
-    });
+  res.pipe(createReadStream(path, { start, end }), size);
 }

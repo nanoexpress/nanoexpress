@@ -5,8 +5,8 @@ import {
   params,
   body,
   pipe
-} from './normalizers/index.js';
-import { HttpResponse } from './proto/index.js';
+} from './request-proto/http/index.js';
+import { HttpResponse } from './response-proto/http/index.js';
 import { Route as RouteCompiler } from './compilers/index.js';
 import {
   prepareSwaggerDocs,
