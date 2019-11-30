@@ -1,20 +1,34 @@
 import responseMethods from '../response-proto/http/HttpResponse.js';
 
-const nonSimpleProps = ['params', 'query', 'cookies', 'body'].map(
+const nonSimpleProps = ['query', 'cookies', 'body'].map(
   (prop) => `req.${prop}`
 );
 const nonSimpleMethods = Object.keys(responseMethods).map(
   (method) => `res.${method}`
 );
 
-const HEADER_KEY_REGEX = /[;()]/g;
+// eslint-disable-next-line no-useless-escape
+const HEADER_PARAM_KEY_REGEX = /['"`;(){}\[\]]/g;
+const HEADER_PARAM_KEY_CONST_REGEX = /(\{(.*)\})?\s+?=?\s+req./m;
 const RETURN_TRIP_REGEX = /;/g;
 const CONTENT_SPACE_TRIM_REGEX = /\s+/g;
 const ARGUMENTS_MATCH_REG_EX = /\((req|res)\)/;
 const DIRECT_SIMPLE_ASYNC_REG_EX = /async?\s+\((.*)\)\s+=>?\s+(.*)/g;
 
-export default function compileRoute(fn) {
+const convertParams = (params) => {
+  if (!params) {
+    return null;
+  }
+  const _params = {};
+  for (let i = 0, len = params.length; i < len; i++) {
+    _params[params[i]] = i;
+  }
+  return _params;
+};
+
+export default function compileRoute(fn, params) {
   const content = fn.toString().trim();
+  const preparedParams = convertParams(params);
 
   // Don't parse dummy functions
   if (content === '() => {}') {
@@ -90,22 +104,69 @@ export default function compileRoute(fn) {
         continue;
       }
 
-      const headerKeyIndex = line.indexOf('req.headers');
-      if (headerKeyIndex !== -1) {
-        const headerKey = line
-          .substr(headerKeyIndex + 12)
-          .replace(HEADER_KEY_REGEX, '');
+      if (line.includes('req.headers')) {
+        const headerKeyIndex = line.indexOf('req.headers');
+        if (headerKeyIndex !== -1) {
+          const headerKey = line
+            .substr(headerKeyIndex + 12)
+            .replace(HEADER_PARAM_KEY_REGEX, '');
 
-        if (line.charAt(headerKeyIndex + 11) === '.') {
-          contentLines += line.replace(
-            'req.headers.' + headerKey,
-            'req.getHeader(\'' + headerKey + '\')'
-          );
-        } else if (line.charAt(headerKeyIndex + 11) === '[') {
-          contentLines += line.replace(
-            'req.headers[\'' + headerKey + '\']',
-            'req.getHeader(\'' + headerKey + '\')'
-          );
+          if (line.charAt(headerKeyIndex + 11) === '.') {
+            contentLines += line.replace(
+              'req.headers.' + headerKey,
+              'req.getHeader(\'' + headerKey + '\')'
+            );
+          } else if (line.charAt(headerKeyIndex + 11) === '[') {
+            contentLines += line.replace(
+              'req.headers[\'' + headerKey + '\']',
+              'req.getHeader(\'' + headerKey + '\')'
+            );
+          } else if (line.includes('req.headers;')) {
+            const extractConstants = line.match(HEADER_PARAM_KEY_CONST_REGEX);
+
+            if (extractConstants && extractConstants[2]) {
+              const constants = extractConstants[2].trim().split(',');
+
+              for (const header of constants) {
+                contentLines += `const ${header} = req.getHeader('${header}');`;
+              }
+            }
+          } else {
+            return null;
+          }
+        }
+      } else if (line.includes('req.params')) {
+        const paramKeyIndex = line.indexOf('req.params');
+
+        if (paramKeyIndex !== -1) {
+          const paramKey = line
+            .substr(paramKeyIndex + 11)
+            .replace(HEADER_PARAM_KEY_REGEX, '');
+          const paramIndex = preparedParams[paramKey];
+
+          if (line.charAt(paramKeyIndex + 10) === '.') {
+            contentLines += line.replace(
+              'req.params.' + paramKey,
+              'req.getParameter(\'' + paramIndex + '\')'
+            );
+          } else if (line.charAt(paramKeyIndex + 10) === '[') {
+            contentLines += line.replace(
+              'req.params[\'' + paramKey + '\']',
+              'req.getParameter(\'' + paramIndex + '\')'
+            );
+          } else if (line.includes('req.params;')) {
+            const extractConstants = line.match(HEADER_PARAM_KEY_CONST_REGEX);
+
+            if (extractConstants && extractConstants[2]) {
+              const constants = extractConstants[2].trim().split(',');
+
+              for (const param of constants) {
+                contentLines += `const ${param} = req.getParameter(${preparedParams[param]});`;
+              }
+            }
+          } else {
+            return null;
+          }
         }
       } else {
         contentLines += line;
