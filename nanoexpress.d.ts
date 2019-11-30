@@ -138,6 +138,7 @@ declare namespace nanoexpress {
     schema?: Schema;
     isRaw?: boolean;
     isStrictRaw?: boolean;
+    forceRaw?: boolean;
     noMiddleware?: boolean;
     onAborted?: () => any;
   }

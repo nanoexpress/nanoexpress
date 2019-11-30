@@ -5,8 +5,9 @@ import {
   params,
   body,
   pipe
-} from './request-proto/index.js';
-import { HttpResponse } from './response-proto/index.js';
+} from './normalizers/index.js';
+import { HttpResponse } from './proto/index.js';
+import { Route as RouteCompiler } from './compilers/index.js';
 import {
   prepareSwaggerDocs,
   prepareValidation,
@@ -103,34 +104,26 @@ export default class Route {
     const bodyAllowedMethod =
       method === 'POST' || method === 'PUT' || method === 'DEL';
     let responseSchema;
-    const isRaw = middlewares.find(
+
+    const findConfig = middlewares.find(
       (middleware) =>
         typeof middleware === 'object' &&
         middleware &&
-        middleware.isRaw === true
+        (middleware.isRaw !== undefined ||
+          middleware.isStrictRaw !== undefined ||
+          middleware.forceRaw !== undefined ||
+          middleware.noMiddleware !== undefined ||
+          middleware.onAborted ||
+          middlewares.schema)
     );
-    const isStrictRaw = middlewares.find(
-      (middleware) =>
-        typeof middleware === 'object' &&
-        middleware &&
-        middleware.isStrictRaw === true
-    );
-    const noMiddleware = middlewares.find(
-      (middleware) =>
-        typeof middleware === 'object' &&
-        middleware &&
-        middleware.noMiddleware === true
-    );
-    const onAborted = middlewares.find(
-      (middleware) =>
-        typeof middleware === 'object' && middleware && middleware.onAborted
-    );
-    let schema = middlewares.find(
-      (middleware) =>
-        typeof middleware === 'object' &&
-        middleware &&
-        typeof middleware.schema === 'object'
-    );
+    const isRaw = findConfig && findConfig.isRaw;
+    const isStrictRaw = findConfig && findConfig.isStrictRaw;
+    const forceRaw = findConfig && findConfig.forceRaw;
+    const noMiddleware = findConfig && findConfig.noMiddleware;
+    const onAborted = findConfig && findConfig.onAborted;
+    let schema = findConfig && findConfig.schema;
+
+    let isCanCompiled = false;
 
     middlewares = middlewares
       .filter((middleware) => typeof middleware === 'function')
@@ -146,6 +139,21 @@ export default class Route {
 
     let routeFunction = middlewares.pop();
 
+    // Quick dirty hack to performance improvement
+    if (forceRaw) {
+      return (res, req) => routeFunction(req, res);
+    }
+
+    // Quick dirty hack to performance improvement
+    if (!isCanCompiled && middlewares.length === 0) {
+      const compile = RouteCompiler(routeFunction);
+
+      if (compile) {
+        isCanCompiled = true;
+        routeFunction = compile;
+      }
+    }
+
     if (typeof path === 'function' && !routeFunction) {
       _direct = true;
       routeFunction = path;
@@ -158,7 +166,8 @@ export default class Route {
       path = path.substr(0, path.length - 1);
     }
 
-    if (!isRaw && !isStrictRaw) {
+    const isShouldReduceTaks = isCanCompiled || isStrictRaw;
+    if (!isShouldReduceTaks && !isRaw) {
       _schema = (schema && schema.schema) || undefined;
       validation = _schema && prepareValidation(_ajv, _schema);
       // eslint-disable-next-line prefer-const
@@ -242,10 +251,10 @@ export default class Route {
           return middleware;
         })
         .filter((middleware) => typeof middleware === 'function');
+    }
 
-      if (_config && _config.swagger && schema) {
-        prepareSwaggerDocs(_config.swagger, path, method, schema);
-      }
+    if (_config && _config.swagger && schema) {
+      prepareSwaggerDocs(_config.swagger, path, method, schema);
     }
 
     if (originalUrl.length > 1 && originalUrl.endsWith('/')) {
@@ -253,26 +262,33 @@ export default class Route {
     }
 
     const preparedParams =
-      (!_schema || _schema.params !== false) && prepareParams(path);
+      !isShouldReduceTaks &&
+      (!_schema || _schema.params !== false) &&
+      prepareParams(path);
 
-    const _onAbortedCallbacks = [];
-    const _handleOnAborted = () => {
-      isAborted = true;
-      if (onAborted) {
-        onAborted();
-      }
-      if (_onAbortedCallbacks.length > 0) {
-        for (let i = 0, len = _onAbortedCallbacks.length; i < len; i++) {
-          _onAbortedCallbacks[i]();
+    const _onAbortedCallbacks = !isShouldReduceTaks && [];
+    const _handleOnAborted =
+      !isShouldReduceTaks &&
+      (() => {
+        isAborted = true;
+        if (onAborted) {
+          onAborted();
         }
-        _onAbortedCallbacks.length = 0;
-      }
-    };
-    const attachOnAborted = (fn) => {
-      _onAbortedCallbacks.push(fn);
-    };
+        if (_onAbortedCallbacks.length > 0) {
+          for (let i = 0, len = _onAbortedCallbacks.length; i < len; i++) {
+            _onAbortedCallbacks[i]();
+          }
+          _onAbortedCallbacks.length = 0;
+        }
+      });
 
-    return isStrictRaw
+    const attachOnAborted =
+      !isShouldReduceTaks &&
+      ((fn) => {
+        _onAbortedCallbacks.push(fn);
+      });
+
+    return isShouldReduceTaks
       ? (res, req) => {
         req.method = fetchMethod ? req.getMethod().toUpperCase() : method;
         req.path = fetchUrl ? req.getUrl().substr(_baseUrl.length) : path;
