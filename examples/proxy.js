@@ -13,7 +13,7 @@ app
       method: 'GET'
       // enableHeadersProxy: true
     }
-    // ws // If you want proxy WebSocket too)
+    // ws // If you want proxy WebSocket too, please import "ws" module
   )
   .get('/health', (req, res) => res.send({ status: 'ok' }));
 
