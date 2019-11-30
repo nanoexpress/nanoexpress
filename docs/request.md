@@ -11,6 +11,7 @@
 ## Methods
 
 - `pipe`
+- `onAborted`
 
 Performance tip: _If you want to your app be faster, please consider using [schemas](./schema.md) for serilization which improves RPS by 3-5%_
 
