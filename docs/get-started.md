@@ -10,7 +10,7 @@ Thanks for choosing `nanoexpress` as backend server
 
 ## Install
 
-### **Requires**: Node.js v10 or greater
+### **Requires**: Node.js v12 or greater
 
 ### npm
 
