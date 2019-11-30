@@ -38,7 +38,7 @@ export default function staticMiddleware(
     index = 'index.html',
     forcePretty = false,
     addPrettyUrl = true,
-    streamConfig
+    lastModified = true
   } = {}
 ) {
   const items = prepareStaticFilesAndFolders(path);
@@ -53,7 +53,7 @@ export default function staticMiddleware(
     for (const { file, streamable, resolved, raw } of items) {
       if (fileName.indexOf(file) !== -1) {
         if (streamable) {
-          return res.sendFile(resolved, streamConfig);
+          return res.sendFile(resolved, lastModified);
         } else {
           return res.end(raw);
         }

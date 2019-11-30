@@ -1,4 +1,4 @@
-import responseMethods from '../proto/http/HttpResponse.js';
+import responseMethods from '../response-proto/http/HttpResponse.js';
 
 const nonSimpleProps = ['params', 'query', 'cookies', 'body'].map(
   (prop) => `req.${prop}`
@@ -68,9 +68,18 @@ export default function compileRoute(fn) {
     buffyReturnLine = returnLine;
     returnLine = lines.pop();
   }
-  if (returnLine && returnLine.includes('return')) {
-    const tripLeft = returnLine.trim().substr(7);
-    returnLine = `res.end(${tripLeft.replace(RETURN_TRIP_REGEX, '')})`;
+  if (returnLine) {
+    if (returnLine.includes('return')) {
+      const tripLeft = returnLine.trim().substr(7);
+
+      returnLine = `res.end(${tripLeft.replace(RETURN_TRIP_REGEX, '')})`;
+    }
+    if (returnLine.includes('(({') || returnLine.includes('({')) {
+      returnLine = returnLine.replace(
+        /res\.end\((.*)\)/g,
+        'res.end(JSON.stringify($1))'
+      );
+    }
   }
 
   let contentLines = argumentsLine + '\n';
