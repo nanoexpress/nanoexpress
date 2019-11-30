@@ -412,24 +412,23 @@ export default class Route {
             if (isAborted) {
               break;
             }
-            if (middleware.methods && middleware.methods.includes(req.method))
-              await middleware(req, res).catch((err) => {
-                if (_config._errorHandler) {
-                  return _config._errorHandler(err, req, res);
-                }
+            await middleware(req, res).catch((err) => {
+              if (_config._errorHandler) {
+                return _config._errorHandler(err, req, res);
+              }
 
-                res.status(err.status || err.code || 400, true);
-                res.writeStatus(res.statusCode);
-                res.writeHeader(
-                  'Content-Type',
-                  'application/json; charset=utf-8'
-                );
+              res.status(err.status || err.code || 400, true);
+              res.writeStatus(res.statusCode);
+              res.writeHeader(
+                'Content-Type',
+                'application/json; charset=utf-8'
+              );
 
-                res.end(
-                  `{"error":"${typeof err === 'string' ? err : err.message}"}`
-                );
-                isAborted = true;
-              });
+              res.end(
+                `{"error":"${typeof err === 'string' ? err : err.message}"}`
+              );
+              isAborted = true;
+            });
           }
         }
 
