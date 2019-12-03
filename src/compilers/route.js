@@ -1,17 +1,20 @@
+import http from 'http';
+
 import responseMethods from '../response-proto/http/HttpResponse.js';
 
 const nonSimpleProps = ['query', 'cookies', 'body'].map(
   (prop) => `req.${prop}`
 );
-const nonSimpleMethods = Object.keys(responseMethods).map(
-  (method) => `res.${method}`
-);
+
+const allowedMethods = ['status', 'setHeader'];
+const nonSimpleMethods = Object.keys(responseMethods)
+  .filter((method) => !allowedMethods.includes(method))
+  .map((method) => `res.${method}`);
 
 // eslint-disable-next-line no-useless-escape
 const HEADER_PARAM_KEY_REGEX = /['"`;(){}\[\]]/g;
 const HEADER_PARAM_KEY_CONST_REGEX = /(\{(.*)\})?\s+?=?\s+req./m;
 const RETURN_TRIP_REGEX = /;/g;
-const CONTENT_SPACE_TRIM_REGEX = /\s+/g;
 const ARGUMENTS_MATCH_REG_EX = /\((req|res)\)/;
 const DIRECT_SIMPLE_ASYNC_REG_EX = /async?\s+\((.*)\)\s+=>?\s+(.*)/g;
 
@@ -25,9 +28,25 @@ const convertParams = (params) => {
   }
   return _params;
 };
+const babelCompilerManipulationNormalize = (content) => {
+  if (content.includes('const {\n') || content.includes('let {\n')) {
+    return content.split('\n').reduce((all, currLine, index) => {
+      if (currLine.includes('{') && index > 0) {
+        all += '\n';
+      }
+      if (index > 0 && (currLine.includes(';') || currLine.includes('}'))) {
+        currLine += '\n';
+      }
+
+      return all + currLine;
+    }, '');
+  } else {
+    return content;
+  }
+};
 
 export default function compileRoute(fn, params) {
-  const content = fn.toString().trim();
+  const content = babelCompilerManipulationNormalize(fn.toString().trim());
   const preparedParams = convertParams(params);
 
   // Don't parse dummy functions
@@ -67,23 +86,30 @@ export default function compileRoute(fn, params) {
     }
   }
 
-  if (argumentsLine.includes('async')) {
+  if (argumentsLine.includes('async') && !content.includes('await')) {
     argumentsLine = argumentsLine.substr(5);
   }
 
-  if (argumentsLine.includes('(req)') || argumentsLine.includes('(res)')) {
-    argumentsLine = argumentsLine.replace(ARGUMENTS_MATCH_REG_EX, '(req, res)');
-  } else if (!argumentsLine.includes('(req, res)')) {
-    argumentsLine =
-      '(req, res) ' + argumentsLine.substr(argumentsLine.indexOf('()') + 2);
+  if (!argumentsLine.includes('(req, res)')) {
+    if (argumentsLine.includes('(req)') || argumentsLine.includes('(res)')) {
+      argumentsLine = argumentsLine.replace(
+        ARGUMENTS_MATCH_REG_EX,
+        '(req, res)'
+      );
+    } else {
+      argumentsLine =
+        '(req, res) ' + argumentsLine.substr(argumentsLine.indexOf('()') + 2);
+    }
   }
 
   if (returnLine === '}' && lines.length > 0) {
     buffyReturnLine = returnLine;
     returnLine = lines.pop();
   }
+
   if (returnLine) {
     if (returnLine.includes('return')) {
+      returnLine = `res.end(${tripLeft.replace(RETURN_TRIP_REGEX, '')})`;
       const tripLeft = returnLine.trim().substr(7);
 
       returnLine = `res.end(${tripLeft.replace(RETURN_TRIP_REGEX, '')})`;
@@ -122,13 +148,17 @@ export default function compileRoute(fn, params) {
               'req.getHeader(\'' + headerKey + '\')'
             );
           } else if (line.includes('req.headers;')) {
+            const matchDefine = line.includes('const') ? 'const' : 'let';
             const extractConstants = line.match(HEADER_PARAM_KEY_CONST_REGEX);
+            const leftPad = line.indexOf(matchDefine);
 
             if (extractConstants && extractConstants[2]) {
               const constants = extractConstants[2].trim().split(',');
 
               for (const header of constants) {
-                contentLines += `const ${header} = req.getHeader('${header}');`;
+                contentLines += `${' '.repeat(
+                  leftPad
+                )}${matchDefine} ${header} = req.getHeader('${header}');`;
               }
             }
           } else {
@@ -155,18 +185,40 @@ export default function compileRoute(fn, params) {
               'req.getParameter(\'' + paramIndex + '\')'
             );
           } else if (line.includes('req.params;')) {
+            const matchDefine = line.includes('const') ? 'const' : 'let';
             const extractConstants = line.match(HEADER_PARAM_KEY_CONST_REGEX);
+            const leftPad = line.indexOf(matchDefine);
 
             if (extractConstants && extractConstants[2]) {
               const constants = extractConstants[2].trim().split(',');
 
               for (const param of constants) {
-                contentLines += `const ${param} = req.getParameter(${preparedParams[param]});`;
+                contentLines += `${' '.repeat(
+                  leftPad
+                )}${matchDefine} ${param} = req.getParameter(${
+                  preparedParams[param]
+                });`;
               }
             }
           } else {
             return null;
           }
+        }
+      } else if (line.includes('setHeader')) {
+        contentLines += line.replace('setHeader', 'writeHeader');
+      } else if (line.includes('status(')) {
+        const statusPrepare = line.substr(line.indexOf('status(') + 7);
+        const code = parseInt(
+          statusPrepare.substr(0, statusPrepare.indexOf(')')),
+          10
+        );
+
+        if (typeof code === 'number' && !Number.isNaN(code)) {
+          contentLines += line
+            .replace('status', 'writeStatus')
+            .replace(code, `'${code} ${http.STATUS_CODES[code]}'`);
+        } else {
+          contentLines += line;
         }
       } else {
         contentLines += line;
@@ -184,7 +236,9 @@ export default function compileRoute(fn, params) {
     contentLines += buffyReturnLine;
   }
 
-  contentLines = contentLines.replace(CONTENT_SPACE_TRIM_REGEX, ' ');
-
-  return eval(contentLines);
+  try {
+    return eval(contentLines);
+  } catch (e) {
+    return null;
+  }
 }
