@@ -253,7 +253,12 @@ export default class Route {
     }
 
     if (_config && _config.swagger && schema) {
-      prepareSwaggerDocs(_config.swagger, path, method.toLowerCase(), schema);
+      prepareSwaggerDocs(
+        _config.swagger,
+        originalUrl,
+        method.toLowerCase(),
+        schema
+      );
     }
 
     if (originalUrl.length > 1 && originalUrl.endsWith('/')) {
