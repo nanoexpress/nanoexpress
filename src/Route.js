@@ -114,14 +114,14 @@ export default class Route {
           middleware.forceRaw !== undefined ||
           middleware.noMiddleware !== undefined ||
           middleware.onAborted ||
-          middlewares.schema)
+          middleware.schema)
     );
     const isRaw = findConfig && findConfig.isRaw;
     const isStrictRaw = findConfig && findConfig.isStrictRaw;
     const forceRaw = findConfig && findConfig.forceRaw;
     const noMiddleware = findConfig && findConfig.noMiddleware;
     const onAborted = findConfig && findConfig.onAborted;
-    let schema = findConfig && findConfig.schema;
+    let schema = findConfig && findConfig.schema && findConfig;
 
     let isCanCompiled = false;
 
@@ -253,7 +253,7 @@ export default class Route {
     }
 
     if (_config && _config.swagger && schema) {
-      prepareSwaggerDocs(_config.swagger, path, method, schema);
+      prepareSwaggerDocs(_config.swagger, path, method.toLowerCase(), schema);
     }
 
     if (originalUrl.length > 1 && originalUrl.endsWith('/')) {
