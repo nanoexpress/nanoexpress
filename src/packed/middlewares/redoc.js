@@ -5,13 +5,13 @@ export default (config = {}) => {
   if (config.path === undefined) {
     config.path = '/docs/';
   }
-  return (req, res, next) => {
+  const fn = async (req, res) => {
     if (config.url === undefined) {
       config.url = `http://${req.getHeader('host')}/docs/swagger.json`;
     }
 
     if (req.path === config.path) {
-      res.end(`
+      return res.end(`
     <!DOCTYPE html>
     <html>
       <head>
@@ -49,8 +49,9 @@ export default (config = {}) => {
       </body>
     </html>
     `);
-    } else {
-      next(null, true);
     }
   };
+  fn.override = true;
+
+  return fn;
 };
