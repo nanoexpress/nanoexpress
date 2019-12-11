@@ -161,7 +161,7 @@ export default class Route {
 
     // Quick dirty hack to performance improvement
     if (!isCanCompiled && middlewares.length === 0) {
-      const compile = RouteCompiler(routeFunction, prepareParams);
+      const compile = RouteCompiler(routeFunction, preparedParams);
 
       if (compile) {
         isCanCompiled = true;
