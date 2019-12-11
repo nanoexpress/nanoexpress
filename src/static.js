@@ -38,12 +38,13 @@ export default function staticMiddleware(
     index = 'index.html',
     forcePretty = false,
     addPrettyUrl = true,
-    lastModified = true
+    lastModified = true,
+    compressed = true
   } = {}
 ) {
   const items = prepareStaticFilesAndFolders(path);
 
-  const fn = (req, res, next) => {
+  const fn = async (req, res) => {
     let fileName = req.path;
 
     if (forcePretty || (addPrettyUrl && req.path === '/')) {
@@ -53,14 +54,12 @@ export default function staticMiddleware(
     for (const { file, streamable, resolved, raw } of items) {
       if (fileName.indexOf(file) !== -1) {
         if (streamable) {
-          return res.sendFile(resolved, lastModified);
+          return res.sendFile(resolved, lastModified, compressed);
         } else {
           return res.end(raw);
         }
       }
     }
-
-    next();
   };
   fn.override = true;
 

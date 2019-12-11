@@ -1,11 +1,12 @@
 import nanoexpress from '../src/nanoexpress.js';
-const staticMiddleware = require('../build/static');
-const { join } = require('path');
+import staticMiddleware from '../src/static.js';
+
+import { resolve } from 'path';
 
 const app = nanoexpress();
 
 app
-  .use(staticMiddleware(join(__dirname + '/static')))
+  .use(staticMiddleware(resolve('./examples/static')))
   .get('/health', (req, res) => res.send({ status: 'ok' }));
 
 app.listen(4040);

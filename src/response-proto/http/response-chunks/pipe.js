@@ -1,30 +1,36 @@
 import compressStream from '../../../helpers/compress-stream.js';
 
-export default function(stream, size = Infinity) {
+export default function(stream, size, compressed = false) {
   const { __request: req } = this;
-  const { onAborted, headers } = req;
+  const { onAborted, headers, responseHeaders } = req;
   let isAborted = false;
 
-  let compressed = false;
-  const compressedStream = compressStream(stream, headers);
+  this.stream = true;
+
+  if (compressed) {
+    const compressedStream = compressStream(stream, responseHeaders || headers);
+
+    if (compressedStream) {
+      stream = compressedStream;
+    }
+  }
 
   onAborted(() => {
     if (stream) {
       stream.destroy();
     }
-    if (compressedStream) {
-      compressedStream.destroy();
+    if (stream) {
+      stream.destroy();
     }
     isAborted = true;
   });
 
-  if (compressedStream) {
-    stream = compressedStream;
-    compressed = true;
-  }
-
-  if (compressed) {
+  if (compressed || !size) {
     stream.on('data', (buffer) => {
+      if (isAborted) {
+        stream.destroy();
+        return;
+      }
       this.write(
         buffer.buffer.slice(
           buffer.byteOffset,
@@ -34,6 +40,10 @@ export default function(stream, size = Infinity) {
     });
   } else {
     stream.on('data', (buffer) => {
+      if (isAborted) {
+        stream.destroy();
+        return;
+      }
       buffer = buffer.buffer.slice(
         buffer.byteOffset,
         buffer.byteOffset + buffer.byteLength
@@ -56,7 +66,7 @@ export default function(stream, size = Infinity) {
             size
           );
           if (done) {
-            stream.destroy();
+            stream.end();
           } else if (ok) {
             stream.resume();
           }
@@ -67,6 +77,7 @@ export default function(stream, size = Infinity) {
   }
   stream
     .on('error', () => {
+      this.stream = -1;
       if (!isAborted) {
         this.writeStatus('500 Internal server error');
         this.end();
@@ -74,9 +85,11 @@ export default function(stream, size = Infinity) {
       stream.destroy();
     })
     .on('end', () => {
+      this.stream = 1;
       if (!isAborted) {
         this.end();
       }
     });
+
   return this;
 }

@@ -1,6 +1,6 @@
-const nanoexpress = require('..');
-// const reDoc = require('../src/packed/middlewares/redoc');
-const swaggerUi = require('../src/packed/middlewares/swagger-ui');
+import nanoexpress from '../src/nanoexpress.js';
+
+import swaggerUi from '../src/packed/middlewares/swagger-ui.js';
 
 const app = nanoexpress({
   swagger: {

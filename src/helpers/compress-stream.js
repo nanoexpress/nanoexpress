@@ -5,7 +5,7 @@ const priority = ['gzip', 'br', 'deflate'];
 export default (stream, headers) => {
   const contentEncoding = headers['accept-encoding'];
   const encoding = priority.find(
-    (encoding) => contentEncoding.indexOf(encoding) !== -1
+    (encoding) => contentEncoding && contentEncoding.indexOf(encoding) !== -1
   );
 
   const compression =

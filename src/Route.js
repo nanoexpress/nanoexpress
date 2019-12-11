@@ -293,7 +293,7 @@ export default class Route {
 
         if (
           fetchUrl &&
-            reqPathLength.length > 1 &&
+            reqPathLength > 1 &&
             req.path.charAt(reqPathLength - 1) === '/'
         ) {
           req.path = req.path.substr(0, reqPathLength - 1);
@@ -319,7 +319,7 @@ export default class Route {
 
         if (
           fetchUrl &&
-            reqPathLength.length > 1 &&
+            reqPathLength > 1 &&
             req.path.charAt(reqPathLength - 1) === '/'
         ) {
           req.path = req.path.substr(0, reqPathLength - 1);
@@ -401,17 +401,12 @@ export default class Route {
             middlewares &&
             middlewares.length > 0
         ) {
-          for (
-            let i = 0, len = middlewares.length, middleware;
-            i < len;
-            i++
-          ) {
-            middleware = middlewares[i];
-
+          for (const middleware of middlewares) {
             if (isAborted) {
               break;
             }
-            await middleware(req, res).catch((err) => {
+
+            const response = await middleware(req, res).catch((err) => {
               if (_config._errorHandler) {
                 return _config._errorHandler(err, req, res);
               }
@@ -428,10 +423,19 @@ export default class Route {
               );
               isAborted = true;
             });
+
+            if (response === res) {
+              return;
+            }
           }
         }
 
-        if (isAborted || method === 'OPTIONS') {
+        if (
+          isAborted ||
+            method === 'OPTIONS' ||
+            res.stream === true ||
+            res.stream === 1
+        ) {
           return;
         }
 

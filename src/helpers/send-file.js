@@ -1,9 +1,10 @@
 import { getMime } from './mime.js';
 import { statSync, createReadStream } from 'fs';
 
-export default function(path, lastModified = true) {
+export default function(path, lastModified = true, compressed = false) {
   const res = this;
-  const { headers } = res.__request;
+  const req = res.__request;
+  const { headers } = req;
   const responseHeaders = {};
 
   const stat = statSync(path);
@@ -55,7 +56,14 @@ export default function(path, lastModified = true) {
     end = 0;
   }
 
+  req.responseHeaders = responseHeaders;
+
+  const createStreamInstance = end
+    ? createReadStream(path, { start, end })
+    : createReadStream(path);
+
+  const pipe = res.pipe(createStreamInstance, size, compressed);
   res.writeHeaders(responseHeaders);
 
-  res.pipe(createReadStream(path, { start, end }), size);
+  return pipe;
 }

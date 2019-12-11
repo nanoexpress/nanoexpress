@@ -86,8 +86,16 @@ declare namespace nanoexpress {
     redirect(code: number | string, path?: string): HttpResponse;
     send(result: string | object | any[]): HttpResponse;
     json(result: object | any[]): HttpResponse;
-    pipe(callback: (pipe: Readable) => void): HttpResponse;
-    sendFile(filename: string, lastModified?: boolean): Promise<HttpResponse>;
+    pipe(
+      callback: (pipe: Readable) => void,
+      size?: number,
+      compressed?: boolean
+    ): HttpResponse;
+    sendFile(
+      filename: string,
+      lastModified?: boolean,
+      compressed?: boolean
+    ): Promise<HttpResponse>;
     setCookie(
       key: string,
       value: string,
@@ -171,6 +179,7 @@ declare namespace nanoexpress {
     addPrettyUrl?: boolean;
     forcePretty?: boolean;
     lastModified?: boolean;
+    compressed?: boolean;
   }
 
   interface validationErrorItems {

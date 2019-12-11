@@ -1,26 +1,26 @@
-import { absolutePath } from 'swagger-ui-dist';
+import swaggerUiDist from 'swagger-ui-dist';
 
 export default (config = {}) => {
   if (config.title === undefined) {
     config.title = 'nanoexpress - Swagger UI';
   }
   if (config.path === undefined) {
-    config.path = '/docs/';
+    config.path = '/docs';
   }
   if (config.fsPath === undefined) {
-    config.fsPath = absolutePath();
+    config.fsPath = swaggerUiDist.absolutePath();
   }
-  return (req, res, next) => {
+  const fn = async (req, res) => {
     if (config.url === undefined) {
-      config.url = `http://${req.getHeader('host')}/docs/swagger.json`;
+      config.url = `//${req.getHeader('host')}/docs/swagger.json`;
     }
 
     if (req.path.indexOf('/swagger-ui') !== -1) {
-      res.sendFile(
+      return res.sendFile(
         `${config.fsPath}${req.path.substr(req.path.lastIndexOf('/'))}`
       );
     } else if (req.path === config.path) {
-      res.end(`
+      return res.end(`
       <!-- HTML for static distribution bundle build -->
 <!DOCTYPE html>
 <html lang="en">
@@ -62,7 +62,7 @@ export default (config = {}) => {
     window.onload = function() {
       // Begin Swagger UI call region
       const ui = SwaggerUIBundle({
-        url: "${config.url}",
+        url: window.location.protocol + "${config.url}",
         dom_id: '#swagger-ui',
         deepLinking: true,
         presets: [
@@ -80,9 +80,10 @@ export default (config = {}) => {
     }
   </script>
   </body>
-</html>      `);
-    } else {
-      next(null, true);
+</html>`);
     }
   };
+  fn.override = true;
+
+  return fn;
 };
