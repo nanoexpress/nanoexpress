@@ -12,7 +12,9 @@ export default (config = {}) => {
   }
   const fn = async (req, res) => {
     if (config.url === undefined) {
-      config.url = `//${req.getHeader('host')}/docs/swagger.json`;
+      config.url = `//${
+        req.headers !== undefined ? req.headers.host : req.getHeader('host')
+      }/docs/swagger.json`;
     }
 
     if (req.path.indexOf('/swagger-ui') !== -1) {

@@ -1,6 +1,6 @@
 {
   "name": "nanoexpress-pro",
-  "version": "1.7.5",
+  "version": "1.7.6",
   "description": "Nano-framework for Node.js powered by uWebSockets.js",
   "type": "module",
   "main": "src/nanoexpress.js",
