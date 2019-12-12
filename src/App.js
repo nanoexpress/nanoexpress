@@ -51,7 +51,7 @@ export default class App {
   }
   activateDocs() {
     this._app.get('/docs/swagger.json', (res) => {
-      res.writeHeader('Content-Type', 'application/json');
+      res.writeHeader('Content-Type', 'application/json; charset=utf-8');
       res.end(JSON.stringify(this._config.swagger, null, 4));
     });
   }
