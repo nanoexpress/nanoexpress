@@ -482,8 +482,12 @@ for (let i = 0, len = httpMethods.length; i < len; i++) {
         originalUrl = _baseUrl + path;
       }
 
+      if (originalUrl && originalUrl[originalUrl.length - 1] !== '/') {
+        originalUrl += '/';
+      }
+
       _app[method](
-        originalUrl + '/',
+        originalUrl,
         this._prepareMethod(
           method.toUpperCase(),
           { path, originalUrl },
