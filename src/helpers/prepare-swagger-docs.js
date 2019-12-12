@@ -13,6 +13,10 @@ export default function swaggerDocsGenerator(
     swaggerDef.paths = {};
   }
 
+  if (path.indexOf(':') !== -1) {
+    path = path.replace(/:(.*)\//, '{$1}');
+  }
+
   for (const typeName in schema) {
     if (schema[typeName] === false) {
       continue;
