@@ -1,5 +1,19 @@
 import isHttpCode from './is-http-code.js';
 
+const swaggerPathNormalizeRegExp = /:(.*?[/])/;
+const swaggerPathNormalizeFunc = (matched) => {
+  if (matched[0] === ':') {
+    matched = matched.substr(1);
+
+    if (matched && matched[matched.length - 1]) {
+      matched = matched.substr(0, matched.length - 1);
+    }
+
+    matched = '{' + matched + '}/';
+  }
+  return matched;
+};
+
 export default function swaggerDocsGenerator(
   swaggerDef,
   path,
@@ -14,7 +28,7 @@ export default function swaggerDocsGenerator(
   }
 
   if (path.indexOf(':') !== -1) {
-    path = path.replace(/:(.*)\//, '{$1}');
+    path = path.replace(swaggerPathNormalizeRegExp, swaggerPathNormalizeFunc);
   }
 
   for (const typeName in schema) {
