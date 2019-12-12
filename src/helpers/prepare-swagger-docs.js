@@ -1,15 +1,17 @@
-import isHttpCode from './is-http-code.js';
+import isHttpCode from './is-http-code';
 
-const swaggerPathNormalizeRegExp = /:(.*?[/])/;
+const swaggerPathNormalizeRegExp = /:(.*?[/])?(.*)/;
 const swaggerPathNormalizeFunc = (matched) => {
   if (matched[0] === ':') {
     matched = matched.substr(1);
 
-    if (matched && matched[matched.length - 1]) {
+    let lastChar = '';
+    if (matched && matched[matched.length - 1] === '/') {
       matched = matched.substr(0, matched.length - 1);
+      lastChar = '/';
     }
 
-    matched = '{' + matched + '}/';
+    matched = '{' + matched + '}' + lastChar;
   }
   return matched;
 };
