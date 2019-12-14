@@ -5,6 +5,12 @@ import responseMethods from '../response-proto/http/HttpResponse.js';
 const nonSimpleProps = ['query', 'cookies', 'body'].map(
   (prop) => `req.${prop}`
 );
+const matchers = (raw, prop) =>
+  raw.includes(`.${prop}`) ||
+  raw.includes(`{ ${prop}`) ||
+  raw.includes(`${prop} }`) ||
+  raw.includes(`, ${prop}`) ||
+  raw.includes(`${prop},`);
 
 const allowedMethods = ['status', 'setHeader'];
 const nonSimpleMethods = Object.keys(responseMethods)
@@ -114,7 +120,13 @@ export default function compileRoute(fn, params) {
 
       returnLine = `res.end(${tripLeft.replace(RETURN_TRIP_REGEX, '')})`;
     }
-    if (returnLine.includes('(({') || returnLine.includes('({')) {
+    if (returnLine.includes('(({')) {
+      returnLine = returnLine.replace(/\(\(/g, '(');
+    }
+    if (returnLine.includes('}))')) {
+      returnLine = returnLine.replace(/\)\)/g, ')');
+    }
+    if (returnLine.includes('({')) {
       returnLine = returnLine.replace(
         /res\.end\((.*)\)/g,
         'res.end(JSON.stringify($1))'
@@ -236,9 +248,21 @@ export default function compileRoute(fn, params) {
     contentLines += buffyReturnLine;
   }
 
+  let compiled;
   try {
-    return eval(contentLines);
+    compiled = new Function('return ' + contentLines)();
   } catch (e) {
-    return null;
+    try {
+      compiled = eval(contentLines);
+    } catch (e) {
+      compiled = null;
+    }
   }
+
+  if (compiled) {
+    compiled.path = matchers(contentLines, 'path');
+    compiled.method = matchers(contentLines, 'method');
+  }
+
+  return compiled;
 }
