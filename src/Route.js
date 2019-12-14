@@ -124,6 +124,8 @@ export default class Route {
     let schema = findConfig && findConfig.schema && findConfig;
 
     let isCanCompiled = false;
+    let compilePath;
+    let compileMethod;
 
     middlewares = middlewares
       .filter((middleware) => typeof middleware === 'function')
@@ -166,6 +168,8 @@ export default class Route {
       if (compile) {
         isCanCompiled = true;
         routeFunction = compile;
+        compileMethod = compile.method;
+        compilePath = compile.path;
       }
     }
 
@@ -288,36 +292,37 @@ export default class Route {
       });
 
     return isShouldReduceTaks
-      ? (res, req) => {
-        req.method = fetchMethod ? req.getMethod().toUpperCase() : method;
-        req.path = fetchUrl ? req.getUrl().substr(_baseUrl.length) : path;
-        req.baseUrl = _baseUrl || req.baseUrl;
+      ? !compilePath && !compileMethod
+        ? (res, req) => routeFunction(req, res)
+        : (res, req) => {
+          req.method = fetchMethod ? req.getMethod().toUpperCase() : method;
+          req.path = fetchUrl ? req.getUrl().substr(_baseUrl.length) : path;
+          req.baseUrl = _baseUrl || '';
 
-        // Cache value
-        const reqPathLength = req.path.length;
+          // Cache value
+          const reqPathLength = req.path.length;
 
-        if (
-          fetchUrl &&
-            reqPathLength > 1 &&
-            req.path.charAt(reqPathLength - 1) === '/'
-        ) {
-          req.path = req.path.substr(0, reqPathLength - 1);
+          if (
+            fetchUrl &&
+              reqPathLength > 1 &&
+              req.path.charAt(reqPathLength - 1) === '/'
+          ) {
+            req.path = req.path.substr(0, reqPathLength - 1);
+          }
+
+          // Aliases for polyfill
+          req.url = req.path;
+          req.originalUrl = originalUrl;
+
+          return routeFunction(req, res);
         }
-
-        // Aliases for polyfill
-        req.url = req.path;
-        req.originalUrl = originalUrl;
-        req.baseUrl = _baseUrl || '';
-
-        return routeFunction(req, res);
-      }
       : async (res, req) => {
         isAborted = false;
         !isRaw && res.onAborted(_handleOnAborted);
 
         req.method = fetchMethod ? req.getMethod().toUpperCase() : method;
         req.path = fetchUrl ? req.getUrl().substr(_baseUrl.length) : path;
-        req.baseUrl = _baseUrl || req.baseUrl;
+        req.baseUrl = _baseUrl || '';
 
         // Cache value
         const reqPathLength = req.path.length;
@@ -333,7 +338,6 @@ export default class Route {
         // Aliases for polyfill
         req.url = req.path;
         req.originalUrl = originalUrl;
-        req.baseUrl = _baseUrl || '';
 
         // Some callbacks which need for your
         req.onAborted = attachOnAborted;
