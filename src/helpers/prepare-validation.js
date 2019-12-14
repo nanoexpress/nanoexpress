@@ -52,7 +52,9 @@ export default (ajv, schema) => {
       const _schema = schema[type];
       if (typeof _schema === 'object' && _schema) {
         if (type === 'response') {
-          const isHttpCodes = Object.keys(_schema).every(isHttpCode);
+          const isHttpCodes = Object.keys(_schema).every(
+            (code) => isHttpCode(code) === 1
+          );
 
           let newSchema;
           if (isHttpCodes) {

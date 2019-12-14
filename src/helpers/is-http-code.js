@@ -1,7 +1,17 @@
 export default (code) => {
-  code = +code;
-  if (typeof code === 'number' && code > 100 && code < 600) {
-    return true;
+  const codeInteger = +code;
+  if (
+    typeof codeInteger === 'number' &&
+    codeInteger > 100 &&
+    codeInteger < 600
+  ) {
+    return 1;
+  } else if (
+    typeof code === 'string' &&
+    code.length === 3 &&
+    code.indexOf('x') !== -1
+  ) {
+    return 2;
   }
-  return false;
+  return 0;
 };
