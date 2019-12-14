@@ -9,7 +9,7 @@ export default (code) => {
   } else if (
     typeof code === 'string' &&
     code.length === 3 &&
-    code.indexOf('x') !== -1
+    code.indexOf('X') !== -1
   ) {
     return 2;
   }

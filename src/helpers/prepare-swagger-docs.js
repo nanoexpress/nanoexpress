@@ -72,6 +72,9 @@ export default function swaggerDocsGenerator(
       if (!methodInstance.parameters) {
         methodInstance.parameters = [];
       }
+      if (schemaItem.description && !methodInstance.description) {
+        methodInstance.description = schemaItem.description;
+      }
       for (const name in schemaItem.properties) {
         const value = schemaItem.properties[name];
 
@@ -95,10 +98,15 @@ export default function swaggerDocsGenerator(
       if (typeName === 'response') {
         for (const httpCode in schema[typeName]) {
           let value = schema[typeName][httpCode];
+          let parent = value;
 
           if (!value.content) {
             schema[typeName][httpCode] = { content: { [contentType]: value } };
-            value = schema[typeName][httpCode].content[contentType];
+            parent = schema[typeName][httpCode];
+            value = parent.content[contentType];
+          }
+          if (value.description && !parent.description) {
+            parent.description = value.description;
           }
 
           if (!value.schema) {
@@ -107,9 +115,15 @@ export default function swaggerDocsGenerator(
         }
       } else {
         let value = schemaItem;
+        let parent = value;
+
         if (!value.content) {
           schema[typeName] = { content: { [contentType]: value } };
+          parent = schema[typeName];
           value = schema[typeName].content[contentType];
+        }
+        if (value.description && !parent.description) {
+          parent.description = value.description;
         }
 
         if (!value.schema) {
