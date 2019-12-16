@@ -33,6 +33,11 @@ export default function swaggerDocsGenerator(
     path = path.replace(swaggerPathNormalizeRegExp, swaggerPathNormalizeFunc);
   }
 
+  // Quick patch for Swagger
+  if (method === 'del') {
+    method = 'delete';
+  }
+
   for (const typeName in schema) {
     if (schema[typeName] === false) {
       continue;
