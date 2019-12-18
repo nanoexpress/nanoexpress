@@ -115,8 +115,8 @@ export default function compileRoute(fn, params) {
 
   if (returnLine) {
     if (returnLine.includes('return')) {
-      returnLine = `res.end(${tripLeft.replace(RETURN_TRIP_REGEX, '')})`;
       const tripLeft = returnLine.trim().substr(7);
+      returnLine = `res.end(${tripLeft.replace(RETURN_TRIP_REGEX, '')})`;
 
       returnLine = `res.end(${tripLeft.replace(RETURN_TRIP_REGEX, '')})`;
     }
