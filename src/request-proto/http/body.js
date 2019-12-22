@@ -1,21 +1,16 @@
-export default function(req) {
-  const { _onDataHandlers } = req;
-  return new Promise((resolve) => {
+export default (req) =>
+  new Promise((resolve, reject) => {
     let buffer;
-    _onDataHandlers.push((chunk, isLast) => {
-      if (isLast) {
-        if (buffer) {
-          resolve(Buffer.concat([buffer, chunk]).toString('utf8'));
-        } else {
-          resolve(chunk.toString('utf8'));
-        }
-      } else {
-        if (buffer) {
-          buffer = Buffer.concat([buffer, chunk]);
-        } else {
-          buffer = Buffer.concat([chunk]);
-        }
-      }
+
+    req.stream.on('data', (chunk) => {
+      buffer = buffer ? Buffer.concat([buffer, chunk]) : chunk;
+    });
+    req.stream.once('end', () => {
+      req.body = buffer;
+      resolve();
+    });
+    req.stream.once('error', (err) => {
+      req.stream.destroy();
+      reject(err);
     });
   });
-}

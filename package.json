@@ -1,6 +1,6 @@
 {
   "name": "nanoexpress-pro",
-  "version": "1.7.15",
+  "version": "1.8.0",
   "description": "Nano-framework for Node.js powered by uWebSockets.js",
   "type": "module",
   "main": "src/nanoexpress.js",
@@ -44,6 +44,7 @@
   "dependencies": {
     "@dalisoft/events": "^0.2.0",
     "ajv": "^6.10.2",
+    "busboy": "^0.3.1",
     "cookie": "^0.x",
     "fast-json-stringify": "^1.15.7",
     "uWebSockets.js": "github:uNetworking/uWebSockets.js#binaries"

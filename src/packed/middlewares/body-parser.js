@@ -13,7 +13,7 @@ export default ({ json = true, urlEncoded = true } = {}) => {
           urlEncoded &&
           contentType.indexOf('/x-www-form-urlencoded') !== -1
         ) {
-          req.body = parse(req.body);
+          req.body = parse(body);
         }
       }
     }

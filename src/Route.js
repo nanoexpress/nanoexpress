@@ -4,6 +4,7 @@ import {
   queries,
   params,
   body,
+  stream,
   pipe
 } from './request-proto/http/index.js';
 import { HttpResponse } from './response-proto/http/index.js';
@@ -380,26 +381,12 @@ export default class Route {
           if (!_schema || _schema.query !== false) {
             req.query = queries(req, _schema && _schema.query);
           }
-          if (
-            !isRaw &&
-              bodyAllowedMethod &&
-              res.onData &&
-              (!_schema || _schema.body !== false)
-          ) {
-            // Attach handler list for onData
-            const _onDataHandlers = [];
-            req._onDataHandlers = _onDataHandlers;
-
-            res.onData((chunk, isLast) => {
-              chunk = Buffer.from(chunk);
-
-              for (const handler of _onDataHandlers) {
-                handler(chunk, isLast);
-              }
-            });
-
-            req.body = await body(req, res);
+          if (!isRaw && bodyAllowedMethod && res.onData) {
+            stream(req, res);
             req.pipe = pipe;
+          }
+          if (req.stream && (!_schema || _schema.body !== false)) {
+            await body(req);
           }
         }
 
