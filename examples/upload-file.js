@@ -23,7 +23,11 @@ app.post('/', (req, res) => {
 
   for (const file of req.files) {
     file
-      .mv(resolve('./examples/' + file.filename))
+      .mv(
+        resolve(
+          './examples/' + (file.filename || 'binary-file' + file.extension)
+        )
+      )
       .then(() => {
         res.send('File Uploaded!');
       })
