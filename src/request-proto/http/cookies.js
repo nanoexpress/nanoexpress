@@ -4,7 +4,7 @@ export default (req, schema) => {
   let cookies;
   const { headers } = req;
   const headerCookie =
-    (headers && headers.cookie) || (req && req.getHeader('Cookie'));
+    (headers && headers.cookie) || (req && req.getHeader('cookie'));
 
   if (headerCookie) {
     if (cookies) {
