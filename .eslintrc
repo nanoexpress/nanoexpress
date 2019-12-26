@@ -19,13 +19,7 @@
       }
     ],
     "eol-last": ["error", "always"],
-    "indent": [
-      "error",
-      2,
-      {
-        "MemberExpression": 1
-      }
-    ],
+    "indent": "off",
     "no-multiple-empty-lines": ["error"],
     "no-new-symbol": "error",
     "no-trailing-spaces": ["error"],
@@ -35,7 +29,7 @@
     "object-curly-spacing": ["error", "always"],
     "object-shorthand": "error",
     "prefer-const": 2,
-    "quotes": ["error", "single"],
+    "quotes": "off",
     "semi": ["error", "always"],
     "space-in-parens": ["error", "never"],
     "strict": [2, "never"],

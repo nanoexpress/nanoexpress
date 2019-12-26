@@ -12,10 +12,10 @@ export default (stream, headers) => {
     encoding === 'br'
       ? createBrotliCompress()
       : encoding === 'gzip'
-        ? createGzip()
-        : encoding === 'deflate'
-          ? createDeflate()
-          : null;
+      ? createGzip()
+      : encoding === 'deflate'
+      ? createDeflate()
+      : null;
 
   if (compression) {
     stream.pipe(compression);

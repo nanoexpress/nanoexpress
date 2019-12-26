@@ -47,10 +47,10 @@ export default function swaggerDocsGenerator(
       typeName === 'params'
         ? 'path'
         : typeName === 'response'
-          ? 'responses'
-          : typeName === 'body'
-            ? 'requestBody'
-            : typeName;
+        ? 'responses'
+        : typeName === 'body'
+        ? 'requestBody'
+        : typeName;
 
     if (swaggerDef.paths[path] === undefined) {
       swaggerDef.paths[path] = {};

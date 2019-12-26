@@ -152,12 +152,12 @@ export default function compileRoute(fn, params) {
           if (line.charAt(headerKeyIndex + 11) === '.') {
             contentLines += line.replace(
               'req.headers.' + headerKey,
-              'req.getHeader(\'' + headerKey + '\')'
+              "req.getHeader('" + headerKey + "')"
             );
           } else if (line.charAt(headerKeyIndex + 11) === '[') {
             contentLines += line.replace(
-              'req.headers[\'' + headerKey + '\']',
-              'req.getHeader(\'' + headerKey + '\')'
+              "req.headers['" + headerKey + "']",
+              "req.getHeader('" + headerKey + "')"
             );
           } else if (line.includes('req.headers;')) {
             const matchDefine = line.includes('const') ? 'const' : 'let';
@@ -189,12 +189,12 @@ export default function compileRoute(fn, params) {
           if (line.charAt(paramKeyIndex + 10) === '.') {
             contentLines += line.replace(
               'req.params.' + paramKey,
-              'req.getParameter(\'' + paramIndex + '\')'
+              "req.getParameter('" + paramIndex + "')"
             );
           } else if (line.charAt(paramKeyIndex + 10) === '[') {
             contentLines += line.replace(
-              'req.params[\'' + paramKey + '\']',
-              'req.getParameter(\'' + paramIndex + '\')'
+              "req.params['" + paramKey + "']",
+              "req.getParameter('" + paramIndex + "')"
             );
           } else if (line.includes('req.params;')) {
             const matchDefine = line.includes('const') ? 'const' : 'let';

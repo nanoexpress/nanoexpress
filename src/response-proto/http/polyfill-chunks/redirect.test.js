@@ -8,7 +8,7 @@ describe('normalize location', () => {
     try {
       normalizeLocation();
     } catch (e) {
-      expect(e.message).toBe('Cannot read property \'indexOf\' of undefined');
+      expect(e.message).toBe("Cannot read property 'indexOf' of undefined");
     }
   });
   it('only one argument should return the argument itself', () => {

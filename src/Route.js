@@ -296,6 +296,31 @@ export default class Route {
       ? !compilePath && !compileMethod
         ? (res, req) => routeFunction(req, res)
         : (res, req) => {
+            req.method = fetchMethod ? req.getMethod().toUpperCase() : method;
+            req.path = fetchUrl ? req.getUrl().substr(_baseUrl.length) : path;
+            req.baseUrl = _baseUrl || '';
+
+            // Cache value
+            const reqPathLength = req.path.length;
+
+            if (
+              fetchUrl &&
+              reqPathLength > 1 &&
+              req.path.charAt(reqPathLength - 1) === '/'
+            ) {
+              req.path = req.path.substr(0, reqPathLength - 1);
+            }
+
+            // Aliases for polyfill
+            req.url = req.path;
+            req.originalUrl = originalUrl;
+
+            return routeFunction(req, res);
+          }
+      : async (res, req) => {
+          isAborted = false;
+          !isRaw && res.onAborted(_handleOnAborted);
+
           req.method = fetchMethod ? req.getMethod().toUpperCase() : method;
           req.path = fetchUrl ? req.getUrl().substr(_baseUrl.length) : path;
           req.baseUrl = _baseUrl || '';
@@ -305,8 +330,8 @@ export default class Route {
 
           if (
             fetchUrl &&
-              reqPathLength > 1 &&
-              req.path.charAt(reqPathLength - 1) === '/'
+            reqPathLength > 1 &&
+            req.path.charAt(reqPathLength - 1) === '/'
           ) {
             req.path = req.path.substr(0, reqPathLength - 1);
           }
@@ -315,150 +340,127 @@ export default class Route {
           req.url = req.path;
           req.originalUrl = originalUrl;
 
-          return routeFunction(req, res);
-        }
-      : async (res, req) => {
-        isAborted = false;
-        !isRaw && res.onAborted(_handleOnAborted);
+          // Some callbacks which need for your
+          req.onAborted = attachOnAborted;
 
-        req.method = fetchMethod ? req.getMethod().toUpperCase() : method;
-        req.path = fetchUrl ? req.getUrl().substr(_baseUrl.length) : path;
-        req.baseUrl = _baseUrl || '';
+          // Aliases for future usage and easy-access
+          if (!isRaw) {
+            req.__response = res;
+            res.__request = req;
 
-        // Cache value
-        const reqPathLength = req.path.length;
-
-        if (
-          fetchUrl &&
-            reqPathLength > 1 &&
-            req.path.charAt(reqPathLength - 1) === '/'
-        ) {
-          req.path = req.path.substr(0, reqPathLength - 1);
-        }
-
-        // Aliases for polyfill
-        req.url = req.path;
-        req.originalUrl = originalUrl;
-
-        // Some callbacks which need for your
-        req.onAborted = attachOnAborted;
-
-        // Aliases for future usage and easy-access
-        if (!isRaw) {
-          req.__response = res;
-          res.__request = req;
-
-          // Extending proto
-          const { __proto__ } = res;
-          for (const newMethod in HttpResponse) {
-            __proto__[newMethod] = HttpResponse[newMethod];
-          }
-          req.getIP = res._getResponseIP;
-          res.writeHead.notModified = true;
-        }
-
-        // Default HTTP Raw Status Code Integer
-        res.rawStatusCode = 200;
-
-        // Assign schemas
-        if (responseSchema) {
-          res.fastJson = responseSchema;
-        }
-
-        if (!isRaw && _schema !== false) {
-          if (!_schema || _schema.headers !== false) {
-            req.headers = headers(req, _schema && _schema.headers);
-          }
-          if (!_schema || _schema.cookies !== false) {
-            req.cookies = cookies(req, _schema && _schema.cookies);
-          }
-          if (!_schema || _schema.params !== false) {
-            if (req.path !== path) {
-              path = req.path;
+            // Extending proto
+            const { __proto__ } = res;
+            for (const newMethod in HttpResponse) {
+              __proto__[newMethod] = HttpResponse[newMethod];
             }
-            req.params = params(req, preparedParams);
+            req.getIP = res._getResponseIP;
+            res.writeHead.notModified = true;
           }
-          if (!_schema || _schema.query !== false) {
-            req.query = queries(req, _schema && _schema.query);
-          }
-          if (!isRaw && bodyAllowedMethod && res.onData) {
-            stream(req, res);
-            req.pipe = pipe;
-          }
-          if (req.stream && (!_schema || _schema.body !== false)) {
-            await body(req);
-          }
-        }
 
-        if (
-          !isRaw &&
+          // Default HTTP Raw Status Code Integer
+          res.rawStatusCode = 200;
+
+          // Assign schemas
+          if (responseSchema) {
+            res.fastJson = responseSchema;
+          }
+
+          if (!isRaw && _schema !== false) {
+            if (!_schema || _schema.headers !== false) {
+              req.headers = headers(req, _schema && _schema.headers);
+            }
+            if (!_schema || _schema.cookies !== false) {
+              req.cookies = cookies(req, _schema && _schema.cookies);
+            }
+            if (!_schema || _schema.params !== false) {
+              if (req.path !== path) {
+                path = req.path;
+              }
+              req.params = params(req, preparedParams);
+            }
+            if (!_schema || _schema.query !== false) {
+              req.query = queries(req, _schema && _schema.query);
+            }
+            if (!isRaw && bodyAllowedMethod && res.onData) {
+              stream(req, res);
+              req.pipe = pipe;
+            }
+            if (req.stream && (!_schema || _schema.body !== false)) {
+              await body(req);
+            }
+          }
+
+          if (
+            !isRaw &&
             !isAborted &&
             !isNotFoundHandler &&
             middlewares &&
             middlewares.length > 0
-        ) {
-          for (const middleware of middlewares) {
-            if (isAborted) {
-              break;
-            }
-
-            const response = await middleware(req, res).catch((err) => {
-              if (_config._errorHandler) {
-                return _config._errorHandler(err, req, res);
+          ) {
+            for (const middleware of middlewares) {
+              if (isAborted) {
+                break;
               }
 
-              res.status(err.status || err.code || 400, true);
-              res.writeStatus(res.statusCode);
-              res.writeHeader(
-                'Content-Type',
-                'application/json; charset=utf-8'
-              );
+              const response = await middleware(req, res).catch((err) => {
+                if (_config._errorHandler) {
+                  return _config._errorHandler(err, req, res);
+                }
 
-              res.end(
-                `{"error":"${typeof err === 'string' ? err : err.message}"}`
-              );
-              isAborted = true;
-            });
+                res.status(err.status || err.code || 400, true);
+                res.writeStatus(res.statusCode);
+                res.writeHeader(
+                  'Content-Type',
+                  'application/json; charset=utf-8'
+                );
 
-            if (response === res) {
-              return;
+                res.end(
+                  `{"error":"${typeof err === 'string' ? err : err.message}"}`
+                );
+                isAborted = true;
+
+                return res;
+              });
+
+              if (response === res) {
+                return;
+              }
             }
-          }
-        }
-
-        if (
-          isAborted ||
-            method === 'OPTIONS' ||
-            res.stream === true ||
-            res.stream === 1
-        ) {
-          return;
-        }
-
-        if (_direct || !fetchUrl || req.path === path) {
-          if (
-            !isRaw &&
-              !res._modifiedEnd &&
-              (!res.writeHead.notModified ||
-                (res.statusCode && res.statusCode !== 200) ||
-                res._headers)
-          ) {
-            res.modifyEnd();
           }
 
           if (
             isAborted ||
-              (!isRaw &&
-                validation &&
-                validation.validationStringify &&
-                processValidation(req, res, _config, validation))
+            method === 'OPTIONS' ||
+            res.stream === true ||
+            res.stream === 1
           ) {
             return;
           }
 
-          return routeFunction(req, res);
-        }
-      };
+          if (_direct || !fetchUrl || req.path === path) {
+            if (
+              !isRaw &&
+              !res._modifiedEnd &&
+              (!res.writeHead.notModified ||
+                (res.statusCode && res.statusCode !== 200) ||
+                res._headers)
+            ) {
+              res.modifyEnd();
+            }
+
+            if (
+              isAborted ||
+              (!isRaw &&
+                validation &&
+                validation.validationStringify &&
+                processValidation(req, res, _config, validation))
+            ) {
+              return;
+            }
+
+            return routeFunction(req, res);
+          }
+        };
   }
 }
 
