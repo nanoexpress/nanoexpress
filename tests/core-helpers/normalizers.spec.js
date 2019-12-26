@@ -2,6 +2,8 @@
 import { headers, cookies, params, queries, body } from '../../src/normalizers';
 import { prepareParams } from '../../src/helpers';
 
+import { Readable } from 'stream';
+
 describe('headers normalize', () => {
   it('header normalize non-empty', () => {
     const fakeReq = {
@@ -82,15 +84,21 @@ describe('queries normalize', () => {
 
 describe('body normalize', () => {
   it('body normalize non-empty', async () => {
-    const fakeReq = {};
+    const stream = new Readable({
+      read() {}
+    });
+    const fakeReq = {
+      stream
+    };
     const fakeRes = {
-      onAborted() {},
-      onData(fn) {
-        fn(Buffer.from('fake body'), true);
-      }
+      onAborted() {}
     };
 
-    expect(await body(fakeReq, fakeRes)).toBe('fake body');
+    stream.push(Buffer.concat([Buffer.from('fake body')]));
+    setTimeout(() => stream.push(null), 50);
+
+    await body(fakeReq, fakeRes);
+    expect(fakeReq.body).toStrictEqual(Buffer.from('fake body'));
   });
   it('body normalize empty', async () => {
     const fakeReq = {};

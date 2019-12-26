@@ -1,4 +1,5 @@
 export default (req) =>
+  req.stream &&
   new Promise((resolve, reject) => {
     let buffer;
 
