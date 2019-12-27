@@ -77,6 +77,16 @@ All examples are lives [here](https://github.com/dalisoft/nanoexpress/tree/pro-e
 
 And to other libraries which used to create this library and without these libraries wouldn't be possible to create this library
 
+## Sponsors
+
+### Platinum Sponsor (1000\$+)
+
+[MyScreen](https://myscreen.ru)
+
+### Gold Sponsor (200\$+)
+
+[Sergey N](https://github.com/mrauhu)
+
 ## License
 
 This project is licensed under GPL-3.0 license and if you want use this on commercial projects with closed sources, you should contact to me via dalisoft@mail.ru for getting license
