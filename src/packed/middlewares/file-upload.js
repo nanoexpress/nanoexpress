@@ -56,6 +56,12 @@ export default () => {
             if (!req.files) {
               req.files = [];
             }
+            if (
+              mimeType.indexOf('x-www-form-urlencoded') !== -1 ||
+              mimeType.indexOf('json') !== -1
+            ) {
+              return next();
+            }
 
             const file = {
               type: mimeType,
