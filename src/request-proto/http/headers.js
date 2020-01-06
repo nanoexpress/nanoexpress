@@ -8,6 +8,10 @@ export default (req, schema) => {
       }
       headers[property] = req.getHeader(property);
     }
+
+    // This shit makes all plugins go wrong
+    headers.origin = req.getHeader('origin');
+
     return headers;
   } else if (schema !== false) {
     req.forEach((key, value) => {
