@@ -29,6 +29,11 @@ export default () => {
                 value = body[key];
               }
             }
+            if (value === 'null') {
+              value = null;
+            } else if (value === 'undefined') {
+              value = 'undefined';
+            }
             body[key] = value;
           });
           form.on('file', (key, file, filename, encoding, mime) => {
