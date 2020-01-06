@@ -19,6 +19,16 @@ export default () => {
               req.body = {};
               body = req.body;
             }
+            if (key.endsWith('[]')) {
+              key = key.substr(0, key.length - 2);
+
+              if (!body[key] || !body[key].length) {
+                value = [value];
+              } else {
+                body[key].push(value);
+                value = body[key];
+              }
+            }
             body[key] = value;
           });
           form.on('file', (key, file, filename, encoding, mime) => {
