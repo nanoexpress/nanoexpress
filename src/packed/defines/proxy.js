@@ -95,7 +95,7 @@ const prepareProxy = (
       return;
     }
 
-    res.experimental_cork(() => {
+    res.cork(() => {
       if (isAborted) {
         return;
       }
