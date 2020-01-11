@@ -1,6 +1,6 @@
 {
   "name": "nanoexpress-pro",
-  "version": "1.10.1",
+  "version": "1.10.2",
   "description": "Nano-framework for Node.js powered by uWebSockets.js",
   "type": "module",
   "main": "src/nanoexpress.js",
@@ -24,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dalisoft/nanoexpress.git#pro"
+    "url": "git+https://github.com/dalisoft/nanoexpress.git#pro-esm"
   },
   "keywords": [
     "nano",
@@ -46,13 +46,13 @@
     "ajv": "^6.10.2",
     "busboy": "^0.3.1",
     "cookie": "^0.x",
-    "fast-json-stringify": "^1.15.7",
+    "fast-json-stringify": "^1.16.0",
     "uWebSockets.js": "github:uNetworking/uWebSockets.js#binaries"
   },
   "devDependencies": {
     "coveralls": "^3.0.9",
-    "eslint": "^6.7.2",
-    "husky": "^3.0.9",
+    "eslint": "^6.8.0",
+    "husky": "^4.0.6",
     "jest": "^24.9.0",
     "lint-staged": "^9.5.0",
     "prettier": "^1.19.1"
