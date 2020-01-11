@@ -32,7 +32,7 @@ export default () => {
             if (value === 'null') {
               value = null;
             } else if (value === 'undefined') {
-              value = 'undefined';
+              value = undefined;
             }
             body[key] = value;
           });
@@ -44,7 +44,7 @@ export default () => {
             file.filename = filename;
             file.encoding = encoding;
             file.mime = mime;
-            file.extension = filename.substr(filename.indexOf('.'));
+            file.extension = filename.substr(filename.lastIndexOf('.'));
             file.type = file.extension.substr(1);
 
             file.mv = (filePath) =>
