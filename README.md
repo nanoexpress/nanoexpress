@@ -75,11 +75,17 @@ And to other libraries which used to create this library and without these libra
 
 ## Sponsors
 
-> Sponsors will get access to private Telegram all-before updates, votes and discussion chat
-> Sponsors can use `nanoexpress Pro` to many apps even sources are closed for them applies Apache 2.0 License
+### Sponsors will get free access to
+
+- Private Telegram all-before updates channel
+- Private Telegram votes channel
+- Private Telegram discussion chat
 
 [Sergey N](https://github.com/mrauhu)
 
 ## License
 
-This project is licensed under GPL-3.0 license and if you want use this on commercial projects with closed sources, you should contact to me via dalisoft@mail.ru for getting license
+This project is dual licensed
+
+- GPL-3.0 for open-source backends for free
+- Apache-2.0 for Sponsors and can use to many apps as can, but per user license
