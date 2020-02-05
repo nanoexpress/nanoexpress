@@ -35,8 +35,6 @@ Nano-framework for Node.js powered by uWebSockets.js
 
 Benchmarked on my macBook Pro 2012 13" (Core i5, 8Gb RAM) performance.
 
-You can see live benchmark results at [here](https://github.com/the-benchmarker/web-frameworks#results)
-
 **Note**: _Real-world app memory/rps may differs from these numbers and these numbers are in my macBook_
 
 _You can install `wrk` via `Homebrew` in `macOS` or `Linux`_
@@ -49,11 +47,9 @@ _You can install `wrk` via `Homebrew` in `macOS` or `Linux`_
 - No async mode supported
 - Easy to use (for Express users especially)
 - Blazing fast performance
-- Ultra lightweight size
 - Resource (CPU / Memory) effecient
 - Familiar API
 - Normalised API
-- Can define routes Declaratively
 - Express-compatible middleware
 - In-built middlewares
 - In-built Stream (Video stream, yay!) support
@@ -79,11 +75,8 @@ And to other libraries which used to create this library and without these libra
 
 ## Sponsors
 
-### Platinum Sponsor (1000\$+)
-
-[MyScreen](https://myscreen.ru)
-
-### Gold Sponsor (200\$+)
+> Sponsors will get access to private Telegram all-before updates, votes and discussion chat
+> Sponsors can use `nanoexpress Pro` to many apps even sources are closed for them applies Apache 2.0 License
 
 [Sergey N](https://github.com/mrauhu)
 
