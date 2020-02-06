@@ -81,7 +81,7 @@ And to other libraries which used to create this library and without these libra
 - Private Telegram votes channel
 - Private Telegram discussion chat
 
-#### Platinum sponsors
+### Platinum sponsors
 
 - [Sergey N](https://github.com/mrauhu)
 - [Yaroslav Dobzhanskij](https://github.com/yarsky-tgz)
