@@ -36,7 +36,7 @@ export default class Route {
       this._middlewares = _middlewares;
     }
 
-    if (typeof path === 'function') {
+    if (typeof path === 'function' || (path && path._module)) {
       middlewares.unshift(path);
       path = undefined;
     }
