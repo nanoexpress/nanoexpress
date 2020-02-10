@@ -1,5 +1,11 @@
 /* globals describe, it, expect */
-import { headers, cookies, params, queries, body } from '../../src/normalizers';
+import {
+  headers,
+  cookies,
+  params,
+  queries,
+  body
+} from '../../src/request-proto';
 import { prepareParams } from '../../src/helpers';
 
 import { Readable } from 'stream';
