@@ -8,12 +8,12 @@ Note: _This example serves `/static` folder and anything inside this, even video
 
 ```js
 // CJS
-const nanoexpress = require('nanoexpress');
+const nanoexpress = require('nanoexpress-pro');
 const staticServe = require('nanoexpress/build/static');
 const path = require('path');
 
 // or ES6 Imports
-import nanoexpress from 'nanoexpress';
+import nanoexpress from 'nanoexpress-pro';
 import staticServe from 'nanoexpress/src/static';
 import path from 'path';
 
