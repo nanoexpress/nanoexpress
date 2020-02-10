@@ -1,6 +1,6 @@
 # Getting Started
 
-Thanks for choosing `nanoexpress` as backend server
+Thanks for choosing `nanoexpress-pro` as backend server
 
 ## Warning
 
@@ -15,13 +15,13 @@ Thanks for choosing `nanoexpress` as backend server
 ### npm
 
 ```bash
-npm install dalisoft/nanoexpress#pro-esm
+npm install nanoexpress-pro
 ```
 
 ### yarn
 
 ```bash
-yarn add dalisoft/nanoexpress#pro-esm
+yarn add nanoexpress-pro
 ```
 
 ## Let's create server

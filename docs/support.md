@@ -15,7 +15,7 @@ And to other libraries which used to create this library and without these libra
 
 ### You can support this project by support me via Patreon
 
-[![GitHub issues](https://img.shields.io/github/issues/dalisoft/nanoexpress.svg)](http://github.com/dalisoft/nanoexpress/issues)
+[![GitHub issues](https://img.shields.io/github/issues/nanoexpress/pro.svg)](http://github.com/nanoexpress/pro/issues)
 
 ### or
 

@@ -1,21 +1,18 @@
 # nanoexpress Pro ESM
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/dalisoft/nanoexpress.svg)](https://greenkeeper.io/)
-[![Travis](https://img.shields.io/travis/dalisoft/nanoexpress.svg)](http://github.com/dalisoft/nanoexpress)
-[![Code Climate](https://codeclimate.com/github/dalisoft/nanoexpress/badges/gpa.svg)](https://codeclimate.com/github/dalisoft/nanoexpress)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/dalisoft/nanoexpress/badges/quality-score.png?b=pro-esm)](https://scrutinizer-ci.com/g/dalisoft/nanoexpress/?branch=pro-esm)
-[![Coverage Status](https://coveralls.io/repos/github/dalisoft/nanoexpress/badge.svg?branch=pro-esm)](https://coveralls.io/github/dalisoft/nanoexpress?branch=pro-esm)
+[![Greenkeeper badge](https://badges.greenkeeper.io/nanoexpress/pro.svg)](https://greenkeeper.io/)
+[![Travis](https://img.shields.io/travis/nanoexpress/pro.svg)](http://github.com/nanoexpress/pro)
+[![Code Climate](https://codeclimate.com/github/nanoexpress/pro/badges/gpa.svg)](https://codeclimate.com/github/nanoexpress/pro)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nanoexpress/pro/badges/quality-score.png?b=pro-esm)](https://scrutinizer-ci.com/g/nanoexpress/pro/?branch=pro-esm)
+[![Coverage Status](https://coveralls.io/repos/github/nanoexpress/pro/badge.svg?branch=pro-esm)](https://coveralls.io/github/nanoexpress/pro?branch=pro-esm)
 
 Nano-framework for Node.js powered by uWebSockets.js
 
-## Documentation available [here](https://github.com/dalisoft/nanoexpress/blob/pro-esm/docs/index.md)
+## Documentation available [here](https://github.com/nanoexpress/pro/blob/master/docs/index.md)
 
 ## Warning
 
 - This library does not support HTTP2!
-- This branch (pro-esm) is differs from master/pro branches
-- This branch always be up-to-date
-- This branch gets new features faster than master/pro branches
 - This branch is paid for commercial products if sources are closed
 
 ## Requires
@@ -62,7 +59,7 @@ _You can install `wrk` via `Homebrew` in `macOS` or `Linux`_
 
 ## Examples
 
-All examples are lives [here](https://github.com/dalisoft/nanoexpress/tree/pro-esm/examples)
+All examples are lives [here](https://github.com/nanoexpress/pro/tree/master/examples)
 
 ## Credits
 

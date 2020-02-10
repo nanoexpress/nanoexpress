@@ -31,7 +31,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dalisoft/nanoexpress.git#pro-esm"
+    "url": "git+https://github.com/nanoexpress/pro.git#pro-esm"
   },
   "keywords": [
     "nano",
@@ -45,9 +45,9 @@
   "author": "dalisoft",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/dalisoft/nanoexpress/issues"
+    "url": "https://github.com/nanoexpress/pro/issues"
   },
-  "homepage": "https://github.com/dalisoft/nanoexpress#readme",
+  "homepage": "https://github.com/nanoexpress/pro#readme",
   "dependencies": {
     "@dalisoft/events": "^0.2.0",
     "ajv": "^6.11.0",
