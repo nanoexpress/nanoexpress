@@ -4,13 +4,20 @@
   "description": "Nano-framework for Node.js powered by uWebSockets.js",
   "type": "module",
   "main": "src/nanoexpress.js",
+  "module": "src/nanoexpress.js",
+  "node": "cjs/nanoexpress.cjs",
   "typings": "nanoexpress.d.ts",
+  "funding": {
+    "type": "patreon",
+    "url": "https://www.patreon.com/dalisoft"
+  },
   "scripts": {
     "lint": "eslint ./src",
     "test": "jest --config jest.config.js",
     "coverage": "npm run test --coverage",
     "coveralls": "npm run coverage && cat ./tests/coverage/lcov.info | coveralls",
-    "prepublishOnly": "npm run lint"
+    "prepublishOnly": "npm run lint && npm run test && npm run build",
+    "build": "rm -rf cjs && rollup -c"
   },
   "exports": {
     ".": "./src/nanoexpress.js",
@@ -20,7 +27,7 @@
     "./middlewares": "./src/packed/middlewares/index.js"
   },
   "engines": {
-    "node": ">=12"
+    "node": ">=12.4"
   },
   "repository": {
     "type": "git",
@@ -43,19 +50,20 @@
   "homepage": "https://github.com/dalisoft/nanoexpress#readme",
   "dependencies": {
     "@dalisoft/events": "^0.2.0",
-    "ajv": "^6.10.2",
+    "ajv": "^6.11.0",
     "busboy": "^0.3.1",
     "cookie": "^0.x",
-    "fast-json-stringify": "^1.16.0",
+    "fast-json-stringify": "^1.16.3",
     "uWebSockets.js": "github:uNetworking/uWebSockets.js#binaries"
   },
   "devDependencies": {
     "coveralls": "^3.0.9",
     "eslint": "^6.8.0",
-    "husky": "^4.0.6",
-    "jest": "^24.9.0",
-    "lint-staged": "^9.5.0",
-    "prettier": "^1.19.1"
+    "husky": "^4.2.1",
+    "jest": "^25.1.0",
+    "lint-staged": "^10.0.7",
+    "prettier": "^1.19.1",
+    "rollup": "^1.31.0"
   },
   "peerDependencies": {
     "passport": "^0.4.0",

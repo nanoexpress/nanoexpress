@@ -62,6 +62,7 @@ typings/
 
 # build files
 build
+cjs
 tmp
 dist
 tests/coverage
