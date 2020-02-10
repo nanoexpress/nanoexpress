@@ -19,7 +19,7 @@
     "coverage": "npm run test --coverage",
     "coveralls": "npm run coverage && cat ./tests/coverage/lcov.info | coveralls",
     "prepublishOnly": "npm run lint && npm run test && npm run build",
-    "build": "rm -rf cjs/*.js && rm -rf cjs/packed && rollup -c"
+    "build": "rm -rf cjs/*.js && rm -rf cjs/*.map && rm -rf cjs/packed && rollup -c"
   },
   "engines": {
     "node": ">=12.4"
