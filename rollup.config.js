@@ -23,7 +23,7 @@ const packedMiddleware = [
   input: `./src/packed/middlewares/${name}.js`,
   output: {
     format: 'cjs',
-    file: `./cjs/middlewares/${name}.js`,
+    file: `./cjs/packed/middlewares/${name}.js`,
     sourcemap: true
   },
   external
@@ -34,7 +34,7 @@ const packedProxy = ['proxy', 'webrtc-server', 'index'].map((name) => ({
   input: `./src/packed/defines/${name}.js`,
   output: {
     format: 'cjs',
-    file: `./cjs/defines/${name}.js`,
+    file: `./cjs/packed/defines/${name}.js`,
     sourcemap: true
   },
   external

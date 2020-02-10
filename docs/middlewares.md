@@ -22,9 +22,21 @@ I'm excluded in-box modules from initialization for performance reason
 
 ### How-to import
 
+#### ES Modules
+
 ```js
 import { middlewares } from 'nanoexpress/packed';
 // or import { passportInitialize } from 'nanoexpress/packed/middlewares';
+
+const app = nanoexpress();
+app.use(middlewares.passportInitialize()); // or app.use(passportInitialize());
+```
+
+#### CommonJS
+
+```js
+const { middlewares } = require('nanoexpress/cjs/packed');
+// or const { passportInitialize } from 'nanoexpress/cjs/packed/middlewares';
 
 const app = nanoexpress();
 app.use(middlewares.passportInitialize()); // or app.use(passportInitialize());
