@@ -10,8 +10,9 @@ Yes, finally, we have working model of Express-middleware like routes
 
 ```js
 import Route from 'nanoexpress/src/Route';
+// const Route = require('nanoexpress/cjs/Route') # For CommonJS
 
-const route = new Router();
+const route = new Route();
 
 // To working properly, first apply `app.use(route)`
 // and then set `route.get(...)`, else this not works
