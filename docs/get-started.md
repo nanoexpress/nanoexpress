@@ -53,7 +53,8 @@ There has few options which you can configure
 ### [Basic](../examples/basic.js) server
 
 ```js
-const nanoexpress = require('nanoexpress-pro');
+import nanoexpress from 'nanoexpress-pro';
+// const nanoexpress = require('nanoexpress-pro/cjs');
 
 const app = nanoexpress();
 
@@ -69,7 +70,8 @@ or if you want try `async` example, you can try code below
 ### [Async](../examples/json.js) example
 
 ```js
-const nanoexpress = require('nanoexpress-pro');
+import nanoexpress from 'nanoexpress-pro';
+// const nanoexpress = require('nanoexpress-pro/cjs');
 
 const app = nanoexpress();
 
@@ -87,7 +89,8 @@ Note: _You can use almost any [express](https://expressjs.com) middleware withou
 ### [CORS](../examples/cors.js) example
 
 ```js
-const nanoexpress = require('nanoexpress-pro');
+import nanoexpress from 'nanoexpress-pro';
+// const nanoexpress = require('nanoexpress-pro/cjs');
 const cors = require('cors');
 
 const app = nanoexpress();
