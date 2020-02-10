@@ -2,7 +2,6 @@
   "name": "nanoexpress-pro",
   "version": "1.10.7",
   "description": "Nano-framework for Node.js powered by uWebSockets.js",
-  "type": "module",
   "main": "src/nanoexpress.js",
   "module": "src/nanoexpress.js",
   "typings": "nanoexpress.d.ts",
@@ -19,8 +18,8 @@
     "test": "jest --config jest.config.js",
     "coverage": "npm run test --coverage",
     "coveralls": "npm run coverage && cat ./tests/coverage/lcov.info | coveralls",
-    "prepublishOnly": "npm run lint && npm run build",
-    "build": "rm -rf cjs && npm run test && rollup -c"
+    "prepublishOnly": "npm run lint && npm run test && npm run build",
+    "build": "rm -rf cjs/*.js && rm -rf cjs/packed && rollup -c"
   },
   "engines": {
     "node": ">=12.4"
