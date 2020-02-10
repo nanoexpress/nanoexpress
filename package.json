@@ -16,7 +16,7 @@
     "test": "jest --config jest.config.js",
     "coverage": "npm run test --coverage",
     "coveralls": "npm run coverage && cat ./tests/coverage/lcov.info | coveralls",
-    "prepublishOnly": "npm run lint && npm run test && npm run build",
+    "prepublishOnly": "npm run lint && npm run build",
     "build": "rm -rf cjs && rollup -c"
   },
   "exports": {
