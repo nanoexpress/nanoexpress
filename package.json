@@ -1,8 +1,8 @@
 {
   "name": "nanoexpress-pro",
-  "version": "1.10.4",
+  "version": "1.10.5",
   "description": "Nano-framework for Node.js powered by uWebSockets.js",
-  "main": "cjs/nanoexpress.cjs",
+  "main": "cjs/nanoexpress.js",
   "module": "src/nanoexpress.js",
   "typings": "nanoexpress.d.ts",
   "funding": {
@@ -16,13 +16,6 @@
     "coveralls": "npm run coverage && cat ./tests/coverage/lcov.info | coveralls",
     "prepublishOnly": "npm run lint && npm run build",
     "build": "rm -rf cjs && npm run test && rollup -c"
-  },
-  "exports": {
-    ".": "./src/nanoexpress.js",
-    "./Route": "./src/Route.js",
-    "./static": "./src/static.js",
-    "./defines": "./src/packed/defines/index.js",
-    "./middlewares": "./src/packed/middlewares/index.js"
   },
   "engines": {
     "node": ">=12.4"

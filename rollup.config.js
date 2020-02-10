@@ -23,7 +23,7 @@ const packedMiddleware = [
   input: `./src/packed/middlewares/${name}.js`,
   output: {
     format: 'cjs',
-    file: `./cjs/middlewares/${name}.cjs`,
+    file: `./cjs/middlewares/${name}.js`,
     sourcemap: true
   },
   external
@@ -34,7 +34,7 @@ const packedProxy = ['proxy', 'webrtc-server', 'index'].map((name) => ({
   input: `./src/packed/defines/${name}.js`,
   output: {
     format: 'cjs',
-    file: `./cjs/defines/${name}.cjs`,
+    file: `./cjs/defines/${name}.js`,
     sourcemap: true
   },
   external
@@ -48,7 +48,7 @@ export default [
     input: './src/static.js',
     output: {
       format: 'cjs',
-      file: './cjs/static.cjs',
+      file: './cjs/static.js',
       sourcemap: true
     },
     external
@@ -57,7 +57,7 @@ export default [
     input: './src/Route.js',
     output: {
       format: 'cjs',
-      file: './cjs/Route.cjs',
+      file: './cjs/Route.js',
       sourcemap: true
     },
     external
@@ -66,7 +66,7 @@ export default [
     input: './src/nanoexpress.js',
     output: {
       format: 'cjs',
-      file: './cjs/nanoexpress.cjs',
+      file: './cjs/nanoexpress.js',
       esModule: false,
       sourcemap: true
     },
