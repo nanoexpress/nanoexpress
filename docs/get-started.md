@@ -103,7 +103,8 @@ app.listen(4000);
 ### `app.use` example
 
 ```js
-const nanoexpress = require('nanoexpress-pro');
+import nanoexpress from 'nanoexpress-pro';
+// const nanoexpress = require('nanoexpress-pro/cjs');
 
 const app = nanoexpress();
 
