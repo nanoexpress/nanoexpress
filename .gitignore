@@ -62,7 +62,7 @@ typings/
 
 # build files
 build
-cjs
+cjs/*
 tmp
 dist
 tests/coverage
@@ -71,3 +71,5 @@ coverage
 # lock files
 package-lock.json
 yarn.lock
+
+!cjs/package.json

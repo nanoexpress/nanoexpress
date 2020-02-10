@@ -1,13 +1,18 @@
 {
   "name": "nanoexpress-pro",
-  "version": "1.10.6",
+  "version": "1.10.7",
   "description": "Nano-framework for Node.js powered by uWebSockets.js",
-  "main": "cjs/nanoexpress.js",
+  "type": "module",
+  "main": "src/nanoexpress.js",
   "module": "src/nanoexpress.js",
   "typings": "nanoexpress.d.ts",
   "funding": {
     "type": "patreon",
     "url": "https://www.patreon.com/dalisoft"
+  },
+  "exports": {
+    "./esm": "./src/nanoexpress.js",
+    "./cjs": "./cjs/nanoexpress.js"
   },
   "scripts": {
     "lint": "eslint ./src",
