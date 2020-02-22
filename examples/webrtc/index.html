@@ -33,6 +33,9 @@
       ws.onerror = (err) => {
         console.error(err);
       };
+      ws.onclose = (code) => {
+        console.log('close', code);
+      };
       ws.onmessage = (msg) => {
         console.log('Got message', msg.data);
         const data = JSON.parse(msg.data);

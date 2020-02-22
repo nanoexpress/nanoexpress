@@ -15,6 +15,6 @@ nanoexpress()
   .get('/favicon.ico', async (req) => {}) // eslint-disable-line no-unused-vars
   .get('/', (req, res) => res.send('Hello'))
   .get('/user/:id', (req, res) => {
-    res.end(`User: ${req.params.id}`);
+    return res.end(`User: ${JSON.stringify(req.params.id)}`);
   })
   .listen(3000);

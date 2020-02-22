@@ -140,7 +140,7 @@ const prepareProxy = (
       },
       message(ws, message, isBinary) {
         if (!isBinary) {
-          message = Buffer.from(message).toString('utf-8');
+          message = Buffer.from(message).toString('utf8');
         }
 
         ws.instance.send(message);

@@ -77,7 +77,7 @@ export default (path, options = {}, fn, ajv) => {
     },
     message: (ws, message, isBinary) => {
       if (!isBinary) {
-        message = Buffer.from(message).toString('utf-8');
+        message = Buffer.from(message).toString('utf8');
       }
       if (options.schema) {
         if (typeof message === 'string') {
@@ -107,7 +107,7 @@ export default (path, options = {}, fn, ajv) => {
       ws.emit('drain', ws.getBufferedAmount());
     },
     close: (ws, code, message) => {
-      ws.emit('close', code, Buffer.from(message).toString('utf-8'));
+      ws.emit('close', code, Buffer.from(message).toString('utf8'));
     }
   };
 };
