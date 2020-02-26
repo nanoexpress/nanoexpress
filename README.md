@@ -10,33 +10,9 @@ Nano-framework for Node.js powered by uWebSockets.js
 
 ## Documentation available [here](https://github.com/nanoexpress/pro/blob/master/docs/index.md)
 
-## Warning
-
-- This library does not support HTTP2!
-- This branch is paid for commercial products if sources are closed
-
-## Requires
-
-- Node.js v12 or greater
-- developer, already worked with nanoexpress before
-
 ## Benchmarks
 
-| Library         | RPS   | Memory |
-| --------------- | ----- | ------ |
-| uWebSockets.js  | 2M    | 80Mb   |
-| nanoexpress Pro | 1.79M | 180Mb  |
-| nanoexpress     | 1.65M | 120Mb  |
-| Raw HTTP        | 1.03M | 290Mb  |
-| express         | 654K  | 430Mb  |
-
-Benchmarked on my macBook Pro 2012 13" (Core i5, 8Gb RAM) performance.
-
-**Note**: _Real-world app memory/rps may differs from these numbers and these numbers are in my macBook_
-
-_You can install `wrk` via `Homebrew` in `macOS` or `Linux`_
-
-**Benchmark command**: `wrk -t4 -d100 -c10`
+See [here](https://github.com/nanoexpress/pro-slim/blob/master/docs/benchmark.md)
 
 ## Features
 

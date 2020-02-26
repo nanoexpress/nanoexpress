@@ -50,6 +50,10 @@ Both versions are maintaining, supporting and documentated
 - [Testing](./testing.md)
 - [Support](./support.md)
 
+## FAQ
+
+See [here](https://github.com/nanoexpress/pro-slim/blob/master/docs/faq.md)
+
 ## License
 
 This project is licensed under GPL v3.0 license and if you want use this on commercial projects with closed sources, you should contact to me via dalisoft@mail.ru for getting license
