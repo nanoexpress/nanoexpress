@@ -14,12 +14,13 @@ app.setValidationErrorHandler((errors, req, res) => {
   res.end('validation errors, ' + JSON.stringify(errors));
 });
 
-app.get('/', (req, res) => {
-  res.end('hello world');
+app.use((req, res, next) => {
+  next(new Error('Test error'));
 });
 
-app.get('/err', async () => {
-  throw new Error('created error here');
+app.get('/', (req, res) => {
+  console.log('it is runs???');
+  res.end('hello world');
 });
 
 app.listen(4000);

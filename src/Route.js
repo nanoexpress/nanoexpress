@@ -403,6 +403,8 @@ export default class Route {
               }
 
               const response = await middleware(req, res).catch((err) => {
+                isAborted = true;
+
                 if (_config._errorHandler) {
                   return _config._errorHandler(err, req, res);
                 }
@@ -417,7 +419,6 @@ export default class Route {
                 res.end(
                   `{"error":"${typeof err === 'string' ? err : err.message}"}`
                 );
-                isAborted = true;
 
                 return res;
               });
