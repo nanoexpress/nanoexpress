@@ -5,12 +5,10 @@ Thanks for choosing `nanoexpress-pro` as backend server
 ## Warning
 
 - This library does not support HTTP2!
-- This branch (PRO) is differs from master/dev branches
+- PRO is differs from non-PRO
 - This branch is paid for commercial products if sources are closed
 
 ## Install
-
-### **Requires**: Node.js v12 or greater
 
 ### npm
 

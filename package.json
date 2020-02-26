@@ -19,7 +19,7 @@
     "build": "rm -rf cjs/*.js && rm -rf cjs/*.map && rm -rf cjs/packed && rollup -c"
   },
   "engines": {
-    "node": ">=12.4"
+    "node": ">=12.16"
   },
   "repository": {
     "type": "git",
