@@ -81,6 +81,9 @@ And to other libraries which used to create this library and without these libra
 ### Platinum sponsors
 
 - [Sergey N](https://github.com/mrauhu)
+
+### Ultra sponsors
+
 - [Yaroslav Dobzhanskij](https://github.com/yarsky-tgz)
 
 ## License
