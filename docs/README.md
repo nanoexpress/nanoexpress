@@ -4,33 +4,7 @@
 
 All examples are lives [here](https://github.com/nanoexpress/pro/tree/master/examples)
 
-## Autodocument your API
-
-For example please see [this](https://github.com/nanoexpress/pro/tree/master/examples/swagger.js)
-
-## Warning
-
-- This library does not support HTTP2!
-- This branch is paid for commercial products if sources are closed
-
-## Why PRO
-
-- Support future development of nanoexpress from commercial projects
-- Testing myself for re-factoring code and how performance changes
-
-## Differences
-
-About approximate price look [here](https://github.com/nanoexpress/pro/issues/29)
-
-### PRO and non-PRO versions are almost same except
-
-- Performance on PRO is much faster
-- Stability on PRO version is much better
-- Features on PRO version is more and better
-- Logic and API are much closer to Express on PRO version
-- License for PRO version is GPL-3.0 licensed, but non-pro is Apache-2.0
-
-Both versions are maintaining, supporting and documentated
+PRO and non-PRO versions are almost same except, but has [some](https://github.com/nanoexpress/pro-slim/tree/master/docs#pro-and-non-pro-versions-are-almost-same-except) things are different
 
 ## Table of Contents
 
@@ -43,7 +17,7 @@ Both versions are maintaining, supporting and documentated
 - [Request](./request.md)
 - [Response](./response.md)
 - [Static Serve](./static-serve.md)
-- [Schema](./schema.md)
+- [Schema](./schema.md) or [Swagger example](https://github.com/nanoexpress/pro/tree/master/examples/swagger.js)
 - [TypeScript](./typescript.md)
 - [Docker](./docker.md)
 - [Benchmark](./benchmark.md)
