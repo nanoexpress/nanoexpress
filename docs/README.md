@@ -4,7 +4,7 @@
 
 All examples are lives [here](https://github.com/nanoexpress/pro/tree/master/examples)
 
-PRO and non-PRO versions are almost same except, but has [some](https://github.com/nanoexpress/pro-slim/tree/master/docs#pro-and-non-pro-versions-are-almost-same-except) things are different
+PRO and non-PRO versions are almost same except, but [few](https://github.com/nanoexpress/pro-slim/tree/master/docs#pro-and-non-pro-versions-are-almost-same-except) changes
 
 ## Table of Contents
 
