@@ -8,7 +8,7 @@
 
 Nano-framework for Node.js powered by uWebSockets.js
 
-## Documentation available [here](https://github.com/nanoexpress/pro/blob/master/docs/index.md)
+## Documentation available [here](https://github.com/nanoexpress/pro/blob/master/docs/README.md)
 
 ## Benchmarks
 
