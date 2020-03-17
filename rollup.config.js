@@ -30,7 +30,7 @@ const packedMiddleware = [
 }));
 
 // Prepare defines export
-const packedProxy = ['proxy', 'webrtc-server', 'index'].map((name) => ({
+const packedDefines = ['proxy', 'webrtc-server', 'index'].map((name) => ({
   input: `./src/packed/defines/${name}.js`,
   output: {
     format: 'cjs',
@@ -43,7 +43,7 @@ const packedProxy = ['proxy', 'webrtc-server', 'index'].map((name) => ({
 // Export config for Rollup
 export default [
   ...packedMiddleware,
-  ...packedProxy,
+  ...packedDefines,
   {
     input: './src/static.js',
     output: {
