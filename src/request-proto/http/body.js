@@ -7,7 +7,8 @@ export default (req) =>
       buffer = buffer ? Buffer.concat([buffer, chunk]) : chunk;
     });
     req.stream.once('end', () => {
-      req.body = buffer;
+      req.buffer = buffer;
+      req.body = buffer.toString('utf8');
       resolve();
     });
     req.stream.once('error', (err) => {

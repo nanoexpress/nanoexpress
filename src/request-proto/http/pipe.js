@@ -1,5 +1,5 @@
 export default function(stream) {
-  stream.write(this.body);
+  stream.write(this.buffer);
   stream.end();
 
   return this;
