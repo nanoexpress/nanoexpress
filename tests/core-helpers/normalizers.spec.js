@@ -104,7 +104,7 @@ describe('body normalize', () => {
     setTimeout(() => stream.push(null), 50);
 
     await body(fakeReq, fakeRes);
-    expect(fakeReq.body).toStrictEqual(Buffer.from('fake body'));
+    expect(fakeReq.body).toStrictEqual('fake body');
   });
   it('body normalize empty', async () => {
     const fakeReq = {};
