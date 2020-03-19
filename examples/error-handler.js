@@ -14,12 +14,19 @@ app.setValidationErrorHandler((errors, req, res) => {
   res.end('validation errors, ' + JSON.stringify(errors));
 });
 
-app.use((req, res, next) => {
-  next(new Error('Test error'));
-});
-
-app.get('/', (req, res) => {
-  res.end('hello world');
+app.get(
+  '/',
+  (req, res, next) => {
+    next(new Error('Test error'));
+  },
+  (req, res) => {
+    res.end('hello world');
+  }
+);
+app.get('/bar', (req, res) => {
+  throw new Error('Something was wrong in GET /bar');
+  // eslint-disable-next-line no-unreachable
+  res.send({ status: 'success' });
 });
 
 app.listen(4000);

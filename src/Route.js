@@ -197,31 +197,20 @@ export default class Route {
       if (
         method !== 'options' &&
         (routeFunction.then ||
-          routeFunction.constructor.name === 'AsyncFunction') &&
-        !/res\.(s?end|json)/g.test(routeFunction.toString())
+          routeFunction.constructor.name === 'AsyncFunction')
       ) {
-        const _oldRouteFunction = routeFunction;
-        routeFunction = (req, res) => {
-          return _oldRouteFunction(req, res)
-            .then((data) => {
-              if (!isAborted && data && data !== res) {
-                isAborted = true;
-                return res.send(data);
-              }
-              return null;
-            })
-            .catch((err) => {
-              if (!isAborted) {
-                if (_config._errorHandler) {
-                  return _config._errorHandler(err, req, res);
-                }
-                res.status(err.code || err.status || 500);
-                res.send({ error: err.message });
-                isAborted = true;
-              }
-              return null;
-            });
-        };
+        if (!/res\.(s?end|json)/g.test(routeFunction.toString())) {
+          const _oldRouteFunction = routeFunction;
+          routeFunction = async (req, res) => {
+            const data = await _oldRouteFunction(req, res);
+            if (!isAborted && data && data !== res) {
+              isAborted = true;
+              return res.send(data);
+            }
+            return null;
+          };
+        }
+        routeFunction.isAsync = true;
       }
 
       middlewares = middlewares
@@ -328,6 +317,25 @@ export default class Route {
           // Cache value
           const reqPathLength = req.path.length;
 
+          // Cache function
+          const handleError = (err) => {
+            isAborted = true;
+
+            if (_config._errorHandler) {
+              return _config._errorHandler(err, req, res);
+            }
+
+            res.status(err.status || err.code || 400, true);
+            res.writeStatus(res.statusCode);
+            res.writeHeader('Content-Type', 'application/json; charset=utf-8');
+
+            res.end(
+              `{"error":"${typeof err === 'string' ? err : err.message}"}`
+            );
+
+            return res;
+          };
+
           if (
             fetchUrl &&
             reqPathLength > 1 &&
@@ -402,26 +410,7 @@ export default class Route {
                 break;
               }
 
-              const response = await middleware(req, res).catch((err) => {
-                isAborted = true;
-
-                if (_config._errorHandler) {
-                  return _config._errorHandler(err, req, res);
-                }
-
-                res.status(err.status || err.code || 400, true);
-                res.writeStatus(res.statusCode);
-                res.writeHeader(
-                  'Content-Type',
-                  'application/json; charset=utf-8'
-                );
-
-                res.end(
-                  `{"error":"${typeof err === 'string' ? err : err.message}"}`
-                );
-
-                return res;
-              });
+              const response = await middleware(req, res).catch(handleError);
 
               if (response === res) {
                 return;
@@ -459,7 +448,11 @@ export default class Route {
               return;
             }
 
-            return routeFunction(req, res);
+            if (routeFunction.isAsync) {
+              return routeFunction(req, res).catch(handleError);
+            } else {
+              return routeFunction(req, res);
+            }
           }
         };
   }
