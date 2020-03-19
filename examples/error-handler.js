@@ -23,7 +23,7 @@ app.get(
     res.end('hello world');
   }
 );
-app.get('/bar', (req, res) => {
+app.get('/bar', async (req, res) => {
   throw new Error('Something was wrong in GET /bar');
   // eslint-disable-next-line no-unreachable
   res.send({ status: 'success' });
