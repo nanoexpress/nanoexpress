@@ -16,6 +16,7 @@ import {
   processValidation,
   httpMethods
 } from './helpers/index.js';
+import turboJsonParse from 'turbo-json-parse';
 
 export default class Route {
   constructor(config = {}) {
@@ -127,6 +128,7 @@ export default class Route {
     let isCanCompiled = false;
     let compilePath;
     let compileMethod;
+    let experimentalBodyParser;
 
     middlewares = middlewares
       .filter((middleware) => typeof middleware === 'function')
@@ -189,10 +191,22 @@ export default class Route {
     const isShouldReduceTaks = isCanCompiled || isStrictRaw;
     if (!isShouldReduceTaks && !isRaw) {
       _schema = (schema && schema.schema) || undefined;
+      experimentalBodyParser =
+        _schema &&
+        _schema.body &&
+        turboJsonParse(_schema.body, {
+          defaults: false,
+          validate: false,
+          fullMatch: false,
+          buffer: false
+        });
       validation = _schema && prepareValidation(_ajv, _schema);
       // eslint-disable-next-line prefer-const
       responseSchema = _schema && validation && validation.responseSchema;
 
+      _schema &&
+        _schema.body &&
+        console.log(_schema.body, experimentalBodyParser);
       isNotFoundHandler = routeFunction.handler === 2;
       if (
         method !== 'options' &&
@@ -371,6 +385,9 @@ export default class Route {
           // Assign schemas
           if (responseSchema) {
             res.fastJson = responseSchema;
+          }
+          if (experimentalBodyParser) {
+            req.fastBodyParse = experimentalBodyParser;
           }
 
           if (!isRaw && _schema !== false) {

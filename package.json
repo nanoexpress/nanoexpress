@@ -46,6 +46,7 @@
     "busboy": "^0.3.1",
     "cookie": "^0.x",
     "fast-json-stringify": "^1.16.3",
+    "turbo-json-parse": "github:dalisoft/turbo-json-parse",
     "uWebSockets.js": "github:uNetworking/uWebSockets.js#binaries"
   },
   "devDependencies": {
