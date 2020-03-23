@@ -3,7 +3,7 @@
 import nanoexpress from '../../src/nanoexpress';
 import http from 'http';
 
-describe('bind to specific host', function() {
+describe('bind to specific host', function () {
   let app = null;
 
   beforeAll(() => {

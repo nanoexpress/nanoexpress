@@ -35,7 +35,7 @@ const strategy = new LocalStrategy(
     usernameField: 'username',
     passwordField: 'password'
   },
-  function(req, username, password, done) {
+  function (req, username, password, done) {
     if (password !== '12345678') {
       return done(null, false);
     }
@@ -45,11 +45,11 @@ const strategy = new LocalStrategy(
 
 // Configuration
 passport.use(strategy);
-passport.serializeUser(function(user, done) {
+passport.serializeUser(function (user, done) {
   done(null, user);
 });
 
-passport.deserializeUser(function(user, done) {
+passport.deserializeUser(function (user, done) {
   done(null, user);
 });
 
