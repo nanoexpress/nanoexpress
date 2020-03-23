@@ -229,7 +229,7 @@ export default class Route {
             return middleware;
           } else {
             const _oldMiddleware = middleware;
-            middleware = function(req, res) {
+            middleware = function (req, res) {
               return new Promise((resolve, reject) => {
                 _oldMiddleware(req, res, (err, done) => {
                   if (err) {
@@ -460,7 +460,7 @@ export default class Route {
 
 for (let i = 0, len = httpMethods.length; i < len; i++) {
   const method = httpMethods[i];
-  Route.prototype[method] = function(path, ...middlewares) {
+  Route.prototype[method] = function (path, ...middlewares) {
     const { _baseUrl, _module, _app } = this;
 
     let originalUrl = path;

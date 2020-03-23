@@ -163,9 +163,9 @@ export default class App {
 
           this._instance = token;
           _debugContext.debug(
-            `[Server]: started successfully at [${
-              config.host
-            }:${port}] in [${Date.now() - this.time}ms]`
+            `[Server]: started successfully at [${config.host}:${port}] in [${
+              Date.now() - this.time
+            }ms]`
           );
           resolve(this);
         } else {
@@ -212,7 +212,7 @@ export default class App {
 
 for (let i = 0, len = httpMethods.length; i < len; i++) {
   const method = httpMethods[i];
-  App.prototype[method] = function(path, ...fns) {
+  App.prototype[method] = function (path, ...fns) {
     const { _app, _route, _anyRouteCalled } = this;
 
     if (fns.length > 0) {

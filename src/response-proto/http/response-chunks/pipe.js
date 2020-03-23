@@ -1,6 +1,6 @@
 import compressStream from '../../../helpers/compress-stream.js';
 
-export default function(stream, size, compressed = false) {
+export default function (stream, size, compressed = false) {
   const { __request: req } = this;
   const { onAborted, headers, responseHeaders } = req;
   let isAborted = false;

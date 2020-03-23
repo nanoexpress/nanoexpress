@@ -2,7 +2,7 @@ export default function modifyEnd() {
   if (!this._modifiedEnd) {
     const _oldEnd = this.end;
 
-    this.end = function(chunk, encoding) {
+    this.end = function (chunk, encoding) {
       // eslint-disable-next-line prefer-const
       let { _headers, statusCode, rawStatusCode } = this;
 

@@ -1,4 +1,4 @@
-export default function(stream) {
+export default function (stream) {
   stream.write(this.buffer);
   stream.end();
 
