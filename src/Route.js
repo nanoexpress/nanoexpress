@@ -197,16 +197,13 @@ export default class Route {
         turboJsonParse(_schema.body, {
           defaults: false,
           validate: false,
-          fullMatch: false,
+          fullMatch: true,
           buffer: false
         });
       validation = _schema && prepareValidation(_ajv, _schema);
       // eslint-disable-next-line prefer-const
       responseSchema = _schema && validation && validation.responseSchema;
 
-      _schema &&
-        _schema.body &&
-        console.log(_schema.body, experimentalBodyParser);
       isNotFoundHandler = routeFunction.handler === 2;
       if (
         method !== 'options' &&

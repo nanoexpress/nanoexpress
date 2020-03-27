@@ -5,24 +5,15 @@ export default ({
   experimentalJsonParse = false,
   urlEncoded = true
 } = {}) => {
-  const middleware = async (req, { fastBodyParse }) => {
+  const middleware = async (req) => {
     const { headers, body } = req;
 
     if (headers && body) {
       const contentType = headers['content-type'];
       if (contentType) {
         if (json && contentType.indexOf('/json') !== -1) {
-          console.log(
-            experimentalJsonParse,
-            fastBodyParse,
-            {
-              check: experimentalJsonParse && fastBodyParse
-            },
-            body
-          );
-          if (experimentalJsonParse && fastBodyParse !== undefined) {
-            console.log('BODY', { body, fast: fastBodyParse(body) });
-            req.body = fastBodyParse(body);
+          if (experimentalJsonParse && req.fastBodyParse !== undefined) {
+            req.body = req.fastBodyParse(body);
           } else {
             req.body = JSON.parse(body);
           }
