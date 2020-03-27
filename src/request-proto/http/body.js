@@ -1,4 +1,4 @@
-const SPACE_TRIM_REGEX = / |\n|\t/g;
+const SPACE_TRIM_REGEX = /\n|\t/g;
 
 export default (req) =>
   req.stream &&
