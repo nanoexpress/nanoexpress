@@ -1,6 +1,10 @@
 import { parse } from 'querystring';
 
-export default ({ json = true, urlEncoded = true } = {}) => {
+export default ({
+  json = true,
+  experimentalJsonParse = false,
+  urlEncoded = true
+} = {}) => {
   const middleware = async (req) => {
     const { headers, body } = req;
 
@@ -8,20 +12,19 @@ export default ({ json = true, urlEncoded = true } = {}) => {
       const contentType = headers['content-type'];
       if (contentType) {
         if (json && contentType.indexOf('/json') !== -1) {
-          req.body = JSON.parse(
-            typeof body === 'string' ? body : body.toString()
-          );
+          if (experimentalJsonParse && req.fastBodyParse !== undefined) {
+            req.body = req.fastBodyParse(body);
+          } else {
+            req.body = JSON.parse(body);
+          }
         } else if (
           urlEncoded &&
           contentType.indexOf('/x-www-form-urlencoded') !== -1
         ) {
           if (typeof urlEncoded === 'object') {
-            req.body = parse(
-              typeof body === 'string' ? body : body.toString(),
-              urlEncoded
-            );
+            req.body = parse(body, urlEncoded);
           } else {
-            req.body = parse(typeof body === 'string' ? body : body.toString());
+            req.body = parse(body);
           }
         }
       }

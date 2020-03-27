@@ -1,3 +1,5 @@
+const SPACE_TRIM_REGEX = / |\n|\t/g;
+
 export default (req) =>
   req.stream &&
   new Promise((resolve, reject) => {
@@ -8,7 +10,7 @@ export default (req) =>
     });
     req.stream.once('end', () => {
       req.buffer = buffer;
-      req.body = buffer.toString('utf8');
+      req.body = buffer.toString('utf8').replace(SPACE_TRIM_REGEX, '');
       resolve();
     });
     req.stream.once('error', (err) => {
