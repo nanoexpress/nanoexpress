@@ -1,4 +1,4 @@
 {
-  "src/**/*.{json,css,scss,md,yml}": ["prettier --write", "git add"],
-  "src/**/*.{js,jsx}": ["prettier --write", "eslint --fix", "git add"]
+  "src/**/*.{json,md,yml}": ["prettier --write", "git add"],
+  "src/**/*.js": ["prettier --write", "eslint --fix", "git add"]
 }

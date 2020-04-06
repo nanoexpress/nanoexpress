@@ -1,5 +1,5 @@
 import nanoexpress from '../src/nanoexpress.js';
-import staticMiddleware from '../src/static';
+import staticMiddleware from '@nanoexpress/middlewares/static';
 
 import { webRTCServer } from '../src/packed/defines';
 

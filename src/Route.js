@@ -17,6 +17,7 @@ import {
   httpMethods
 } from './helpers/index.js';
 import turboJsonParse from 'turbo-json-parse';
+import { resAbortHandler } from '@nanoexpress/pro-slim/src/constants.js';
 
 export default class Route {
   constructor(config = {}) {
@@ -319,7 +320,12 @@ export default class Route {
           }
       : async (res, req) => {
           isAborted = false;
+          _onAbortedCallbacks.length = 0;
           !isRaw && res.onAborted(_handleOnAborted);
+          attachOnAborted.push(() => {
+            res.aborted = true;
+          });
+          res[resAbortHandler] = true;
 
           req.method = fetchMethod ? req.getMethod().toUpperCase() : method;
           req.path = fetchUrl ? req.getUrl().substr(_baseUrl.length) : path;

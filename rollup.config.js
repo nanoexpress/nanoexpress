@@ -13,7 +13,6 @@ const external = dependencies.concat([
 
 // Prepare middlewares export
 const packedMiddleware = [
-  'body-parser',
   'file-upload',
   'passport',
   'redoc',
@@ -44,15 +43,6 @@ const packedDefines = ['proxy', 'webrtc-server', 'index'].map((name) => ({
 export default [
   ...packedMiddleware,
   ...packedDefines,
-  {
-    input: './src/static.js',
-    output: {
-      format: 'cjs',
-      file: './cjs/static.js',
-      sourcemap: true
-    },
-    external
-  },
   {
     input: './src/Route.js',
     output: {
