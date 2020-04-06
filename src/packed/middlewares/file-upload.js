@@ -1,4 +1,4 @@
-import busboy from 'busboy';
+import Busboy from 'busboy';
 import { createWriteStream } from 'fs';
 import { mimes } from '../../helpers/mime.js';
 
@@ -13,7 +13,7 @@ export default () => {
       const contentType = headers['content-type'];
       if (contentType) {
         if (contentType.indexOf('multipart/form-data') === 0) {
-          const form = new busboy(req);
+          const form = new Busboy(req);
           form.on('field', (key, value) => {
             if (typeof body !== 'object' || body.length) {
               req.body = {};
