@@ -17,7 +17,8 @@ import {
   httpMethods
 } from './helpers/index.js';
 import turboJsonParse from 'turbo-json-parse';
-import { resAbortHandler } from '@nanoexpress/pro-slim/src/constants.js';
+
+const resAbortHandler = '___$HttpResponseAbortHandler';
 
 export default class Route {
   constructor(config = {}) {

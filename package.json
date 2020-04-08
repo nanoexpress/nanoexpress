@@ -42,25 +42,24 @@
   "homepage": "https://github.com/nanoexpress/pro#readme",
   "dependencies": {
     "@dalisoft/events": "^0.2.0",
-    "@nanoexpress/pro-slim": "github:nanoexpress/pro-slim",
     "ajv": "^6.11.0",
     "busboy": "^0.3.1",
     "cookie": "^0.x",
-    "fast-json-stringify": "^1.16.3",
+    "fast-json-stringify": "^1.20.1",
     "turbo-json-parse": "github:dalisoft/turbo-json-parse",
     "uWebSockets.js": "github:uNetworking/uWebSockets.js#binaries"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
-    "@babel/preset-env": "^7.8.4",
-    "babel-jest": "^25.1.0",
+    "@babel/preset-env": "^7.9.5",
+    "babel-jest": "^25.3.0",
     "coveralls": "^3.0.9",
     "eslint": "^6.8.0",
     "husky": "^4.2.1",
-    "jest": "^25.1.0",
-    "lint-staged": "^10.0.7",
+    "jest": "^25.3.0",
+    "lint-staged": "^10.1.2",
     "prettier": "^2.0.1",
-    "rollup": "^2.0.6"
+    "rollup": "^2.3.4"
   },
   "peerDependencies": {
     "passport": "^0.4.0",
