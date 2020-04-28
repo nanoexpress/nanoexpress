@@ -12,21 +12,17 @@ const external = dependencies.concat([
 ]);
 
 // Prepare middlewares export
-const packedMiddleware = [
-  'file-upload',
-  'passport',
-  'redoc',
-  'swagger-ui',
-  'index'
-].map((name) => ({
-  input: `./src/packed/middlewares/${name}.js`,
-  output: {
-    format: 'cjs',
-    file: `./cjs/packed/middlewares/${name}.js`,
-    sourcemap: true
-  },
-  external
-}));
+const packedMiddleware = ['file-upload', 'passport', 'swagger-ui', 'index'].map(
+  (name) => ({
+    input: `./src/packed/middlewares/${name}.js`,
+    output: {
+      format: 'cjs',
+      file: `./cjs/packed/middlewares/${name}.js`,
+      sourcemap: true
+    },
+    external
+  })
+);
 
 // Prepare defines export
 const packedDefines = ['proxy', 'webrtc-server', 'index'].map((name) => ({
