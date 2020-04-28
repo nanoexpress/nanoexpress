@@ -7,7 +7,7 @@
 
 <!-- [![Coverage Status](https://coveralls.io/repos/github/nanoexpress/pro/badge.svg?branch=master)](https://coveralls.io/github/nanoexpress/pro?branch=master) -->
 
-Nano-framework for Node.js powered by uWebSockets.js
+Nano-framework for Node.js
 
 See more info at [docs](https://nanoexpress.js.org)
 
