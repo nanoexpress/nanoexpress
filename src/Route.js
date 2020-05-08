@@ -323,7 +323,7 @@ export default class Route {
           isAborted = false;
           _onAbortedCallbacks.length = 0;
           !isRaw && res.onAborted(_handleOnAborted);
-          attachOnAborted.push(() => {
+          attachOnAborted(() => {
             res.aborted = true;
           });
           res[resAbortHandler] = true;
