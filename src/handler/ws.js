@@ -75,6 +75,12 @@ export default (path, options = {}, fn, ajv) => {
       }
       fn(req, ws);
     },
+    upgrade: (ws, req, context) => {
+      if (options.upgrade) {
+        options.upgrade(req, ws, context);
+      }
+      ws.emit('upgrade', req, context);
+    },
     message: (ws, message, isBinary) => {
       if (!isBinary) {
         message = Buffer.from(message).toString('utf8');
