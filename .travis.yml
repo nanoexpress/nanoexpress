@@ -11,6 +11,6 @@ node_js:
 install:
   - npm install
 script:
-  - npm run lint:analysis
+  - npm run lint
   - npm test
 #  - npm run coveralls

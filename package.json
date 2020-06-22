@@ -13,7 +13,7 @@
   "scripts": {
     "lint:eslint": "eslint ./src",
     "lint:prettier": "prettier -c .",
-    "lint:analysis": "npm run lint:eslint && npm run lint:prettier",
+    "lint": "npm run lint:eslint && npm run lint:prettier",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.config.json",
     "coverage": "npm run test --coverage",
     "coveralls": "npm run coverage && cat ./tests/coverage/lcov.info | coveralls",
