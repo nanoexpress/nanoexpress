@@ -1,0 +1,10 @@
+.git
+.github
+.gitignore
+.gitattributes
+.vscode
+coverage
+tests
+cjs/
+
+CODE_OF_CONDUCT.md
