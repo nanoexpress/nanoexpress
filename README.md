@@ -12,3 +12,5 @@ Nano-framework for Node.js
 See more info at [docs](https://nanoexpress.js.org)
 
 ## License
+
+Apache-2.0
