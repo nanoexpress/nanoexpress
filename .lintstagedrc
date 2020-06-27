@@ -1,4 +1,4 @@
 {
   "*.{json,css,scss,md,yml}": ["prettier -c"],
-  "*.{js,ts}": ["eslint", "prettier -c"]
+  "*.js": ["eslint", "prettier -c"]
 }

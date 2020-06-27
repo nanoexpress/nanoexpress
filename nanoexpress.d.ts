@@ -41,10 +41,17 @@ declare namespace nanoexpress {
   }
 
   export interface WebSocket extends WebSocketBasic {
-    on(name: string, listener: Function);
-    once(name: string, listener: Function);
-    off(name: string, listener?: Function);
     emit(name: string, ...args: any[]);
+
+    on(
+      event: 'upgrade',
+      listener: (req: HttpRequest, res: HttpResponse) => void
+    ): void;
+    on(event: 'close', listener: (code: number, message: string) => void): void;
+    on(
+      event: 'message',
+      listener: (message: string | object, isBinary?: boolean) => void
+    ): void;
   }
   export interface HttpRequest extends HttpRequestBasic {
     method: string;
@@ -105,6 +112,7 @@ declare namespace nanoexpress {
     hasCookie(key: string): HttpResponse;
     removeCookie(key: string, options?: CookieOptions): HttpResponse;
     __request?: HttpRequest;
+    on(event: 'connection', ws: WebSocket): void;
   }
 
   type HttpRoute = (req: HttpRequest, res: HttpResponse) => nanoexpressApp;
@@ -114,8 +122,6 @@ declare namespace nanoexpress {
     res: HttpResponse,
     next?: (err: Error | null | undefined, done: boolean | undefined) => any
   ) => nanoexpressApp;
-
-  type WsRoute = (req: HttpRequest, ws: WebSocket) => any;
 
   export interface AppRoute {
     get: HttpRoute;
@@ -127,7 +133,7 @@ declare namespace nanoexpress {
     options: HttpRoute;
     trace: HttpRoute;
     any: HttpRoute;
-    ws: WsRoute;
+    ws: HttpRoute;
   }
 
   interface SchemaValue {
@@ -330,8 +336,12 @@ declare namespace nanoexpress {
       ...middlewares: MiddlewareRoute[]
     ): nanoexpressApp;
 
-    ws(path: string, fn: WsRoute): nanoexpressApp;
-    ws(path: string, options: WebSocketOptions, fn: WsRoute): nanoexpressApp;
+    ws(path: string, ...middlewares: MiddlewareRoute[]): nanoexpressApp;
+    ws(
+      path: string,
+      options: WebSocketOptions,
+      ...middlewares: MiddlewareRoute[]
+    ): nanoexpressApp;
 
     webRTCServer(): nanoexpressApp;
     webRTCServer(path: string): nanoexpressApp;
