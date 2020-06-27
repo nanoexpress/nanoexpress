@@ -10,10 +10,3 @@
 Nano-framework for Node.js
 
 See more info at [docs](https://nanoexpress.js.org)
-
-## License
-
-This project is dual licensed
-
-- GPL-3.0 for open-source backends for free
-- Apache-2.0 for Sponsors and can use to many apps as can, but per user license
