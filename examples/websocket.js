@@ -3,15 +3,24 @@ import nanoexpress from '../src/nanoexpress.js';
 const app = nanoexpress();
 
 app.get('/', async () => 'Connect at /ws');
-app.ws('/ws', (req, ws) => {
-  console.log('Connected');
+app.ws('/ws', async (req, res) => {
+  console.log('Connecting...');
 
-  ws.on('message', (msg) => {
-    console.log('Message received', msg);
-    ws.send(msg);
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
+  res.on('connection', (ws) => {
+    console.log('Connected');
+
+    ws.on('message', (msg) => {
+      console.log('Message received', msg);
+      ws.send(msg);
+    });
+    ws.on('close', (code, message) => {
+      console.log('Connection closed', { code, message });
+    });
   });
-  ws.on('close', (code, message) => {
-    console.log('Connection closed', { code, message });
+  res.on('upgrade', () => {
+    console.log('Connection upgrade');
   });
 });
 

@@ -1,6 +1,6 @@
 {
   "name": "nanoexpress-pro",
-  "version": "1.12.2",
+  "version": "2.0.0",
   "description": "Nano-framework for Node.js",
   "type": "module",
   "main": "src/nanoexpress.js",
@@ -53,12 +53,12 @@
   },
   "devDependencies": {
     "coveralls": "^3.1.0",
-    "eslint": "^7.3.0",
+    "eslint": "^7.3.1",
     "husky": "^4.2.5",
-    "jest": "^26.0.1",
+    "jest": "^26.1.0",
     "lint-staged": "^10.2.11",
     "prettier": "^2.0.5",
-    "rollup": "^2.18.0"
+    "rollup": "^2.18.1"
   },
   "peerDependencies": {
     "passport": "^0.4.0",
