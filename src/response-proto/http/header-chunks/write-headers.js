@@ -5,7 +5,7 @@ export default function writeHeaders(headers) {
       if (value.splice) {
         this.writeHeaderValues(header, value);
       } else {
-        this.writeHeader(header, value);
+        this.writeHeader(header, value + '');
       }
     }
   }

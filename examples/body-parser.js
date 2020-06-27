@@ -1,9 +1,10 @@
 import nanoexpress from '../src/nanoexpress.js';
-import bodyParser from '../src/packed/middlewares/body-parser.js';
 
 const app = nanoexpress();
 
-app.use(bodyParser({ json: true, experimentalJsonParse: false }));
+app.use(async (req) => {
+  req.body = JSON.parse(req.body);
+});
 
 app.get('/', (req, res) => res.end('ok'));
 

@@ -10,7 +10,9 @@ export default (req) =>
     });
     req.stream.once('end', () => {
       req.buffer = buffer;
-      req.body = buffer.toString('utf8').replace(SPACE_TRIM_REGEX, '');
+      req.body = buffer
+        ? buffer.toString('utf8').replace(SPACE_TRIM_REGEX, '')
+        : null;
       resolve();
     });
     req.stream.once('error', (err) => {

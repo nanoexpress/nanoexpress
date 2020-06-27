@@ -339,13 +339,14 @@ export default class Route {
           const handleError = (err) => {
             isAborted = true;
 
+            res.writeHeader('Content-Type', 'application/json; charset=utf-8');
+
             if (_config._errorHandler) {
               return _config._errorHandler(err, req, res);
             }
 
             res.status(err.status || err.code || 400, true);
             res.writeStatus(res.statusCode);
-            res.writeHeader('Content-Type', 'application/json; charset=utf-8');
 
             res.end(
               `{"error":"${typeof err === 'string' ? err : err.message}"}`
