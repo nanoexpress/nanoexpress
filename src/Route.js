@@ -579,14 +579,19 @@ const exposeMethod = (method) =>
         originalUrl = originalUrl.substr(0, originalUrl.length - 1);
       }
 
-      _app[method](
-        originalUrl + '/',
-        this._prepareMethod(
-          method.toUpperCase(),
-          { path, originalUrl },
-          ...middlewares
-        )
+      const preparedRouteFunction = this._prepareMethod(
+        method.toUpperCase(),
+        { path, originalUrl },
+        ...middlewares
       );
+
+      _app[method](originalUrl, preparedRouteFunction);
+
+      // TODO: this is temporarily solution
+      // for https://github.com/nanoexpress/pro/issues/41
+      if (!originalUrl.endsWith('/')) {
+        _app[method](originalUrl + '/', preparedRouteFunction);
+      }
     }
 
     return this;
