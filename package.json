@@ -1,6 +1,6 @@
 {
   "name": "nanoexpress-pro",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "description": "Nano-framework for Node.js",
   "type": "module",
   "main": "src/nanoexpress.js",

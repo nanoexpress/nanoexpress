@@ -47,11 +47,16 @@ declare namespace nanoexpress {
       event: 'upgrade',
       listener: (req: HttpRequest, res: HttpResponse) => void
     ): void;
+    on(event: 'drain', listener: (drain_amount: number) => void): void;
     on(event: 'close', listener: (code: number, message: string) => void): void;
     on(
       event: 'message',
       listener: (message: string | object, isBinary?: boolean) => void
     ): void;
+
+    on(event: string, listener: (...args: any[]) => void): void;
+    once(event: string, listener: (...args: any[]) => void): void;
+    off(event: string, listener?: (...args: any[]) => void): void;
   }
   export interface HttpRequest extends HttpRequestBasic {
     method: string;

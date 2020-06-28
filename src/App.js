@@ -212,12 +212,6 @@ const exposeAppMethod = (method) =>
 
       _app[method](path, preparedRouteFunction);
 
-      // TODO: this is temporarily solution
-      // for https://github.com/nanoexpress/pro/issues/41
-      if (!path.endsWith('/')) {
-        _app[method](path + '/', preparedRouteFunction);
-      }
-
       this._routeCalled = true;
 
       if (!_anyRouteCalled && method !== 'options') {
