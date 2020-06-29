@@ -33,12 +33,12 @@ Thanks for all supporters
 
 #### Commercial sponsors
 
-- @mrauhu
-- @yarsky-tgz
+- [@mrauhu](https://github.com/mrauhu)
+- [@yarsky-tgz](https://github.com/yarsky-tgz)
 
 #### Supporters
 
-- @victor-a-rigacci
+- [@victor-a-rigacci](https://github.com/victor-a-rigacci)
 
 #### Donaters
 
