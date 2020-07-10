@@ -3,8 +3,14 @@
   "version": "2.1.1",
   "description": "Nano-framework for Node.js",
   "type": "module",
-  "main": "src/nanoexpress.js",
+  "main": "cjs/nanoexpress.js",
   "module": "src/nanoexpress.js",
+  "exports": {
+    ".": "./cjs/nanoexpress.js",
+    "./module": "./src/nanoexpress.js",
+    "./cjs/": "./cjs/",
+    "./src/": "./src/"
+  },
   "typings": "nanoexpress.d.ts",
   "funding": {
     "type": "patreon",
