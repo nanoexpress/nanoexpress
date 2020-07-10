@@ -18,7 +18,7 @@
     "coverage": "npm run test --coverage",
     "coveralls": "npm run coverage && cat ./tests/coverage/lcov.info | coveralls",
     "prepublishOnly": "npm run lint && npm run test && npm run build",
-    "build": "rm -rf cjs/*.js && rm -rf cjs/*.map && rm -rf cjs/packed && rollup -c"
+    "build": "shx rm -rf cjs/*.js && shx rm -rf cjs/*.map && shx rm -rf cjs/packed && rollup -c"
   },
   "engines": {
     "node": ">=12.16"
@@ -58,7 +58,8 @@
     "jest": "^26.1.0",
     "lint-staged": "^10.2.11",
     "prettier": "^2.0.5",
-    "rollup": "^2.18.1"
+    "rollup": "^2.18.1",
+    "shx": "^0.3.2"
   },
   "peerDependencies": {
     "passport": "^0.4.0",
