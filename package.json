@@ -27,7 +27,7 @@
     "build": "shx rm -rf cjs/*.js && shx rm -rf cjs/*.map && shx rm -rf cjs/packed && rollup -c"
   },
   "engines": {
-    "node": ">=12.16"
+    "node": ">=10.16.0"
   },
   "repository": {
     "type": "git",
