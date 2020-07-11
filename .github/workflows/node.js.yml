@@ -38,9 +38,6 @@ jobs:
       - name: Run tests
         run: |
           npm run test
-      - name: Build
-        run: |
-          npm run build --if-present
   release:
     runs-on: macos-latest
 
@@ -51,6 +48,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
+
+      - name: Build
+        run: |
+          npm run build --if-present
 
       - name: Release
         env:
