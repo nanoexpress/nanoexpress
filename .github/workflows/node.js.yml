@@ -52,6 +52,7 @@ jobs:
       - name: Install
         run: |
           npm install --ignore-scripts
+          npm install @semantic-release/git
       - name: Build
         run: |
           npm run build --if-present
