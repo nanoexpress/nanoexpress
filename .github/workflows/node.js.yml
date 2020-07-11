@@ -39,6 +39,7 @@ jobs:
         run: |
           npm run test
   release:
+    needs: build
     runs-on: macos-latest
 
     steps:
