@@ -7,7 +7,7 @@
 
 <h3 align="center">Professional backend framework for Node.js</h3>
 
-[![Travis](https://img.shields.io/travis/nanoexpress/pro.svg)](http://github.com/nanoexpress/pro)
+![Node.js CI](https://github.com/nanoexpress/pro/workflows/Node.js%20CI/badge.svg)
 [![Code Climate](https://codeclimate.com/github/nanoexpress/pro/badges/gpa.svg)](https://codeclimate.com/github/nanoexpress/pro)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nanoexpress/pro/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/nanoexpress/pro/?branch=master)
 [![GitHub issues](https://img.shields.io/github/issues/nanoexpress/pro.svg)](http://github.com/nanoexpress/pro/issues)
@@ -39,9 +39,6 @@ Thank you, all sponsors, backers and supporters
 #### Supporters
 
 - [@victor-a-rigacci](https://github.com/victor-a-rigacci)
-
-#### Donaters
-
 - [Lemico](https://github.com/nanoexpress/pro/issues/44)
 
 ### Services
