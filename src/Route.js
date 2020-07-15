@@ -109,7 +109,7 @@ export default class Route {
     let isAborted = false;
     let isNotFoundHandler = false;
     const bodyAllowedMethod =
-      method === 'POST' || method === 'PUT' || method === 'DEL';
+      method === 'POST' || method === 'PUT' || method === 'PATCH';
     let responseSchema;
 
     const findConfig = middlewares.find(

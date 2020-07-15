@@ -24,6 +24,7 @@
 - [Docker](https://nanoexpress.js.org/docker-linux)
 - [Benchmarks](https://nanoexpress.js.org/benchmark) and [Live benchmarks](https://github.com/the-benchmarker/web-frameworks#results)
 - [FAQ](https://nanoexpress.js.org/support/faq)
+- [Disable Analytics](https://github.com/scarf-sh/scarf-js#configuration)
 
 ## Support
 
