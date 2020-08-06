@@ -201,7 +201,6 @@ export default class App {
 
 const exposeAppMethod = (method) =>
   function (path, ...fns) {
-
     const { _app, _route, _anyRouteCalled } = this;
     var that = this;
     function createRoute(path) {
@@ -224,16 +223,13 @@ const exposeAppMethod = (method) =>
       }
     }
     if (fns.length > 0) {
-
       if (Array.isArray(path)) {
-        for(let n=0; n < path.length; n++) {
+        for (let n = 0; n < path.length; n++) {
           createRoute(path[n]);
         }
-      }
-      else {
+      } else {
         createRoute(path);
       }
-
     }
     return this;
   };
