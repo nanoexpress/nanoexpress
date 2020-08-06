@@ -201,39 +201,39 @@ export default class App {
 
 const exposeAppMethod = (method) =>
   function (path, ...fns) {
-    
+
     const { _app, _route, _anyRouteCalled } = this;
-    var that = this
-    if (fns.length > 0) {
-      
-      function createRoute(path) {
-        const preparedRouteFunction = _route._prepareMethod(
-          method.toUpperCase(),
-          { path, originalUrl: path },
-          ...fns
-        );
-        
-        _app[method](path, preparedRouteFunction);
+    var that = this;
+    function createRoute(path) {
+      const preparedRouteFunction = _route._prepareMethod(
+        method.toUpperCase(),
+        { path, originalUrl: path },
+        ...fns
+      );
 
-        that._routeCalled = true;
+      _app[method](path, preparedRouteFunction);
 
-        if (!_anyRouteCalled && method !== 'options') {
-          that._anyRouteCalled = path === '/*';
-        }
+      that._routeCalled = true;
 
-        if (method === 'options') {
-          that._optionsCalled = true;
-        }
+      if (!_anyRouteCalled && method !== 'options') {
+        that._anyRouteCalled = path === '/*';
       }
+
+      if (method === 'options') {
+        that._optionsCalled = true;
+      }
+    }
+    if (fns.length > 0) {
+
       if (Array.isArray(path)) {
         for(let n=0; n < path.length; n++) {
-          createRoute(path[n])
+          createRoute(path[n]);
         }
       }
       else {
-        createRoute(path)
+        createRoute(path);
       }
-      
+
     }
     return this;
   };
