@@ -58,12 +58,12 @@
   },
   "devDependencies": {
     "coveralls": "^3.1.0",
-    "eslint": "^7.5.0",
+    "eslint": "^7.6.0",
     "husky": "^4.2.5",
-    "jest": "^26.1.0",
+    "jest": "^26.3.0",
     "lint-staged": "^10.2.11",
     "prettier": "^2.0.5",
-    "rollup": "^2.23.0",
+    "rollup": "^2.23.1",
     "shx": "^0.3.2"
   },
   "peerDependencies": {
