@@ -63,7 +63,7 @@
     "jest": "^26.4.0",
     "lint-staged": "^10.2.11",
     "prettier": "^2.0.5",
-    "rollup": "^2.23.1",
+    "rollup": "^2.25.0",
     "shx": "^0.3.2"
   },
   "peerDependencies": {
