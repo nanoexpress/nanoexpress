@@ -27,24 +27,11 @@
 
 ## Support
 
-Thank you, all sponsors, backers and supporters
+Thank you, all previous sponsors, backers and supporters
 
 ### Sponsors
 
-#### Commercial sponsors
-
-- [@mrauhu](https://github.com/mrauhu)
-- [@yarsky-tgz](https://github.com/yarsky-tgz)
-
-#### Supporters
-
-- [@victor-a-rigacci](https://github.com/victor-a-rigacci)
-- [Lemico](https://github.com/nanoexpress/pro/issues/44)
-
-### Services
-
-- [JetBrains](https://www.jetbrains.com/) - for providing to me free applications to develop this library, making my development easier, faster and efficient
-- [BrowserStack](https://www.browserstack.com/) - for providing to me free access to many browsers for my other projects (e.g. es6-tween, Forceify)
+See [here](https://nanoexpress.js.org/support/sponsors)
 
 ## License
 
