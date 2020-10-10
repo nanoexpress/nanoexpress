@@ -52,7 +52,7 @@
     "ajv": "^6.12.5",
     "busboy": "^0.3.1",
     "cookie": "^0.4.1",
-    "fast-json-stringify": "^2.2.7",
+    "fast-json-stringify": "^2.2.8",
     "turbo-json-parse": "github:dalisoft/turbo-json-parse",
     "uWebSockets.js": "github:uNetworking/uWebSockets.js#v18.6.0"
   },
