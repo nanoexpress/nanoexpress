@@ -54,7 +54,7 @@
     "cookie": "^0.4.1",
     "fast-json-stringify": "^2.2.9",
     "turbo-json-parse": "github:dalisoft/turbo-json-parse",
-    "uWebSockets.js": "github:uNetworking/uWebSockets.js#v18.8.0"
+    "uWebSockets.js": "github:uNetworking/uWebSockets.js#v18.9.0"
   },
   "devDependencies": {
     "coveralls": "^3.1.0",
