@@ -2,9 +2,9 @@
 
 # github: dalisoft
 patreon: dalisoft # Replace with a single Patreon username
-open_collective: nanoexpress # Replace with a single Open Collective username
+open_collective: # nanoexpress # Replace with a single Open Collective username
 ko_fi: # Replace with a single Ko-fi username
-tidelift: npm/nanoexpress-pro # Replace with a single Tidelift platform-name/package-name e.g., npm/babel
+tidelift: # npm/nanoexpress-pro # Replace with a single Tidelift platform-name/package-name e.g., npm/babel
 community_bridge: # 9e789b4b-2fe4-4a61-b5c5-acba3130ea4f # Replace with a single Community Bridge project-name e.g., cloud-foundry
 liberapay: # dalisoft # Replace with a single Liberapay username
 issuehunt: nanoexpress # Replace with a single IssueHunt username
