@@ -1,5 +1,5 @@
 {
-  "name": "nanoexpress-pro",
+  "name": "nanoexpress",
   "description": "Nano-framework for Node.js",
   "type": "module",
   "main": "cjs/nanoexpress.js",
@@ -11,18 +11,10 @@
     "./src/": "./src/"
   },
   "typings": "nanoexpress.d.ts",
-  "funding": [
-    {
-      "type": "opencollective",
-      "url": "https://opencollective.com/nanoexpress"
-    },
-    "https://www.buymeacoffee.com/dalisoft",
-    "https://www.paypal.me/dalisoft",
-    {
-      "type": "patreon",
-      "url": "https://www.patreon.com/dalisoft"
-    }
-  ],
+  "funding": {
+    "type": "patreon",
+    "url": "https://www.patreon.com/dalisoft"
+  },
   "scripts": {
     "lint:eslint": "eslint ./src",
     "lint:prettier": "prettier -c .",
@@ -38,7 +30,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nanoexpress/pro.git"
+    "url": "git+https://github.com/nanoexpress/nanoexpress.git"
   },
   "keywords": [
     "nano",
@@ -52,9 +44,9 @@
   "author": "dalisoft",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/nanoexpress/pro/issues"
+    "url": "https://github.com/nanoexpress/nanoexpress/issues"
   },
-  "homepage": "https://github.com/nanoexpress/pro#readme",
+  "homepage": "https://github.com/nanoexpress/nanoexpress#readme",
   "dependencies": {
     "@dalisoft/events": "^0.2.0",
     "ajv": "^6.12.6",
@@ -62,7 +54,7 @@
     "cookie": "^0.4.1",
     "fast-json-stringify": "^2.2.10",
     "turbo-json-parse": "github:dalisoft/turbo-json-parse",
-    "uWebSockets.js": "github:uNetworking/uWebSockets.js#v18.9.0"
+    "uWebSockets.js": "github:uNetworking/uWebSockets.js#v18.11.0"
   },
   "devDependencies": {
     "coveralls": "^3.1.0",
