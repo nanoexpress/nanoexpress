@@ -16,7 +16,7 @@
     "url": "https://www.patreon.com/dalisoft"
   },
   "scripts": {
-    "lint:eslint": "eslint ./src",
+    "lint:eslint": "eslint .",
     "lint:prettier": "prettier -c .",
     "lint": "npm run lint:eslint && npm run lint:prettier",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.config.json",
