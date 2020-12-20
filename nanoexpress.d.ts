@@ -1,12 +1,13 @@
-import {
-  AppOptions as AppOptionsBasic,
-  TemplatedApp as AppTemplatedApp,
-  HttpRequest as HttpRequestBasic,
-  HttpResponse as HttpResponseBasic,
-  WebSocket as WebSocketBasic
-} from 'uWebSockets.js';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Ajv, Options as AjvOptions } from 'ajv';
 import { Readable, Writable } from 'stream';
+import {
+  AppOptions as AppOptionsBasic,
+  HttpRequest as HttpRequestBasic,
+  HttpResponse as HttpResponseBasic,
+  TemplatedApp as AppTemplatedApp,
+  WebSocket as WebSocketBasic
+} from 'uWebSockets.js';
 
 declare namespace nanoexpress {
   export interface SwaggerOptions {
@@ -34,14 +35,14 @@ declare namespace nanoexpress {
     [key: string]: string;
   }
   export interface HttpRequestBody {
-    [key: string]: string | object | any[];
+    [key: string]: string | any[];
   }
   export interface HttpRequestCookies {
     [key: string]: string;
   }
 
   export interface WebSocket extends WebSocketBasic {
-    emit(name: string, ...args: any[]);
+    emit(name: string, ...args: any[]): void;
 
     on(
       event: 'upgrade',
@@ -51,7 +52,7 @@ declare namespace nanoexpress {
     on(event: 'close', listener: (code: number, message: string) => void): void;
     on(
       event: 'message',
-      listener: (message: string | object, isBinary?: boolean) => void
+      listener: (message: string | any, isBinary?: boolean) => void
     ): void;
 
     on(event: string, listener: (...args: any[]) => void): void;
@@ -70,7 +71,7 @@ declare namespace nanoexpress {
     params?: HttpRequestParams;
     body?: string | HttpRequestBody;
     pipe(callback: (pipe: Writable) => void): HttpRequest;
-    onAborted(onAborted: () => void);
+    onAborted(onAborted: () => void): void;
     __response?: HttpResponse;
   }
 
@@ -96,8 +97,8 @@ declare namespace nanoexpress {
     writeHeaders(headers: HttpRequestHeaders): HttpResponse;
     writeHead(code: number, headers: HttpRequestHeaders): HttpResponse;
     redirect(code: number | string, path?: string): HttpResponse;
-    send(result: string | object | any[]): HttpResponse;
-    json(result: object | any[]): HttpResponse;
+    send(result: string | { [key: string]: any } | any[]): HttpResponse;
+    json(result: { [key: string]: any } | any[]): HttpResponse;
     pipe(
       callback: (pipe: Readable) => void,
       size?: number,
@@ -167,16 +168,10 @@ declare namespace nanoexpress {
     onAborted?: () => any;
   }
 
-  export interface AppRoute {
-    callback<HttpRequest, HttpResponse>(
-      req: HttpRequest,
-      res: HttpResponse
-    ): any;
+  export interface PerRoute {
+    callback(req: HttpRequest, res: HttpResponse): any;
     middlewares?: HttpRoute[];
     schema?: Schema;
-  }
-  export interface AppRoutes {
-    [key: string]: AppRoute | AppRoutes | Function;
   }
 
   export interface AppConfig {
