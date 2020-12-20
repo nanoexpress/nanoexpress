@@ -31,10 +31,6 @@ jobs:
 
       - name: Install
         run: yarn
-      - name: Lerna configure
-        run: |
-          yarn lerna bootstrap
-          yarn lerna link
 
       - name: Lint code
         run: yarn lint
@@ -56,11 +52,7 @@ jobs:
       - name: Install
         run: yarn
       - name: semantic-release Prepare
-        run: yarn add semantic-release semantic-release-monorepo -W
-      - name: Lerna configure
-        run: |
-          yarn lerna bootstrap
-          yarn lerna link
+        run: yarn add semantic-release -W
 
       - name: Build
         run: yarn build
@@ -69,4 +61,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: yarn run semantic-release
+        run: yarn semantic-release
