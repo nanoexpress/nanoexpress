@@ -1,6 +1,6 @@
 /* global describe, expect, it */
-import HttpResponse from '../../../../tests/mock/HttpResponse';
-import { default as writeHead } from './write-head';
+import HttpResponse from '../../../../tests/mock/HttpResponse.js';
+import writeHead from './write-head.js';
 
 describe('writeHead status', () => {
   it('empty status should do nothing', async (done) => {

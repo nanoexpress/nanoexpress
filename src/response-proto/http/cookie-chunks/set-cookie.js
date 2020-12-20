@@ -6,20 +6,20 @@ export default function setCookie(name, value, options) {
   }
   const serialized = cookie.serialize(name, value, options);
 
-  let setCookie = this.getHeader('Set-Cookie');
+  let getCookie = this.getHeader('Set-Cookie');
 
   if (!setCookie) {
     this.setHeader('Set-Cookie', serialized);
     return undefined;
   }
 
-  if (typeof setCookie === 'string') {
-    setCookie = [setCookie];
+  if (typeof getCookie === 'string') {
+    getCookie = [getCookie];
   }
 
-  setCookie.push(serialized);
+  getCookie.push(serialized);
 
   this.removeHeader('Set-Cookie');
-  this.setHeader('Set-Cookie', setCookie);
+  this.setHeader('Set-Cookie', getCookie);
   return this;
 }

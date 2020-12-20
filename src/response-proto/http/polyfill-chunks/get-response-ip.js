@@ -1,6 +1,6 @@
 /** global: Buffer */
 
-export default function () {
+export default function getIP() {
   // Detect self
   const _self = this.send ? this : this.__response;
 

@@ -1,7 +1,7 @@
 export default (req, res, config, { validationStringify, validation } = {}) => {
   if (validationStringify) {
     let errors;
-    for (let i = 0, len = validation.length; i < len; i++) {
+    for (let i = 0, len = validation.length; i < len; i += 1) {
       const { type, validator, schema } = validation[i];
 
       const reqValue = req[type];
@@ -11,15 +11,15 @@ export default (req, res, config, { validationStringify, validation } = {}) => {
           if (!errors) {
             errors = {
               type: 'errors',
-              errors: { [type]: [type + ' is not missing'] }
+              errors: { [type]: [`${type} is not missing`] }
             };
           } else {
             const _errors = errors.errors;
 
             if (_errors[type]) {
-              _errors[type].push(type + ' is not missing');
+              _errors[type].push(`${type} is not missing`);
             } else {
-              _errors[type] = [type + ' is not missing'];
+              _errors[type] = [`${type} is not missing`];
             }
           }
         }

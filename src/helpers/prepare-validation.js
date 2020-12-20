@@ -47,7 +47,7 @@ export default (ajv, schema) => {
   let responseSchema;
 
   if (schema) {
-    for (let i = 0, len = validationMethods.length, type; i < len; i++) {
+    for (let i = 0, len = validationMethods.length, type; i < len; i += 1) {
       type = validationMethods[i];
       const _schema = schema[type];
       if (typeof _schema === 'object' && _schema) {
@@ -65,13 +65,11 @@ export default (ajv, schema) => {
           }
 
           responseSchema = newSchema;
-        } else {
-          if (ajv) {
-            const validator = ajv.compile(_schema);
-            validation.push({ type, validator, schema: _schema });
-            if (!validationStringify) {
-              validationStringify = fastJson(validationSchema);
-            }
+        } else if (ajv) {
+          const validator = ajv.compile(_schema);
+          validation.push({ type, validator, schema: _schema });
+          if (!validationStringify) {
+            validationStringify = fastJson(validationSchema);
           }
         }
       }

@@ -1,19 +1,21 @@
 import uWS from 'uWebSockets.js';
-
 import { httpMethods } from './helpers/index.js';
 
 export default class App {
   get config() {
     return this._config;
   }
+
   get host() {
     const { _config: config } = this;
     return config.host;
   }
+
   get port() {
     const { _config: config } = this;
     return config.port;
   }
+
   get address() {
     const { _config: config } = this;
     let address = '';
@@ -22,12 +24,13 @@ export default class App {
       address += config.host || 'localhost';
 
       if (config.port) {
-        address += ':' + config.port;
+        address += `:${config.port}`;
       }
     }
 
     return address;
   }
+
   constructor(config, app, route) {
     this._config = config;
     this._app = app;
@@ -48,43 +51,51 @@ export default class App {
 
     return this;
   }
+
   activateDocs() {
     this._app.get('/docs/swagger.json', (res) => {
       res.writeHeader('Content-Type', 'application/json; charset=utf-8');
       res.end(JSON.stringify(this._config.swagger, null, 4));
     });
   }
+
   setErrorHandler(fn) {
     this._config._errorHandler = fn;
 
     return this;
   }
+
   setNotFoundHandler(fn) {
     this._config._notFoundHandler = fn;
 
     return this;
   }
+
   setValidationErrorHandler(fn) {
     this._config._validationErrorHandler = fn;
 
     return this;
   }
+
   use(...args) {
     this._route.use(...args);
 
     return this;
   }
+
   define(callback) {
     callback(this);
 
     return this;
   }
+
   // TODO:
   // Beta `app.publish` method
   // when i will i have time, i will improve this wrapping
   publish(topic, string, isBinary, compress) {
     this._app.publish(topic, string, isBinary, compress);
   }
+
   listen(port, host) {
     const {
       _config: config,
@@ -178,6 +189,7 @@ export default class App {
       }
     });
   }
+
   close() {
     const { _config: config, _console } = this;
 
@@ -190,17 +202,16 @@ export default class App {
       this._instance = null;
       _debugContext.debug('[Server]: stopped successfully');
       return true;
-    } else {
-      const _errorContext = _console.error ? _console : console;
-
-      _errorContext.error('[Server]: Error, failed while stopping');
-      return false;
     }
+    const _errorContext = _console.error ? _console : console;
+
+    _errorContext.error('[Server]: Error, failed while stopping');
+    return false;
   }
 }
 
 const exposeAppMethod = (method) =>
-  function (path, ...fns) {
+  function exposeAppMethodHOC(path, ...fns) {
     const { _app, _route, _anyRouteCalled } = this;
 
     if (fns.length > 0) {
@@ -225,7 +236,7 @@ const exposeAppMethod = (method) =>
     return this;
   };
 
-for (let i = 0, len = httpMethods.length; i < len; i++) {
+for (let i = 0, len = httpMethods.length; i < len; i += 1) {
   const method = httpMethods[i];
   App.prototype[method] = exposeAppMethod(method);
 }

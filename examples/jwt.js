@@ -1,7 +1,8 @@
-/* eslint-disable max-len */
+/* eslint-disable import/no-unresolved, node/no-missing-import */
+
+import expressJwt from 'express-jwt';
+import jwt from 'jsonwebtoken';
 import nanoexpress from '../src/nanoexpress.js';
-const expressJwt = require('../node_modules/express-jwt');
-const jwt = require('../node_modules/jsonwebtoken');
 
 // Secret key
 const secret = 'secret';

@@ -6,7 +6,8 @@ export default (code) => {
     codeInteger < 600
   ) {
     return 1;
-  } else if (
+  }
+  if (
     typeof code === 'string' &&
     code.length === 3 &&
     code.indexOf('X') !== -1

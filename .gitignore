@@ -26,6 +26,7 @@ artifacts
 
 logs
 .log
+*.log
 *-debug.log*
 
 #################
@@ -114,7 +115,6 @@ jspm_packages
 #################
 
 .lock-wscript
-yarn.lock
 .yarn-integrity
 
 #################

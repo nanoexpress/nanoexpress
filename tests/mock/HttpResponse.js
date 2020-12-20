@@ -1,4 +1,4 @@
-import HttpResponseExtends from '../../src/response-proto/http/HttpResponse';
+import HttpResponseExtends from '../../src/response-proto/http/HttpResponse.js';
 
 class HttpResponse {
   constructor() {
@@ -6,9 +6,11 @@ class HttpResponse {
     this.___code = '200 OK';
     this.___end = null;
   }
+
   writeHeader(key, value) {
     this.___headers.push({ key, value });
   }
+
   writeStatus(code) {
     if (typeof code !== 'string') {
       throw new Error('HttpResponse.writeStatus accepts only String');
@@ -16,6 +18,7 @@ class HttpResponse {
 
     this.___code = code;
   }
+
   end(end) {
     if (this.___end) {
       throw new Error('Invalid access of used HttpResponse');

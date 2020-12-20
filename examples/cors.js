@@ -1,5 +1,6 @@
-import nanoexpress from '../src/nanoexpress.js';
+// eslint-disable-next-line import/no-unresolved, node/no-missing-import
 import cors from 'cors';
+import nanoexpress from '../src/nanoexpress.js';
 
 const app = nanoexpress();
 
@@ -12,11 +13,7 @@ const corsConfigured = cors({
 app.use(corsConfigured);
 
 app.get('/', async () => ({ hello: 'world' }));
-app.post('/cors', async () => {
-  return { cors: 'post' };
-});
-app.put('/cors', async () => {
-  return { cors: 'put' };
-});
+app.post('/cors', async () => ({ cors: 'post' }));
+app.put('/cors', async () => ({ cors: 'put' }));
 
 app.listen(1234);

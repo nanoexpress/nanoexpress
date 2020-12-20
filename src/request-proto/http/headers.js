@@ -13,7 +13,8 @@ export default (req, schema) => {
     headers.origin = req.getHeader('origin');
 
     return headers;
-  } else if (schema !== false) {
+  }
+  if (schema !== false) {
     req.forEach((key, value) => {
       if (!headers) {
         headers = {};

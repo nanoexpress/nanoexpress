@@ -1,13 +1,11 @@
-import nanoexpress from '../src/nanoexpress.js';
-
-import bodyParser from '../src/packed/middlewares/body-parser.js';
-import fileUpload from '../src/packed/middlewares/file-upload.js';
-
+/* eslint-disable no-console */
 import { resolve } from 'path';
+import nanoexpress from '../src/nanoexpress.js';
+import fileUpload from '../src/packed/middlewares/file-upload.js';
 
 const app = nanoexpress();
 
-app.use(bodyParser());
+// app.use(bodyParser());
 app.use(fileUpload());
 
 app.get('/', async () => 'ok');
@@ -24,9 +22,7 @@ app.post('/', (req, res) => {
   for (const file of req.files) {
     file
       .mv(
-        resolve(
-          './examples/' + (file.filename || 'binary-file' + file.extension)
-        )
+        resolve(`./examples/${file.filename || `binary-file${file.extension}`}`)
       )
       .then(() => {
         res.send('File Uploaded!');

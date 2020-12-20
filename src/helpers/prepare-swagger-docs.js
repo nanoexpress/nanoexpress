@@ -11,7 +11,7 @@ const swaggerPathNormalizeFunc = (matched) => {
       lastChar = '/';
     }
 
-    matched = '{' + matched + '}' + lastChar;
+    matched = `{${matched}}${lastChar}`;
   }
   return matched;
 };
@@ -44,9 +44,11 @@ export default function swaggerDocsGenerator(
     }
 
     const type =
+      // eslint-disable-next-line no-nested-ternary
       typeName === 'params'
         ? 'path'
-        : typeName === 'response'
+        : // eslint-disable-next-line no-nested-ternary
+        typeName === 'response'
         ? 'responses'
         : typeName === 'body'
         ? 'requestBody'

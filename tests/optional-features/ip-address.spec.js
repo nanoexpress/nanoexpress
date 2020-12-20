@@ -1,9 +1,9 @@
 // eslint-disable-next-line no-redeclare
-/* globals Buffer, describe, it, expect, beforeAll, afterAll */
-import nanoexpress from '../../src/nanoexpress';
+/* globals describe, it, expect, beforeAll, afterAll */
 import http from 'http';
+import nanoexpress from '../../src/nanoexpress.js';
 
-describe('bind to specific host', function () {
+describe('bind to specific host', () => {
   let app = null;
 
   beforeAll(() => {
@@ -14,12 +14,10 @@ describe('bind to specific host', function () {
     return app.listen(3000, '127.0.0.1');
   });
 
-  afterAll(() => {
-    return app.close();
-  });
+  afterAll(() => app.close());
 
-  it('should return IPv4 address', () => {
-    return new Promise((resolve, reject) => {
+  it('should return IPv4 address', () =>
+    new Promise((resolve, reject) => {
       http
         .request({ host: '127.0.0.1', port: 3000 }, (res) => {
           // console.log("Response received");
@@ -29,6 +27,5 @@ describe('bind to specific host', function () {
         .end();
     }).then((resp) => {
       expect(resp.toString('ascii')).toStrictEqual('127.0.0.1');
-    });
-  });
+    }));
 });

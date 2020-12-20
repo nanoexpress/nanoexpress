@@ -80,7 +80,7 @@ export default () => {
 
             const file = {
               type: mimeType,
-              extension: '.' + mimeType,
+              extension: `.${mimeType}`,
               buffer: { data: body }
             };
             req.body = null;

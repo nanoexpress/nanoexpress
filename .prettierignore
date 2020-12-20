@@ -4,8 +4,6 @@
 .gitattributes
 .vscode
 coverage
-tests
 cjs/
-examples/**/*.html
 
 CODE_OF_CONDUCT.md

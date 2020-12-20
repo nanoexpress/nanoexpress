@@ -1,5 +1,5 @@
 /* globals describe, it, expect */
-import { HttpResponse } from '../../src/response-proto';
+import { HttpResponse } from '../../src/response-proto/index.js';
 
 // Init Fake HttpResponse
 class Response {
@@ -7,6 +7,8 @@ class Response {
     this.buffer = '';
     this.headers = {};
   }
+
+  // eslint-disable-next-line class-methods-use-this
   getRemoteAddress() {
     const ipBuffer = new Uint8Array(4);
 
@@ -15,12 +17,15 @@ class Response {
 
     return ipBuffer;
   }
+
   end(result) {
     this.buffer = result;
   }
+
   writeHeader(key, value) {
     this.headers[key] = value;
   }
+
   writeStatus(code) {
     this.code = code;
   }

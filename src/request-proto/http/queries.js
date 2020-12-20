@@ -9,13 +9,13 @@ export default (req) => {
   }
   const parsed = parse(query);
 
-  for (const query in parsed) {
+  for (const queryItem in parsed) {
     // On-Demand attaching for memory reason
     if (!queries) {
       queries = {};
     }
 
-    queries[query] = parsed[query];
+    queries[queryItem] = parsed[queryItem];
   }
   return queries;
 };

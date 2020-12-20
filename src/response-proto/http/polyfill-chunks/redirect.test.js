@@ -1,6 +1,6 @@
 /* global describe, expect, it */
-import HttpResponse from '../../../../tests/mock/HttpResponse';
-import { default as redirect, normalizeLocation } from './redirect';
+import HttpResponse from '../../../../tests/mock/HttpResponse.js';
+import redirect, { normalizeLocation } from './redirect.js';
 
 describe('normalize location', () => {
   it('empty values should throw', () => {

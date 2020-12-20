@@ -1,23 +1,23 @@
-import {
-  headers,
-  cookies,
-  queries,
-  params,
-  body,
-  stream,
-  pipe
-} from './request-proto/http/index.js';
-import { HttpResponse } from './response-proto/http/index.js';
+import Events from '@dalisoft/events';
+import turboJsonParse from 'turbo-json-parse';
 import { Route as RouteCompiler } from './compilers/index.js';
 import {
+  httpMethods,
+  prepareParams,
   prepareSwaggerDocs,
   prepareValidation,
-  prepareParams,
-  processValidation,
-  httpMethods
+  processValidation
 } from './helpers/index.js';
-import turboJsonParse from 'turbo-json-parse';
-import Events from '@dalisoft/events';
+import {
+  body,
+  cookies,
+  headers,
+  params,
+  pipe,
+  queries,
+  stream
+} from './request-proto/http/index.js';
+import { HttpResponse } from './response-proto/http/index.js';
 
 const resAbortHandler = '___$HttpResponseAbortHandler';
 const __wsProto__ = Events.prototype;
@@ -33,6 +33,7 @@ export default class Route {
     this._module = true;
     this._rootLevel = false;
   }
+
   use(path, ...middlewares) {
     let { _middlewares } = this;
 
@@ -48,7 +49,7 @@ export default class Route {
 
     _middlewares.push(...middlewares);
 
-    for (let i = 0, len = _middlewares.length, middleware; i < len; i++) {
+    for (let i = 0, len = _middlewares.length, middleware; i < len; i += 1) {
       middleware = _middlewares[i];
       if (!middleware) {
         continue;
@@ -64,12 +65,14 @@ export default class Route {
               middleware._middlewares = _middlewares
                 .concat(middleware._middlewares)
                 .filter(
-                  (middleware, i, self) => self.indexOf(middleware) === i
+                  (currentMiddleware, index, self) =>
+                    self.indexOf(currentMiddleware) === index
                 );
             }
           } else {
             middleware._middlewares = _middlewares.filter(
-              (middleware, i, self) => self.indexOf(middleware) === i
+              (currentMiddleware, index, self) =>
+                self.indexOf(currentMiddleware) === index
             );
           }
         }
@@ -96,8 +99,9 @@ export default class Route {
 
     return this;
   }
+
   _prepareMethod(method, { originalUrl, path, ...options }, ...middlewares) {
-    // eslint-disable-next-line no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { _config, _baseUrl, _middlewares, _module, _rootLevel, _ajv } = this;
 
     const fetchMethod = method.toUpperCase() === 'ANY';
@@ -238,25 +242,26 @@ export default class Route {
 
           if (middleware._module) {
             return null;
-          } else if (
+          }
+          if (
             middleware.then ||
             middleware.constructor.name === 'AsyncFunction'
           ) {
             return middleware;
-          } else {
-            const _oldMiddleware = middleware;
-            middleware = function (req, res) {
-              return new Promise((resolve, reject) => {
-                _oldMiddleware(req, res, (err, done) => {
-                  if (err) {
-                    reject(err);
-                  } else {
-                    resolve(done);
-                  }
-                });
-              });
-            };
           }
+          const _oldMiddleware = middleware;
+          middleware = function refactoredMiddleware(req, res) {
+            return new Promise((resolve, reject) => {
+              _oldMiddleware(req, res, (err, done) => {
+                if (err) {
+                  reject(err);
+                } else {
+                  resolve(done);
+                }
+              });
+            });
+          };
+
           return middleware;
         })
         .filter((middleware) => typeof middleware === 'function');
@@ -284,7 +289,7 @@ export default class Route {
           onAborted();
         }
         if (_onAbortedCallbacks.length > 0) {
-          for (let i = 0, len = _onAbortedCallbacks.length; i < len; i++) {
+          for (let i = 0, len = _onAbortedCallbacks.length; i < len; i += 1) {
             _onAbortedCallbacks[i]();
           }
           _onAbortedCallbacks.length = 0;
@@ -298,6 +303,7 @@ export default class Route {
       });
 
     const handler =
+      // eslint-disable-next-line no-nested-ternary
       isShouldReduceTaks && !isWebSocket
         ? !compilePath && !compileMethod
           ? (res, req) => routeFunction(req, res)
@@ -326,7 +332,9 @@ export default class Route {
         : async (res, req) => {
             isAborted = false;
             _onAbortedCallbacks.length = 0;
-            !isRaw && res.onAborted(_handleOnAborted);
+            if (!isRaw) {
+              res.onAborted(_handleOnAborted);
+            }
             attachOnAborted(() => {
               res.aborted = true;
             });
@@ -434,7 +442,7 @@ export default class Route {
               middlewares &&
               middlewares.length > 0
             ) {
-              for (const middleware of middlewares) {
+              for await (const middleware of middlewares) {
                 if (isAborted) {
                   break;
                 }
@@ -479,9 +487,8 @@ export default class Route {
 
               if (routeFunction.isAsync) {
                 return routeFunction(req, res).catch(handleError);
-              } else {
-                return routeFunction(req, res);
               }
+              return routeFunction(req, res);
             }
           };
 
@@ -516,7 +523,7 @@ export default class Route {
           res.emit('upgrade', req, res);
 
           res.upgrade(
-            Object.assign({ req }, res),
+            { req, ...res },
             /* Spell these correctly */
             req.headers['sec-websocket-key'],
             req.headers['sec-websocket-protocol'],
@@ -559,14 +566,13 @@ export default class Route {
           ws.emit('close', code, Buffer.from(message).toString('utf8'));
         }
       };
-    } else {
-      return handler;
     }
+    return handler;
   }
 }
 
 const exposeMethod = (method) =>
-  function (path, ...middlewares) {
+  function exposeMethodHOC(path, ...middlewares) {
     const { _baseUrl, _module, _app } = this;
 
     let originalUrl = path;
@@ -587,7 +593,7 @@ const exposeMethod = (method) =>
     return this;
   };
 
-for (let i = 0, len = httpMethods.length; i < len; i++) {
+for (let i = 0, len = httpMethods.length; i < len; i += 1) {
   const method = httpMethods[i];
   Route.prototype[method] = exposeMethod(method);
 }

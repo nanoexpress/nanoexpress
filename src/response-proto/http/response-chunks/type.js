@@ -1,5 +1,5 @@
-export default function type(type) {
-  this.setHeader('Content-Type', type);
+export default function type(contentType) {
+  this.setHeader('Content-Type', contentType);
 
   return this;
 }

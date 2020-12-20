@@ -1,21 +1,20 @@
 /* globals describe, it, expect */
-import {
-  headers,
-  cookies,
-  params,
-  queries,
-  body
-} from '../../src/request-proto';
-import { prepareParams } from '../../src/helpers';
-
 import { Readable } from 'stream';
+import { prepareParams } from '../../src/helpers/index.js';
+import {
+  body,
+  cookies,
+  headers,
+  params,
+  queries
+} from '../../src/request-proto/index.js';
 
 describe('headers normalize', () => {
   it('header normalize non-empty', () => {
     const fakeReq = {
       forEach(fn) {
-        for (let i = 1; i < 4; i++) {
-          fn('header_' + i, 'header_value' + i);
+        for (let i = 1; i < 4; i += 1) {
+          fn(`header_${i}`, `header_value${i}`);
         }
       }
     };

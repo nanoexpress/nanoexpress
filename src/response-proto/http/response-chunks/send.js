@@ -12,13 +12,13 @@ export default function send(result) {
       } else if (fastJson && typeof fastJson[statusCode] === 'function') {
         result = fastJson[statusCode](result);
       } else {
-        const _statusCode = statusCode + '';
+        const _statusCode = `${statusCode}`;
         for (let code in fastJson) {
           const fastJsonFunc = fastJson[code];
           if (code === _statusCode) {
             result = fastJsonFunc(result);
           } else if (code.indexOf('X') !== -1) {
-            for (let i = 0; i < 3; i++) {
+            for (let i = 0; i < 3; i += 1) {
               if (code.charAt(i) === 'X') {
                 code =
                   code.substr(0, i) +
@@ -27,6 +27,7 @@ export default function send(result) {
               }
             }
 
+            // eslint-disable-next-line eqeqeq
             if (code == _statusCode) {
               result = fastJsonFunc(result);
             }

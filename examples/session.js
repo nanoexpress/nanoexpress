@@ -1,6 +1,6 @@
-/* eslint-disable max-len */
-import nanoexpress from '../src/nanoexpress.js';
+/* eslint-disable import/no-unresolved, node/no-missing-import */
 import expressSession from 'express-session';
+import nanoexpress from '../src/nanoexpress.js';
 
 const app = nanoexpress();
 
@@ -22,9 +22,7 @@ app.use(
 );
 
 // Our routes list
-app.get('/', async (req) => {
-  return { foo: req.session.foo || 'undefined' };
-});
+app.get('/', async (req) => ({ foo: req.session.foo || 'undefined' }));
 
 // Type below line into browser console
 /*

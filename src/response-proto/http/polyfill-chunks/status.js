@@ -7,12 +7,12 @@ export default function status(code, notModify) {
 
   if (typeof code === 'string') {
     this.statusCode = code;
-    this.rawStatusCode = parseInt(code);
+    this.rawStatusCode = parseInt(code, 10);
   } else if (http.STATUS_CODES[code] !== undefined) {
-    this.statusCode = code + ' ' + http.STATUS_CODES[code];
+    this.statusCode = `${code} ${http.STATUS_CODES[code]}`;
     this.rawStatusCode = code;
   } else {
-    throw new Error('Invalid Code: ' + JSON.stringify(code));
+    throw new Error(`Invalid Code: ${JSON.stringify(code)}`);
   }
 
   return this;

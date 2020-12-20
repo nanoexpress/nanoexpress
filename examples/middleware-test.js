@@ -12,9 +12,9 @@ function two(req, res, next) {
 
 nanoexpress()
   .use(one, two)
-  .get('/favicon.ico', async (req) => {}) // eslint-disable-line no-unused-vars
+  .get('/favicon.ico', async () => {}) // eslint-disable-line no-unused-vars
   .get('/', (req, res) => res.send('Hello'))
-  .get('/user/:id', (req, res) => {
-    return res.end(`User: ${JSON.stringify(req.params.id)}`);
-  })
+  .get('/user/:id', (req, res) =>
+    res.end(`User: ${JSON.stringify(req.params.id)}`)
+  )
   .listen(3000);

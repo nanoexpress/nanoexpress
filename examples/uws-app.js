@@ -16,5 +16,6 @@ app.get('/bar', (res) => {
 
 app.listen(
   4005,
+  // eslint-disable-next-line no-console
   (token) => token && console.debug('server started at port', 4005)
 );

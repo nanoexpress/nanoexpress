@@ -4,7 +4,7 @@ const HTTPS_PREFIX = 'https://';
 export const normalizeLocation = (path, config, host) => {
   if (path.indexOf('http') === -1) {
     if (path.indexOf('/') === -1) {
-      path = '/' + path;
+      path = `/${path}`;
     }
     let httpHost;
     if (host) {

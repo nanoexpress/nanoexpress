@@ -1,0 +1,16 @@
+name: Auto-merge dependabot updates
+
+on: pull_request
+
+jobs:
+  auto-merge:
+    timeout-minutes: 5
+
+    runs-on: ubuntu-18.04
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ahmadnassri/action-dependabot-auto-merge@v2
+        with:
+          target: minor
+          github-token: ${{ secrets.GH_TOKEN }}

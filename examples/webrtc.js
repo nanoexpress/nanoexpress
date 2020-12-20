@@ -1,9 +1,8 @@
-import nanoexpress from '../src/nanoexpress.js';
+// eslint-disable-next-line import/no-unresolved, node/no-missing-import
 import staticMiddleware from '@nanoexpress/middlewares/static';
-
-import { webRTCServer } from '../src/packed/defines';
-
 import { resolve } from 'path';
+import nanoexpress from '../src/nanoexpress.js';
+import { webRTCServer } from '../src/packed/defines/index.js';
 
 const app = nanoexpress();
 

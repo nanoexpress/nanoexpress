@@ -1,5 +1,4 @@
 import http from 'http';
-
 import responseMethods from '../response-proto/http/HttpResponse.js';
 
 const nonSimpleProps = ['query', 'cookies', 'body'].map(
@@ -29,7 +28,7 @@ const convertParams = (params) => {
     return null;
   }
   const _params = {};
-  for (let i = 0, len = params.length; i < len; i++) {
+  for (let i = 0, len = params.length; i < len; i += 1) {
     _params[params[i]] = i;
   }
   return _params;
@@ -46,9 +45,8 @@ const babelCompilerManipulationNormalize = (content) => {
 
       return all + currLine;
     }, '');
-  } else {
-    return content;
   }
+  return content;
 };
 
 export default function compileRoute(fn, params) {
@@ -103,8 +101,9 @@ export default function compileRoute(fn, params) {
         '(req, res)'
       );
     } else {
-      argumentsLine =
-        '(req, res) ' + argumentsLine.substr(argumentsLine.indexOf('()') + 2);
+      argumentsLine = `(req, res) ${argumentsLine.substr(
+        argumentsLine.indexOf('()') + 2
+      )}`;
     }
   }
 
@@ -134,7 +133,7 @@ export default function compileRoute(fn, params) {
     }
   }
 
-  let contentLines = argumentsLine + '\n';
+  let contentLines = `${argumentsLine}\n`;
 
   if (lines.length > 0) {
     for (const line of lines) {
@@ -151,13 +150,13 @@ export default function compileRoute(fn, params) {
 
           if (line.charAt(headerKeyIndex + 11) === '.') {
             contentLines += line.replace(
-              'req.headers.' + headerKey,
-              "req.getHeader('" + headerKey + "')"
+              `req.headers.${headerKey}`,
+              `req.getHeader('${headerKey}')`
             );
           } else if (line.charAt(headerKeyIndex + 11) === '[') {
             contentLines += line.replace(
-              "req.headers['" + headerKey + "']",
-              "req.getHeader('" + headerKey + "')"
+              `req.headers['${headerKey}']`,
+              `req.getHeader('${headerKey}')`
             );
           } else if (line.includes('req.headers;')) {
             const matchDefine = line.includes('const') ? 'const' : 'let';
@@ -188,13 +187,13 @@ export default function compileRoute(fn, params) {
 
           if (line.charAt(paramKeyIndex + 10) === '.') {
             contentLines += line.replace(
-              'req.params.' + paramKey,
-              "req.getParameter('" + paramIndex + "')"
+              `req.params.${paramKey}`,
+              `req.getParameter('${paramIndex}')`
             );
           } else if (line.charAt(paramKeyIndex + 10) === '[') {
             contentLines += line.replace(
-              "req.params['" + paramKey + "']",
-              "req.getParameter('" + paramIndex + "')"
+              `req.params['${paramKey}']`,
+              `req.getParameter('${paramIndex}')`
             );
           } else if (line.includes('req.params;')) {
             const matchDefine = line.includes('const') ? 'const' : 'let';
@@ -250,11 +249,13 @@ export default function compileRoute(fn, params) {
 
   let compiled;
   try {
-    compiled = new Function('return ' + contentLines)();
-  } catch (e) {
+    // eslint-disable-next-line @typescript-eslint/no-implied-eval
+    compiled = new Function(`return ${contentLines}`)();
+  } catch (funcEvalErr) {
     try {
+      // eslint-disable-next-line security-node/detect-eval-with-expr, no-eval
       compiled = eval(contentLines);
-    } catch (e) {
+    } catch (evalErr) {
       compiled = null;
     }
   }

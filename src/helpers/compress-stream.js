@@ -1,17 +1,20 @@
-import { createBrotliCompress, createGzip, createDeflate } from 'zlib';
+import { createBrotliCompress, createDeflate, createGzip } from 'zlib';
 
 const priority = ['gzip', 'br', 'deflate'];
 
 export default (stream, headers) => {
   const contentEncoding = headers['accept-encoding'];
   const encoding = priority.find(
-    (encoding) => contentEncoding && contentEncoding.indexOf(encoding) !== -1
+    (encodingItem) =>
+      contentEncoding && contentEncoding.indexOf(encodingItem) !== -1
   );
 
   const compression =
+    // eslint-disable-next-line no-nested-ternary
     encoding === 'br'
       ? createBrotliCompress()
-      : encoding === 'gzip'
+      : // eslint-disable-next-line no-nested-ternary
+      encoding === 'gzip'
       ? createGzip()
       : encoding === 'deflate'
       ? createDeflate()

@@ -39,7 +39,7 @@ const prepareProxy = (
       'Accept-Encoding'
     ]
   } = {},
-  wsInstance
+  WebsocketInstance
 ) => {
   const isAny = method === undefined;
   const fetchUrl = url.indexOf('*') !== -1 || url.indexOf(':') !== -1;
@@ -111,7 +111,7 @@ const prepareProxy = (
           if (typeof value === 'string') {
             res.writeHeader(key, value);
           } else if (value.splice) {
-            for (let i = 0, len = value.length; i < len; i++) {
+            for (let i = 0, len = value.length; i < len; i += 1) {
               res.writeHeader(key, value[i]);
             }
           }
@@ -121,7 +121,7 @@ const prepareProxy = (
       res.end(data);
     });
   };
-  if (wsInstance) {
+  if (WebsocketInstance) {
     prepared.ws = {
       open(ws, req) {
         config.method = 'ws';
@@ -130,7 +130,7 @@ const prepareProxy = (
           url.replace(/http/, 'ws') +
           (fetchUrl ? req.getUrl().substr(proxyPathLen) : '');
 
-        ws.instance = new wsInstance(wsUrl);
+        ws.instance = new WebsocketInstance(wsUrl);
 
         ws.instance.on('message', (data) => {
           ws.send(data);
@@ -156,10 +156,14 @@ const prepareProxy = (
 
 export default (app) => {
   app.proxy = (path, config, wsInstance) => {
-    const { ws, http, method } = prepareProxy(path, config, wsInstance);
+    const { ws, http: httpHandler, method } = prepareProxy(
+      path,
+      config,
+      wsInstance
+    );
 
-    if (http) {
-      app._app[method](path, http);
+    if (httpHandler) {
+      app._app[method](path, httpHandler);
     }
     if (ws) {
       app._app.ws(path, ws);

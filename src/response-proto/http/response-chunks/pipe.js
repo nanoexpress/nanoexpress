@@ -1,6 +1,6 @@
 import compressStream from '../../../helpers/compress-stream.js';
 
-export default function (stream, size, compressed = false) {
+export default function pipe(stream, size, compressed = false) {
   const { __request: req } = this;
   const { onAborted, headers, responseHeaders } = req;
   let isAborted = false;
@@ -61,13 +61,13 @@ export default function (stream, size, compressed = false) {
 
         // Register async handlers for drainage
         this.onWritable((offset) => {
-          const [ok, done] = this.tryEnd(
+          const [writeOk, writeDone] = this.tryEnd(
             buffer.slice(offset - lastOffset),
             size
           );
-          if (done) {
+          if (writeDone) {
             stream.end();
-          } else if (ok) {
+          } else if (writeOk) {
             stream.resume();
           }
           return ok;

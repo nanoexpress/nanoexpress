@@ -1,3 +1,4 @@
+/* eslint-disable no-console, security-node/detect-crlf */
 import nanoexpress from '../src/nanoexpress.js';
 
 const log = (...texts) => {

@@ -1,5 +1,5 @@
 /* global describe, expect, it */
-import { default as status } from './status';
+import status from './status.js';
 
 describe('normalize status', () => {
   const _this = {};

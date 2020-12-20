@@ -1,17 +1,17 @@
-import nanoexpress from '../src/nanoexpress.js';
+/* eslint-disable import/no-unresolved, node/no-missing-import */
 import expressGraphql from 'express-graphql';
-
 import { buildSchema } from 'graphql';
+import nanoexpress from '../src/nanoexpress.js';
 
 // Construct a schema, using GraphQL schema language
-var schema = buildSchema(`
+const schema = buildSchema(`
   type Query {
     hello: String
   }
 `);
 
 // The root provides a resolver function for each API endpoint
-var root = {
+const root = {
   hello: () => 'Hello world!'
 };
 

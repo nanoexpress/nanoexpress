@@ -20,9 +20,7 @@ app.post(
       }
     }
   },
-  (req, res) => {
-    return res.send({ status: 'ok', body: req.body });
-  }
+  (req, res) => res.send({ status: 'ok', body: req.body })
 );
 
 app.listen(4002);

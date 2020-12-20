@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import nanoexpress from '../src/nanoexpress.js';
 
 const app = nanoexpress();
@@ -12,10 +13,12 @@ app.ws('/ws', async (req, res) => {
     console.log('Connected');
 
     ws.on('message', (msg) => {
+      // eslint-disable-next-line security-node/detect-crlf
       console.log('Message received', msg);
       ws.send(msg);
     });
     ws.on('close', (code, message) => {
+      // eslint-disable-next-line security-node/detect-crlf
       console.log('Connection closed', { code, message });
     });
   });

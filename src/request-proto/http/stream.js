@@ -1,6 +1,6 @@
 import { Readable } from 'stream';
 
-export default function (req, res) {
+export default function requestStream(req, res) {
   const stream = new Readable({
     read() {}
   });

@@ -3,7 +3,7 @@ import nanoexpress from '../src/nanoexpress.js';
 const app = nanoexpress();
 
 app.setErrorHandler((err, req, res) => {
-  res.end('error handled: ' + err.message);
+  res.end(`error handled: ${err.message}`);
 });
 
 app.setNotFoundHandler((req, res) => {
@@ -11,7 +11,7 @@ app.setNotFoundHandler((req, res) => {
 });
 
 app.setValidationErrorHandler((errors, req, res) => {
-  res.end('validation errors, ' + JSON.stringify(errors));
+  res.end(`validation errors, ${JSON.stringify(errors)}`);
 });
 
 app.get(
