@@ -1,7 +1,8 @@
 {
   "extends": "airlight-node",
   "parserOptions": {
-    "project": "./tsconfig.json"
+    "project": "./tsconfig.json",
+    "extraFileExtensions": [".cjs"]
   },
   "rules": {
     "@typescript-eslint/no-var-requires": "off",

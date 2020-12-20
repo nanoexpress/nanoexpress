@@ -1,5 +1,5 @@
 {
-  "include": ["src", "tests", "examples", "*.js", "*.d.ts"],
+  "include": ["src", "tests", "examples", "*.d.ts", "*.js", "*.cjs"],
   "exclude": ["node_modules"],
   "compilerOptions": {
     /* Basic Options */

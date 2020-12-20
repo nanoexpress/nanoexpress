@@ -61,7 +61,7 @@
     "commitlint-config-airlight": "^0.0.1",
     "coveralls": "^3.1.0",
     "eslint": "^7.16.0",
-    "eslint-config-airlight-node": "^1.0.3",
+    "eslint-config-airlight-node": "^1.0.4",
     "husky": "^4.3.6",
     "husky-config-airlight": "^0.0.1",
     "jest": "^26.6.3",

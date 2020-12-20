@@ -2335,10 +2335,10 @@ eslint-config-airbnb@18.2.0:
     object.assign "^4.1.0"
     object.entries "^1.1.2"
 
-eslint-config-airlight-node@^1.0.3:
-  version "1.0.3"
-  resolved "https://registry.yarnpkg.com/eslint-config-airlight-node/-/eslint-config-airlight-node-1.0.3.tgz#a28684578ffc2c67cf71ef872779c5353c85e6e4"
-  integrity sha512-PEu6y+jwC2naAqZRLY/7beEmn0p8oNnt1k3HvZ0gZP3xyugZTwxb4xIWXvGWni/fzxbE5+CrlI5CziXJqT/i6A==
+eslint-config-airlight-node@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/eslint-config-airlight-node/-/eslint-config-airlight-node-1.0.4.tgz#65b53d293b734bbb148592e377fb1e53bf1258dd"
+  integrity sha512-wWLn7FYINt1X8tQ8+mUleNtxa1qzYH5HH2n9KaCEhzWG1rEVLbNfcWX0RcnhvOOIn7cNXO4L7u76g4w/3wwLfA==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^4.6.1"
     eslint-config-airbnb-typescript "^12.0.0"
