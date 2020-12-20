@@ -3,5 +3,13 @@
 .gitignore
 .gitattributes
 .vscode
+
+build
+node_modules
+
 coverage
+tests/coverage
+
 cjs/
+
+CODE_OF_CONDUCT.md

@@ -18,7 +18,7 @@
   "scripts": {
     "lint:eslint": "eslint .",
     "lint:prettier": "prettier -c .",
-    "lint": "npm run lint:eslint && npm run lint:prettier",
+    "lint": "rm -rf ./tests/coverage && smartlint",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.config.json",
     "coverage": "npm run test --coverage",
     "coveralls": "npm run coverage && cat ./tests/coverage/lcov.info | coveralls",

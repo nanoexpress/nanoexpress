@@ -5,12 +5,12 @@
   </head>
   <body>
     <main>
-      <div id="login">
+      <div id="login-box">
         <label for="username">Login</label>
         <input id="username" placeholder="Login" required="" autofocus="" />
         <button id="login">Login</button>
       </div>
-      <div id="call">
+      <div id="call-box">
         <video id="local" autoplay></video>
         <video id="remote" autoplay></video>
         <div>
@@ -88,8 +88,8 @@
         if (success === false) {
           alert('😞 Username already taken');
         } else {
-          document.querySelector('div#login').style.display = 'none';
-          document.querySelector('div#call').style.display = 'block';
+          document.querySelector('div#login-box').style.display = 'none';
+          document.querySelector('div#call-box').style.display = 'block';
           let localStream;
           try {
             localStream = await navigator.mediaDevices.getUserMedia({
