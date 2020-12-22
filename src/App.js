@@ -210,8 +210,8 @@ export default class App {
   }
 }
 
-const exposeAppMethod = (method) =>
-  function exposeAppMethodHOC(path, ...fns) {
+const exposeAppMethodHOC = (method) =>
+  function exposeAppMethod(path, ...fns) {
     const { _app, _route, _anyRouteCalled } = this;
 
     if (fns.length > 0) {
@@ -238,7 +238,7 @@ const exposeAppMethod = (method) =>
 
 for (let i = 0, len = httpMethods.length; i < len; i += 1) {
   const method = httpMethods[i];
-  App.prototype[method] = exposeAppMethod(method);
+  App.prototype[method] = exposeAppMethodHOC(method);
 }
 
-App.prototype.ws = exposeAppMethod('ws');
+App.prototype.ws = exposeAppMethodHOC('ws');

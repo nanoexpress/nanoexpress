@@ -32,6 +32,8 @@ export default class Route {
 
     this._module = true;
     this._rootLevel = false;
+
+    this._console = config.console || console;
   }
 
   use(path, ...middlewares) {
@@ -101,10 +103,9 @@ export default class Route {
   }
 
   _prepareMethod(method, { originalUrl, path, ...options }, ...middlewares) {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { _config, _baseUrl, _middlewares, _module, _rootLevel, _ajv } = this;
+    const { _config, _baseUrl, _middlewares, _ajv, _console } = this;
 
-    const fetchMethod = method.toUpperCase() === 'ANY';
+    const fetchMethod = method === 'ANY';
     const isWebSocket = method === 'WS';
     const fetchUrl = path.indexOf('*') !== -1 || path.indexOf(':') !== -1;
     let validation = null;
@@ -155,6 +156,13 @@ export default class Route {
 
     // Quick dirty hack to performance improvement
     if (forceRaw) {
+      if (isWebSocket) {
+        const _errorContext = _console.error ? _console : console;
+
+        _errorContext.error(
+          'nanoexpress [Server]: Option `forceRaw` availbale only for HTTP Routes'
+        );
+      }
       return (res, req) => routeFunction(req, res);
     }
 
@@ -174,7 +182,7 @@ export default class Route {
       (!_schema || _schema.params !== false) && prepareParams(path);
 
     // Quick dirty hack to performance improvement
-    if (!isCanCompiled && middlewares.length === 0) {
+    if (!isWebSocket && !isCanCompiled && middlewares.length === 0) {
       const compile = RouteCompiler(routeFunction, preparedParams);
 
       if (compile) {
