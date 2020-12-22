@@ -16,8 +16,6 @@
     "url": "https://www.patreon.com/dalisoft"
   },
   "scripts": {
-    "lint:eslint": "eslint .",
-    "lint:prettier": "prettier -c .",
     "lint": "rm -rf ./tests/coverage && smartlint",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.config.json",
     "coverage": "npm run test --coverage",
