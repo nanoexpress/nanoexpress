@@ -13,7 +13,7 @@ env:
   CI: true
 
 jobs:
-  lint:
+  lint_test:
     runs-on: ${{ matrix.os }}
 
     strategy:
