@@ -70,7 +70,7 @@ export default function pipe(stream, size, compressed = false) {
           } else if (writeOk) {
             stream.resume();
           }
-          return ok;
+          return writeOk;
         });
       }
     });
