@@ -30,6 +30,7 @@ jobs:
       - name: Lint code
         run: yarn lint
   test:
+    needs: lint
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -51,7 +52,7 @@ jobs:
       - name: Test code
         run: yarn test
   release:
-    needs: lint
+    needs: test
     runs-on: ubuntu-18.04
 
     steps:
