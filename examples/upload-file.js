@@ -24,9 +24,7 @@ app.post('/', (req, res) => {
       .mv(
         resolve(`./examples/${file.filename || `binary-file${file.extension}`}`)
       )
-      .then(() => {
-        res.send('File Uploaded!');
-      })
+      .then(() => res.send('File Uploaded!'))
       .catch((err) => {
         res.status(500);
         return res.send(err);

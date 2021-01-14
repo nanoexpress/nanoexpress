@@ -25,7 +25,7 @@ describe('bind to specific host', () => {
           res.on('error', (e) => reject(e));
         })
         .end();
-    }).then((resp) => {
-      expect(resp.toString('ascii')).toStrictEqual('127.0.0.1');
-    }));
+    }).then((resp) =>
+      expect(resp.toString('ascii')).toStrictEqual('127.0.0.1')
+    ));
 });
