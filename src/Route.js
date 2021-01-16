@@ -368,7 +368,13 @@ export default class Route {
                 return _config._errorHandler(err, req, res);
               }
 
-              res.status(err.status || err.code || 400, true);
+              if (typeof err.status === 'number' && err.status !== 200) {
+                res.status(err.status);
+              } else if (typeof err.code === 'number' && err.code !== 200) {
+                res.status(err.code);
+              } else if (res.rawStatusCode === 200) {
+                res.status(400);
+              }
               res.writeStatus(res.statusCode);
 
               res.end(
