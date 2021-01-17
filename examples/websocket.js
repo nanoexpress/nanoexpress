@@ -17,7 +17,7 @@ app.ws('/ws', async (req, res) => {
       console.log('Message received', msg);
       ws.send(msg);
     });
-    ws.on('close', (code, message) => {
+    ws.on('close', (closedWs, code, message) => {
       // eslint-disable-next-line security-node/detect-crlf
       console.log('Connection closed', { code, message });
     });

@@ -577,7 +577,7 @@ export default class Route {
           ws.emit('drain', ws.getBufferedAmount());
         },
         close: (ws, code, message) => {
-          ws.emit('close', code, Buffer.from(message).toString('utf8'));
+          ws.emit('close', ws, code, Buffer.from(message).toString('utf8'));
         }
       };
     }

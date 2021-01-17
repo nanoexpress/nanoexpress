@@ -49,7 +49,7 @@ declare namespace nanoexpress {
       listener: (req: HttpRequest, res: HttpResponse) => void
     ): void;
     on(event: 'drain', listener: (drain_amount: number) => void): void;
-    on(event: 'close', listener: (code: number, message: string) => void): void;
+    on(event: 'close', listener: (ws: WebSocket, code: number, message: string) => void): void;
     on(
       event: 'message',
       listener: (message: string | any, isBinary?: boolean) => void
