@@ -359,10 +359,7 @@ export default class Route {
             const handleError = (err) => {
               isAborted = true;
 
-              res.writeHeader(
-                'Content-Type',
-                'application/json; charset=utf-8'
-              );
+              res.setHeader('Content-Type', 'application/json');
 
               if (_config._errorHandler) {
                 return _config._errorHandler(err, req, res);
@@ -375,7 +372,6 @@ export default class Route {
               } else if (res.rawStatusCode === 200) {
                 res.status(400);
               }
-              res.writeStatus(res.statusCode);
 
               res.end(
                 `{"error":"${typeof err === 'string' ? err : err.message}"}`
