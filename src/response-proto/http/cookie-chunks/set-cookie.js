@@ -8,7 +8,7 @@ export default function setCookie(name, value, options) {
 
   let getCookie = this.getHeader('Set-Cookie');
 
-  if (!setCookie) {
+  if (!getCookie) {
     this.setHeader('Set-Cookie', serialized);
     return undefined;
   }
