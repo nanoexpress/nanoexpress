@@ -121,7 +121,7 @@ declare namespace nanoexpress {
     on(event: 'connection', ws: WebSocket): void;
   }
 
-  type HttpRoute = (req: HttpRequest, res: HttpResponse) => nanoexpressApp;
+  type HttpRoute = (req: HttpRequest, res: HttpResponse) => any | Promise<any>;
 
   type MiddlewareRoute = (
     req: HttpRequest,
