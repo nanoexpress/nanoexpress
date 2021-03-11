@@ -1,8 +1,7 @@
 import uWS from 'uWebSockets.js';
-
-import Route from './Route.js';
 import App from './App.js';
 import Config from './Config.js';
+import Route from './Route.js';
 
 const nanoexpress = (options = {}) => {
   let app;
