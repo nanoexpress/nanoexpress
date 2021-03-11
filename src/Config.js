@@ -19,8 +19,10 @@ export default class Config {
     this.host = null;
     this.port = null;
 
-    // eslint-disable-next-line new-cap
-    this.ajv = new Ajv.default(options.ajv);
+    this.ajv = Ajv.default
+      ? // eslint-disable-next-line new-cap
+        new Ajv.default(options.ajv)
+      : new Ajv(options.ajv);
 
     this.configureAjv = options.configureAjv;
 
