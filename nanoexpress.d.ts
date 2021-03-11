@@ -13,7 +13,7 @@ import {
 declare namespace nanoexpress {
   // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
   interface IRecord {
-    [key: string]: string | IRecord;
+    [key: string]: string | string[] | IRecord;
   }
   export type RecordString = IRecord;
   export type SwaggerOptions = IRecord;
