@@ -1,24 +1,35 @@
 import nanoexpress from '../src/nanoexpress.js';
 
-const app = nanoexpress();
+const app = nanoexpress({ swagger: {} });
 
 app.get(
   '/',
   {
     schema: {
       headers: false,
-      query: false,
+      query: {
+        type: 'object',
+        properties: {
+          url: {
+            type: 'string'
+          }
+        },
+        required: ['url']
+      },
       cookies: false,
       params: false,
       response: {
         type: 'object',
         properties: {
-          hello: { type: 'string' }
+          hello: { type: 'string' },
+          url: {
+            type: 'string'
+          }
         }
       }
     }
   },
-  async () => ({ hello: 'world' })
+  async (req) => ({ hello: 'world', url: req.query.url })
 );
 
 app.listen(4000);
