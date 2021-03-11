@@ -1,5 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { Ajv, Options as AjvOptions } from 'ajv';
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable max-lines, @typescript-eslint/no-explicit-any */
+import Ajv, { Options as AjvOptions } from 'ajv';
 import { Readable, Writable } from 'stream';
 import {
   AppOptions as AppOptionsBasic,
@@ -10,43 +11,36 @@ import {
 } from 'uWebSockets.js';
 
 declare namespace nanoexpress {
-  export interface SwaggerOptions {
-    [key: string]: SwaggerOptions | string;
+  // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
+  interface IRecord {
+    [key: string]: string | IRecord;
   }
-  export interface AppOptions extends AppOptionsBasic {
+  export type RecordString = IRecord;
+  export type SwaggerOptions = IRecord;
+  export interface IAppOptions extends AppOptionsBasic {
     https?: {
       key_file_name: string;
       cert_file_name: string;
       passphare: string;
     };
-    isSSL?: boolean;
+    is_ssl?: boolean;
     ajv?: AjvOptions;
     configureAjv(ajv: Ajv): Ajv;
     swagger?: SwaggerOptions;
   }
 
-  export interface HttpRequestHeaders {
-    [key: string]: string;
-  }
-  export interface HttpRequestQueries {
-    [key: string]: string;
-  }
-  export interface HttpRequestParams {
-    [key: string]: string;
-  }
-  export interface HttpRequestBody {
-    [key: string]: string | any[];
-  }
-  export interface HttpRequestCookies {
-    [key: string]: string;
-  }
+  export type HttpRequestHeaders = Record<string, string>;
+  export type HttpRequestQueries = Record<string, string>;
+  export type HttpRequestParams = Record<string, string>;
+  export type HttpRequestBody = Record<string, string | any>;
+  export type HttpRequestCookies = Record<string, string>;
 
-  export interface WebSocket extends WebSocketBasic {
+  export interface IWebSocket extends WebSocketBasic {
     emit(name: string, ...args: any[]): void;
 
     on(
       event: 'upgrade',
-      listener: (req: HttpRequest, res: HttpResponse) => void
+      listener: (req: IHttpRequest, res: IHttpResponse) => void
     ): void;
     on(event: 'drain', listener: (drain_amount: number) => void): void;
     on(event: 'close', listener: (code: number, message: string) => void): void;
@@ -59,7 +53,7 @@ declare namespace nanoexpress {
     once(event: string, listener: (...args: any[]) => void): void;
     off(event: string, listener?: (...args: any[]) => void): void;
   }
-  export interface HttpRequest extends HttpRequestBasic {
+  export interface IHttpRequest extends HttpRequestBasic {
     method: string;
     path: string;
     baseUrl: string;
@@ -70,12 +64,13 @@ declare namespace nanoexpress {
     query?: HttpRequestQueries;
     params?: HttpRequestParams;
     body?: string | HttpRequestBody;
-    pipe(callback: (pipe: Writable) => void): HttpRequest;
+    pipe(callback: (pipe: Writable) => void): IHttpRequest;
     onAborted(onAborted: () => void): void;
-    __response?: HttpResponse;
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __response?: IHttpResponse;
   }
 
-  export interface CookieOptions {
+  export interface ICookieOptions {
     httpOnly?: boolean;
     secure?: boolean;
     maxAge?: number;
@@ -84,52 +79,56 @@ declare namespace nanoexpress {
     signed?: boolean;
     expires?: number | string;
   }
-  export interface HttpResponse extends HttpResponseBasic {
-    type(type: string): HttpResponse;
-    status(code: number): HttpResponse;
-    setHeader(key: string, value: string | number): HttpResponse;
-    header(key: string, value: string | number): HttpResponse;
-    hasHeader(key: string): HttpResponse;
-    removeHeader(key: string): HttpResponse;
-    applyHeadersAndStatus(): HttpResponse;
-    setHeaders(headers: HttpRequestHeaders): HttpResponse;
-    writeHeaderValues(name: string, value: string[]): HttpResponse;
-    writeHeaders(headers: HttpRequestHeaders): HttpResponse;
-    writeHead(code: number, headers: HttpRequestHeaders): HttpResponse;
-    redirect(code: number | string, path?: string): HttpResponse;
-    send(result: string | { [key: string]: any } | any[]): HttpResponse;
-    json(result: { [key: string]: any } | any[]): HttpResponse;
+  export interface IHttpResponse extends HttpResponseBasic {
+    type(type: string): IHttpResponse;
+    status(code: number): IHttpResponse;
+    setHeader(key: string, value: string | number): IHttpResponse;
+    header(key: string, value: string | number): IHttpResponse;
+    hasHeader(key: string): IHttpResponse;
+    removeHeader(key: string): IHttpResponse;
+    applyHeadersAndStatus(): IHttpResponse;
+    setHeaders(headers: HttpRequestHeaders): IHttpResponse;
+    writeHeaderValues(name: string, value: string[]): IHttpResponse;
+    writeHeaders(headers: HttpRequestHeaders): IHttpResponse;
+    writeHead(code: number, headers: HttpRequestHeaders): IHttpResponse;
+    redirect(code: number | string, path?: string): IHttpResponse;
+    send(result: string | Record<string, any> | any[]): IHttpResponse;
+    json(result: Record<string, any> | any[]): IHttpResponse;
     pipe(
       callback: (pipe: Readable) => void,
       size?: number,
       compressed?: boolean
-    ): HttpResponse;
+    ): IHttpResponse;
     sendFile(
       filename: string,
       lastModified?: boolean,
       compressed?: boolean
-    ): Promise<HttpResponse>;
+    ): Promise<IHttpResponse>;
     setCookie(
       key: string,
       value: string,
-      options?: CookieOptions
-    ): HttpResponse;
-    cookie(key: string, value: string, options?: CookieOptions): HttpResponse;
-    hasCookie(key: string): HttpResponse;
-    removeCookie(key: string, options?: CookieOptions): HttpResponse;
-    __request?: HttpRequest;
+      options?: ICookieOptions
+    ): IHttpResponse;
+    cookie(key: string, value: string, options?: ICookieOptions): IHttpResponse;
+    hasCookie(key: string): IHttpResponse;
+    removeCookie(key: string, options?: ICookieOptions): IHttpResponse;
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __request?: IHttpResponse;
     on(event: 'connection', ws: WebSocket): void;
   }
 
-  type HttpRoute = (req: HttpRequest, res: HttpResponse) => any | Promise<any>;
+  type HttpRoute = (
+    req: IHttpRequest,
+    res: IHttpResponse
+  ) => any | Promise<any>;
 
   type MiddlewareRoute = (
-    req: HttpRequest,
-    res: HttpResponse,
+    req: IHttpRequest,
+    res: IHttpResponse,
     next?: (err: Error | null | undefined, done: boolean | undefined) => any
-  ) => nanoexpressApp;
+  ) => INanoexpressApp;
 
-  export interface AppRoute {
+  export interface IAppRoute {
     get: HttpRoute;
     post: HttpRoute;
     put: HttpRoute;
@@ -142,25 +141,23 @@ declare namespace nanoexpress {
     ws: HttpRoute;
   }
 
-  interface SchemaValue {
-    [key: string]: string | SchemaValue;
+  type SchemaValue = IRecord;
+  interface ISchema {
+    headers?: false | SchemaValue;
+    cookies?: false | SchemaValue;
+    query?: false | SchemaValue;
+    params?: false | SchemaValue;
+    body?: false | SchemaValue;
+    response?: false | SchemaValue;
   }
-  interface Schema {
-    headers: boolean | SchemaValue;
-    cookies: boolean | SchemaValue;
-    query: boolean | SchemaValue;
-    params: boolean | SchemaValue;
-    body: string | boolean | SchemaValue;
-    response: boolean | SchemaValue;
-  }
-  export interface WebSocketOptions {
+  export interface IWebSocketOptions {
     compression?: number;
     maxPayloadLength?: number;
     idleTimeout?: number;
-    schema?: Schema;
+    schema?: ISchema;
   }
-  interface RouteOption {
-    schema?: Schema;
+  interface IRouteOption {
+    schema?: ISchema;
     isRaw?: boolean;
     isStrictRaw?: boolean;
     forceRaw?: boolean;
@@ -168,19 +165,17 @@ declare namespace nanoexpress {
     onAborted?: () => any;
   }
 
-  export interface PerRoute {
-    callback(req: HttpRequest, res: HttpResponse): any;
+  export interface IPerRoute {
+    callback(req: IHttpRequest, res: IHttpResponse): any;
     middlewares?: HttpRoute[];
-    schema?: Schema;
+    schema?: ISchema;
   }
 
-  export interface AppConfig {
-    config: {
-      [key: string]: any;
-    };
+  export interface IAppConfig {
+    config: Record<string, any>;
   }
 
-  export interface StaticOptions {
+  export interface IStaticOptions {
     index?: string;
     addPrettyUrl?: boolean;
     forcePretty?: boolean;
@@ -188,25 +183,25 @@ declare namespace nanoexpress {
     compressed?: boolean;
   }
 
-  interface validationErrorItems {
+  interface IValidationErrorItems {
     type: string;
     messages: string[];
   }
-  export interface validationErrors {
+  export interface IValidationErrors {
     type: string;
-    errors: validationErrorItems;
+    errors: IValidationErrorItems;
   }
 
-  interface nanoexpressAppInterface {
+  interface INanoexpressAppInterface {
     host: string | null;
     port: number | null;
     address: string;
 
-    define(callback: (app: nanoexpressApp) => void): nanoexpressApp;
-    use(middleware: MiddlewareRoute): nanoexpressApp;
-    use(path: string, middleware: MiddlewareRoute): nanoexpressApp;
-    use(path: string, ...middlewares: MiddlewareRoute[]): nanoexpressApp;
-    use(...middlewares: MiddlewareRoute[]): nanoexpressApp;
+    define(callback: (app: INanoexpressApp) => void): INanoexpressApp;
+    use(middleware: MiddlewareRoute): INanoexpressApp;
+    use(path: string, middleware: MiddlewareRoute): INanoexpressApp;
+    use(path: string, ...middlewares: MiddlewareRoute[]): INanoexpressApp;
+    use(...middlewares: MiddlewareRoute[]): INanoexpressApp;
 
     use(middleware: PromiseLike<MiddlewareRoute>): PromiseLike<any>;
     use(
@@ -219,173 +214,173 @@ declare namespace nanoexpress {
     ): PromiseLike<any>;
     use(...middlewares: PromiseLike<MiddlewareRoute>[]): PromiseLike<any>;
 
-    get(path: string, callback: HttpRoute): nanoexpressApp;
+    get(path: string, callback: HttpRoute): INanoexpressApp;
     get(
       path: string,
-      options: RouteOption,
+      options: IRouteOption,
       callback: HttpRoute
-    ): nanoexpressApp;
-    get(path: string, ...middlewares: MiddlewareRoute[]): nanoexpressApp;
+    ): INanoexpressApp;
+    get(path: string, ...middlewares: MiddlewareRoute[]): INanoexpressApp;
     get(
       path: string,
-      options: RouteOption,
+      options: IRouteOption,
       ...middlewares: MiddlewareRoute[]
-    ): nanoexpressApp;
+    ): INanoexpressApp;
 
-    post(path: string, callback: HttpRoute): nanoexpressApp;
+    post(path: string, callback: HttpRoute): INanoexpressApp;
     post(
       path: string,
-      options: RouteOption,
+      options: IRouteOption,
       callback: HttpRoute
-    ): nanoexpressApp;
-    post(path: string, ...middlewares: MiddlewareRoute[]): nanoexpressApp;
+    ): INanoexpressApp;
+    post(path: string, ...middlewares: MiddlewareRoute[]): INanoexpressApp;
     post(
       path: string,
-      options: RouteOption,
+      options: IRouteOption,
       ...middlewares: MiddlewareRoute[]
-    ): nanoexpressApp;
+    ): INanoexpressApp;
 
-    put(path: string, callback: HttpRoute): nanoexpressApp;
+    put(path: string, callback: HttpRoute): INanoexpressApp;
     put(
       path: string,
-      options: RouteOption,
+      options: IRouteOption,
       callback: HttpRoute
-    ): nanoexpressApp;
-    put(path: string, ...middlewares: MiddlewareRoute[]): nanoexpressApp;
+    ): INanoexpressApp;
+    put(path: string, ...middlewares: MiddlewareRoute[]): INanoexpressApp;
     put(
       path: string,
-      options: RouteOption,
+      options: IRouteOption,
       ...middlewares: MiddlewareRoute[]
-    ): nanoexpressApp;
+    ): INanoexpressApp;
 
-    patch(path: string, callback: HttpRoute): nanoexpressApp;
+    patch(path: string, callback: HttpRoute): INanoexpressApp;
     patch(
       path: string,
-      options: RouteOption,
+      options: IRouteOption,
       callback: HttpRoute
-    ): nanoexpressApp;
-    patch(path: string, ...middlewares: MiddlewareRoute[]): nanoexpressApp;
+    ): INanoexpressApp;
+    patch(path: string, ...middlewares: MiddlewareRoute[]): INanoexpressApp;
     patch(
       path: string,
-      options: RouteOption,
+      options: IRouteOption,
       ...middlewares: MiddlewareRoute[]
-    ): nanoexpressApp;
+    ): INanoexpressApp;
 
-    del(path: string, callback: HttpRoute): nanoexpressApp;
+    del(path: string, callback: HttpRoute): INanoexpressApp;
     del(
       path: string,
-      options: RouteOption,
+      options: IRouteOption,
       callback: HttpRoute
-    ): nanoexpressApp;
-    del(path: string, ...middlewares: MiddlewareRoute[]): nanoexpressApp;
+    ): INanoexpressApp;
+    del(path: string, ...middlewares: MiddlewareRoute[]): INanoexpressApp;
     del(
       path: string,
-      options: RouteOption,
+      options: IRouteOption,
       ...middlewares: MiddlewareRoute[]
-    ): nanoexpressApp;
+    ): INanoexpressApp;
 
-    options(path: string, callback: HttpRoute): nanoexpressApp;
+    options(path: string, callback: HttpRoute): INanoexpressApp;
     options(
       path: string,
-      options: RouteOption,
+      options: IRouteOption,
       callback: HttpRoute
-    ): nanoexpressApp;
-    options(path: string, ...middlewares: MiddlewareRoute[]): nanoexpressApp;
+    ): INanoexpressApp;
+    options(path: string, ...middlewares: MiddlewareRoute[]): INanoexpressApp;
     options(
       path: string,
-      options: RouteOption,
+      options: IRouteOption,
       ...middlewares: MiddlewareRoute[]
-    ): nanoexpressApp;
+    ): INanoexpressApp;
 
-    any(path: string, callback: HttpRoute): nanoexpressApp;
+    any(path: string, callback: HttpRoute): INanoexpressApp;
     any(
       path: string,
-      options: RouteOption,
+      options: IRouteOption,
       callback: HttpRoute
-    ): nanoexpressApp;
-    any(path: string, ...middlewares: MiddlewareRoute[]): nanoexpressApp;
+    ): INanoexpressApp;
+    any(path: string, ...middlewares: MiddlewareRoute[]): INanoexpressApp;
     any(
       path: string,
-      options: RouteOption,
+      options: IRouteOption,
       ...middlewares: MiddlewareRoute[]
-    ): nanoexpressApp;
+    ): INanoexpressApp;
 
-    head(path: string, callback: HttpRoute): nanoexpressApp;
+    head(path: string, callback: HttpRoute): INanoexpressApp;
     head(
       path: string,
-      options: RouteOption,
+      options: IRouteOption,
       callback: HttpRoute
-    ): nanoexpressApp;
-    head(path: string, ...middlewares: MiddlewareRoute[]): nanoexpressApp;
+    ): INanoexpressApp;
+    head(path: string, ...middlewares: MiddlewareRoute[]): INanoexpressApp;
     head(
       path: string,
-      options: RouteOption,
+      options: IRouteOption,
       ...middlewares: MiddlewareRoute[]
-    ): nanoexpressApp;
+    ): INanoexpressApp;
 
-    trace(path: string, callback: HttpRoute): nanoexpressApp;
+    trace(path: string, callback: HttpRoute): INanoexpressApp;
     trace(
       path: string,
-      options: RouteOption,
+      options: IRouteOption,
       callback: HttpRoute
-    ): nanoexpressApp;
-    trace(path: string, ...middlewares: MiddlewareRoute[]): nanoexpressApp;
+    ): INanoexpressApp;
+    trace(path: string, ...middlewares: MiddlewareRoute[]): INanoexpressApp;
     trace(
       path: string,
-      options: RouteOption,
+      options: IRouteOption,
       ...middlewares: MiddlewareRoute[]
-    ): nanoexpressApp;
+    ): INanoexpressApp;
 
-    ws(path: string, ...middlewares: MiddlewareRoute[]): nanoexpressApp;
+    ws(path: string, ...middlewares: MiddlewareRoute[]): INanoexpressApp;
     ws(
       path: string,
-      options: WebSocketOptions,
+      options: IWebSocketOptions,
       ...middlewares: MiddlewareRoute[]
-    ): nanoexpressApp;
+    ): INanoexpressApp;
 
-    webRTCServer(): nanoexpressApp;
-    webRTCServer(path: string): nanoexpressApp;
-    webRTCServer(path: string, options: WebSocketOptions): nanoexpressApp;
+    webRtcServer(): INanoexpressApp;
+    webRtcServer(path: string): INanoexpressApp;
+    webRtcServer(path: string, options: IWebSocketOptions): INanoexpressApp;
 
     publish(
       topic: string,
       message: string,
       isBinary?: boolean,
       compress?: boolean
-    ): nanoexpressApp;
+    ): INanoexpressApp;
 
-    listen(port: number, host?: string): Promise<nanoexpressApp>;
+    listen(port: number, host?: string): Promise<INanoexpressApp>;
     close(): boolean;
     setErrorHandler(
       errorHandlerCallback: (
         err: Error,
-        req: HttpRequest,
-        res: HttpResponse
-      ) => HttpResponse
-    ): nanoexpressApp;
+        req: IHttpRequest,
+        res: IHttpResponse
+      ) => IHttpResponse
+    ): INanoexpressApp;
     setNotFoundHandler(
       notFoundHandlerCallback: (
-        req: HttpRequest,
-        res: HttpResponse
-      ) => HttpResponse
-    ): nanoexpressApp;
+        req: IHttpRequest,
+        res: IHttpResponse
+      ) => IHttpResponse
+    ): INanoexpressApp;
     setValidationErrorHandler(
       validationErrorHandlerCallback: (
-        errors: validationErrors,
-        req: HttpRequest,
-        res: HttpResponse
+        errors: IValidationErrors,
+        req: IHttpRequest,
+        res: IHttpResponse
       ) => any
-    ): nanoexpressApp;
-    config: AppConfig;
+    ): INanoexpressApp;
+    config: IAppConfig;
   }
 
-  export interface nanoexpressApp
-    extends Omit<AppTemplatedApp, keyof nanoexpressAppInterface>,
-      nanoexpressAppInterface {}
+  export interface INanoexpressApp
+    extends Omit<AppTemplatedApp, keyof INanoexpressAppInterface>,
+      INanoexpressAppInterface {}
 }
 
 declare function nanoexpress(
-  options?: nanoexpress.AppOptions
-): nanoexpress.nanoexpressApp;
+  options?: nanoexpress.IAppOptions
+): nanoexpress.INanoexpressApp;
 
 export = nanoexpress;

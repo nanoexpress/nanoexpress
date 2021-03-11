@@ -1,3 +1,4 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable no-console, security-node/detect-crlf */
 import nanoexpress from '../src/nanoexpress.js';
 

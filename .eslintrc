@@ -5,13 +5,21 @@
     "extraFileExtensions": [".cjs"]
   },
   "rules": {
-    "@typescript-eslint/no-var-requires": "off",
-    "@typescript-eslint/naming-convention": "off",
-    "eslint-comments/disable-enable-pair": "off",
-    "guard-for-in": "off",
-    "no-restricted-syntax": "off",
-    "no-continue": "off",
-    "no-param-reassign": "off",
-    "consistent-return": "off"
+    "@typescript-eslint/indent": "off",
+    "indent": "off",
+    "@typescript-eslint/no-redeclare": "off", // TODO: Do it later
+    "@typescript-eslint/naming-convention": "off", // TODO: Do it later
+    "@typescript-eslint/restrict-plus-operands": "off", // TODO: Do it later
+    "no-param-reassign": "off", // TODO: Do it later
+    "complexity": "off", // TODO: Do it later
+    "max-lines-per-function": "off", // TODO: Do it later
+    "max-lines": "off", // TODO: Do it later
+    "max-depth": "off", // TODO: Do it later
+    "no-continue": "off", // TODO: Do it later
+    "guard-for-in": "off", // TODO: Do it later
+    "no-restricted-syntax": "off", // TODO: Do it later
+    "filename-rules/match": "off", // TODO: Do it later
+    "max-nested-callbacks": "off", // TODO: Do it later
+    "consistent-return": "off" // TODO: Do it later
   }
 }

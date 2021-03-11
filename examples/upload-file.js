@@ -1,3 +1,4 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable no-console */
 import { resolve } from 'path';
 import nanoexpress from '../src/nanoexpress.js';

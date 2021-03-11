@@ -1,3 +1,4 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable import/no-unresolved, node/no-missing-import */
 
 import expressJwt from 'express-jwt';

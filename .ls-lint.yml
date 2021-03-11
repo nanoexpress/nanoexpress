@@ -1,0 +1,15 @@
+ls:
+  src:
+    .dir: kebab-case
+    .ts: kebab-case
+    .tsx: kebab-case
+    .js: kebab-case | PascalCase # TODO: Fix later
+    .d.ts: kebab-case
+    .html: kebab-case
+    .scss: kebab-case
+    .spec.ts: kebab-case | pointcase
+    .test.js: kebab-case | pointcase # TODO: Fix later
+
+ignore:
+  - .git
+  - node_modules
