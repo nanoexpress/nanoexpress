@@ -51,8 +51,8 @@
     "busboy": "^0.3.1",
     "cookie": "^0.4.1",
     "fast-json-stringify": "^2.5.1",
-    "turbo-json-parse": "github:dalisoft/turbo-json-parse",
-    "uWebSockets.js": "uNetworking/uWebSockets.js#v18.14.0"
+    "turbo-json-parse": "https://github.com/dalisoft/turbo-json-parse/archive/refs/tags/v2.3.0.tar.gz",
+    "uWebSockets.js": "https://github.com/uNetworking/uWebSockets.js/archive/v18.14.0.tar.gz"
   },
   "devDependencies": {
     "@commitlint/cli": "^12.0.1",
