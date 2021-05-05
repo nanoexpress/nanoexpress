@@ -7,8 +7,8 @@
   "exports": {
     ".": "./cjs/nanoexpress.js",
     "./module": "./src/nanoexpress.js",
-    "./cjs/": "./cjs/",
-    "./src/": "./src/"
+    "./cjs/*": "./cjs/*",
+    "./src/*": "./src/*"
   },
   "typings": "nanoexpress.d.ts",
   "funding": {
