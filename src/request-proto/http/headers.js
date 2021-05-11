@@ -1,26 +1,10 @@
-export default (req, schema) => {
+export default (req) => {
   let headers;
-  if (schema) {
-    const { properties } = schema;
-    for (const property in properties) {
-      if (!headers) {
-        headers = {};
-      }
-      headers[property] = req.getHeader(property);
+  req.forEach((key, value) => {
+    if (!headers) {
+      headers = {};
     }
-
-    // This shit makes all plugins go wrong
-    headers.origin = req.getHeader('origin');
-
-    return headers;
-  }
-  if (schema !== false) {
-    req.forEach((key, value) => {
-      if (!headers) {
-        headers = {};
-      }
-      headers[key] = value;
-    });
-  }
+    headers[key] = value;
+  });
   return headers;
 };

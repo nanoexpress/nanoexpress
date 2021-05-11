@@ -1,6 +1,6 @@
 import cookieCtx from 'cookie';
 
-export default (req, schema) => {
+export default (req) => {
   let cookies;
   const { headers } = req;
   const headerCookie =
@@ -9,15 +9,8 @@ export default (req, schema) => {
   if (headerCookie) {
     if (cookies) {
       const parsedCookie = cookieCtx.parse(headerCookie);
-      if (schema) {
-        const { properties } = schema;
-        for (const cookie in properties) {
-          cookies[cookie] = parsedCookie[cookie];
-        }
-      } else {
-        for (const cookie in parsedCookie) {
-          cookies[cookie] = parsedCookie[cookie];
-        }
+      for (const cookie in parsedCookie) {
+        cookies[cookie] = parsedCookie[cookie];
       }
     } else if (!cookies) {
       cookies = cookieCtx.parse(headerCookie);
