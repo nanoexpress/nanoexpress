@@ -1,13 +1,6 @@
 import Events from '@dalisoft/events';
-import turboJsonParse from 'turbo-json-parse';
 import { Route as RouteCompiler } from './compilers/index.js';
-import {
-  httpMethods,
-  prepareParams,
-  prepareSwaggerDocs,
-  prepareValidation,
-  processValidation
-} from './helpers/index.js';
+import { httpMethods, prepareParams } from './helpers/index.js';
 import {
   body,
   cookies,
@@ -25,7 +18,6 @@ const __wsProto__ = Events.prototype;
 export default class Route {
   constructor(config = {}) {
     this._config = config;
-    this._ajv = config.ajv;
     this._middlewares = null;
 
     this._baseUrl = '';
@@ -57,7 +49,6 @@ export default class Route {
         continue;
       }
       if (middleware._module) {
-        middleware._ajv = this._ajv;
         middleware._config = this._config;
         middleware._app = this._app;
 
@@ -103,19 +94,17 @@ export default class Route {
   }
 
   _prepareMethod(method, { originalUrl, path, ...options }, ...middlewares) {
-    const { _config, _baseUrl, _middlewares, _ajv, _console } = this;
+    const { _config, _baseUrl, _middlewares, _console } = this;
 
     const fetchMethod = method === 'ANY';
     const isWebSocket = method === 'WS';
     const fetchUrl = path.indexOf('*') !== -1 || path.indexOf(':') !== -1;
-    let validation = null;
+    const validation = null;
     let _direct = false;
-    let _schema = null;
     let isAborted = false;
     let isNotFoundHandler = false;
     const bodyAllowedMethod =
       method === 'POST' || method === 'PUT' || method === 'PATCH';
-    let responseSchema;
 
     const findConfig = middlewares.find(
       (middleware) =>
@@ -125,20 +114,17 @@ export default class Route {
           middleware.isStrictRaw !== undefined ||
           middleware.forceRaw !== undefined ||
           middleware.noMiddleware !== undefined ||
-          middleware.onAborted ||
-          middleware.schema)
+          middleware.onAborted)
     );
     const isRaw = findConfig && findConfig.isRaw;
     const isStrictRaw = findConfig && findConfig.isStrictRaw;
     const forceRaw = findConfig && findConfig.forceRaw;
     const noMiddleware = findConfig && findConfig.noMiddleware;
     const onAborted = findConfig && findConfig.onAborted;
-    let schema = findConfig && findConfig.schema && findConfig;
 
     let isCanCompiled = false;
     let compilePath;
     let compileMethod;
-    let experimentalBodyParser;
 
     middlewares = middlewares
       .filter((middleware) => typeof middleware === 'function')
@@ -178,8 +164,7 @@ export default class Route {
     });
 
     // Prepare params
-    const preparedParams =
-      (!_schema || _schema.params !== false) && prepareParams(path);
+    const preparedParams = prepareParams(path);
 
     // Quick dirty hack to performance improvement
     if (!isWebSocket && !isCanCompiled && middlewares.length === 0) {
@@ -196,9 +181,6 @@ export default class Route {
     if (typeof path === 'function' && !routeFunction) {
       _direct = true;
       routeFunction = path;
-    } else if (typeof schema === 'function' && !routeFunction) {
-      routeFunction = schema;
-      schema = null;
     }
 
     if (!fetchUrl && path.length > 1 && path.charAt(path.length - 1) === '/') {
@@ -207,20 +189,6 @@ export default class Route {
 
     const isShouldReduceTaks = isCanCompiled || isStrictRaw;
     if (!isShouldReduceTaks && !isRaw) {
-      _schema = (schema && schema.schema) || undefined;
-      experimentalBodyParser =
-        _schema &&
-        _schema.body &&
-        turboJsonParse(_schema.body, {
-          defaults: false,
-          validate: false,
-          fullMatch: true,
-          buffer: false
-        });
-      validation = _schema && prepareValidation(_ajv, _schema);
-      // eslint-disable-next-line prefer-const
-      responseSchema = _schema && validation && validation.responseSchema;
-
       isNotFoundHandler = routeFunction.handler === 2;
       if (
         method !== 'options' &&
@@ -273,15 +241,6 @@ export default class Route {
           return middleware;
         })
         .filter((middleware) => typeof middleware === 'function');
-    }
-
-    if (_config && _config.swagger && schema) {
-      prepareSwaggerDocs(
-        _config.swagger,
-        originalUrl,
-        method.toLowerCase(),
-        schema
-      );
     }
 
     if (originalUrl.length > 1 && originalUrl.endsWith('/')) {
@@ -412,41 +371,24 @@ export default class Route {
             // Default HTTP Raw Status Code Integer
             res.rawStatusCode = 200;
 
-            // Assign schemas
-            if (responseSchema) {
-              res.fastJson = responseSchema;
-            }
-            if (experimentalBodyParser) {
-              req.fastBodyParse = experimentalBodyParser;
-            }
+            req.headers = headers(req);
+            req.cookies = cookies(req);
 
-            if (!isRaw && _schema !== false) {
-              if (!_schema || _schema.headers !== false) {
-                req.headers = headers(req, _schema && _schema.headers);
-              }
-              if (!_schema || _schema.cookies !== false) {
-                req.cookies = cookies(req, _schema && _schema.cookies);
-              }
-              if (!_schema || _schema.params !== false) {
-                if (req.path !== path) {
-                  path = req.path;
-                }
-                req.params = params(req, preparedParams);
-              }
-              if (!_schema || _schema.query !== false) {
-                req.query = queries(req, _schema && _schema.query);
-              }
-              if (!isRaw && bodyAllowedMethod && res.onData) {
-                stream(req, res);
-                req.pipe = pipe;
-              }
-              if (req.stream && (!_schema || _schema.body !== false)) {
-                await body(req);
-              }
+            if (req.path !== path) {
+              path = req.path;
+            }
+            req.params = params(req, preparedParams);
+            req.query = queries(req);
+
+            if (bodyAllowedMethod && res.onData) {
+              stream(req, res);
+              req.pipe = pipe;
+            }
+            if (req.stream) {
+              await body(req);
             }
 
             if (
-              !isRaw &&
               !isAborted &&
               !isNotFoundHandler &&
               middlewares &&
@@ -483,16 +425,6 @@ export default class Route {
                   res._headers)
               ) {
                 res.modifyEnd();
-              }
-
-              if (
-                isAborted ||
-                (!isRaw &&
-                  validation &&
-                  validation.validationStringify &&
-                  processValidation(req, res, _config, validation))
-              ) {
-                return;
               }
 
               if (routeFunction.isAsync) {

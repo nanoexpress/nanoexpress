@@ -4,7 +4,7 @@ import { HttpResponse } from '../../src/response-proto/index.js';
 // Init Fake HttpResponse
 class Response {
   constructor() {
-    this.buffer = '';
+    this.body = Buffer.alloc(0);
     this.headers = {};
   }
 
@@ -19,7 +19,7 @@ class Response {
   }
 
   end(result) {
-    this.buffer = result;
+    this.body = result;
   }
 
   writeHeader(key, value) {
@@ -48,23 +48,23 @@ describe('http response send', () => {
 
   it('res.send', () => {
     fakeRes.send('res.send works');
-    expect(fakeRes.buffer).toBe('res.send works');
+    expect(fakeRes.body).toBe('res.send works');
   });
   it('res.json', () => {
     fakeRes.json({ status: 'ok' });
-    expect(fakeRes.buffer).toBe('{"status":"ok"}');
+    expect(fakeRes.body).toBe('{"status":"ok"}');
   });
   it('res.xml', () => {
     fakeRes.send('<xml />');
-    expect(fakeRes.buffer).toBe('<xml />');
+    expect(fakeRes.body).toBe('<xml />');
   });
   it('res.html', () => {
     fakeRes.send('<!DOCTYPE />');
-    expect(fakeRes.buffer).toBe('<!DOCTYPE />');
+    expect(fakeRes.body).toBe('<!DOCTYPE />');
   });
   it('res.plain', () => {
     fakeRes.send('Text works');
-    expect(fakeRes.buffer).toBe('Text works');
+    expect(fakeRes.body).toBe('Text works');
   });
 });
 

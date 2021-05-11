@@ -8,19 +8,6 @@ app.use(async (req) => {
 
 app.get('/', (req, res) => res.end('ok'));
 
-app.post(
-  '/',
-  {
-    schema: {
-      body: {
-        type: 'object',
-        properties: {
-          foo: { type: 'string' }
-        }
-      }
-    }
-  },
-  (req, res) => res.send({ status: 'ok', body: req.body })
-);
+app.post('/', (req, res) => res.send({ status: 'ok', body: req.body }));
 
 app.listen(4002);

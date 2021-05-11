@@ -99,11 +99,11 @@ describe('body normalize', () => {
       onAborted() {}
     };
 
-    stream.push(Buffer.concat([Buffer.from('fake body')]));
+    stream.push(Buffer.from('fake body'));
     setTimeout(() => stream.push(null), 50);
 
     await body(fakeReq, fakeRes);
-    expect(fakeReq.body).toStrictEqual('fake body');
+    expect(fakeReq.body).toStrictEqual(Buffer.from('fake body'));
   });
   it('body normalize empty', async () => {
     const fakeReq = {};
