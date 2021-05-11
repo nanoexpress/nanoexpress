@@ -156,11 +156,11 @@ const prepareProxy = (
 
 export default (app) => {
   app.proxy = (path, config, wsInstance) => {
-    const { ws, http: httpHandler, method } = prepareProxy(
-      path,
-      config,
-      wsInstance
-    );
+    const {
+      ws,
+      http: httpHandler,
+      method
+    } = prepareProxy(path, config, wsInstance);
 
     if (httpHandler) {
       app._app[method](path, httpHandler);

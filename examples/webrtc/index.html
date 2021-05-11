@@ -120,8 +120,9 @@
         }
       };
       document.querySelector('button#call').addEventListener('click', () => {
-        const callToUsername = document.querySelector('input#username-to-call')
-          .value;
+        const callToUsername = document.querySelector(
+          'input#username-to-call'
+        ).value;
         if (callToUsername.length === 0) {
           alert('Enter a username 😉');
           return;
