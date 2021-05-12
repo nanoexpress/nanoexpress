@@ -1,5 +1,5 @@
-export default (req, res, config, { validationStringify, validation } = {}) => {
-  if (validationStringify) {
+export default (req, res, config, validation = {}) => {
+  if (validation) {
     let errors;
     for (let i = 0, len = validation.length; i < len; i += 1) {
       const { type, validator, schema } = validation[i];
@@ -62,7 +62,7 @@ export default (req, res, config, { validationStringify, validation } = {}) => {
       }
       res.writeHeader('400 Bad Request');
       res.writeHeader('Content-Type', 'application/json; charset=utf-8');
-      return res.end(validationStringify(errors));
+      return res.end(JSON.stringify(errors));
     }
   }
 };

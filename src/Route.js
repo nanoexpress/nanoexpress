@@ -1,5 +1,4 @@
 import Events from '@dalisoft/events';
-import turboJsonParse from 'turbo-json-parse';
 import { Route as RouteCompiler } from './compilers/index.js';
 import {
   httpMethods,
@@ -115,7 +114,6 @@ export default class Route {
     let isNotFoundHandler = false;
     const bodyAllowedMethod =
       method === 'POST' || method === 'PUT' || method === 'PATCH';
-    let responseSchema;
 
     const findConfig = middlewares.find(
       (middleware) =>
@@ -138,7 +136,6 @@ export default class Route {
     let isCanCompiled = false;
     let compilePath;
     let compileMethod;
-    let experimentalBodyParser;
 
     middlewares = middlewares
       .filter((middleware) => typeof middleware === 'function')
@@ -208,18 +205,8 @@ export default class Route {
     const isShouldReduceTaks = isCanCompiled || isStrictRaw;
     if (!isShouldReduceTaks && !isRaw) {
       _schema = (schema && schema.schema) || undefined;
-      experimentalBodyParser =
-        _schema &&
-        _schema.body &&
-        turboJsonParse(_schema.body, {
-          defaults: false,
-          validate: false,
-          fullMatch: true,
-          buffer: false
-        });
       validation = _schema && prepareValidation(_ajv, _schema);
       // eslint-disable-next-line prefer-const
-      responseSchema = _schema && validation && validation.responseSchema;
 
       isNotFoundHandler = routeFunction.handler === 2;
       if (
@@ -412,14 +399,6 @@ export default class Route {
             // Default HTTP Raw Status Code Integer
             res.rawStatusCode = 200;
 
-            // Assign schemas
-            if (responseSchema) {
-              res.fastJson = responseSchema;
-            }
-            if (experimentalBodyParser) {
-              req.fastBodyParse = experimentalBodyParser;
-            }
-
             if (!isRaw && _schema !== false) {
               if (!_schema || _schema.headers !== false) {
                 req.headers = headers(req, _schema && _schema.headers);
@@ -489,7 +468,6 @@ export default class Route {
                 isAborted ||
                 (!isRaw &&
                   validation &&
-                  validation.validationStringify &&
                   processValidation(req, res, _config, validation))
               ) {
                 return;
