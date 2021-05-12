@@ -1,18 +1,13 @@
-const SPACE_TRIM_REGEX = /\n|\t/g;
-
 export default (req) =>
   req.stream &&
   new Promise((resolve, reject) => {
-    let buffer;
+    const buffers = [];
 
     req.stream.on('data', (chunk) => {
-      buffer = buffer ? Buffer.concat([buffer, chunk]) : chunk;
+      buffers.push(chunk);
     });
     req.stream.once('end', () => {
-      req.buffer = buffer;
-      req.body = buffer
-        ? buffer.toString('utf8').replace(SPACE_TRIM_REGEX, '')
-        : null;
+      req.body = Buffer.concat(buffers);
       resolve();
     });
     req.stream.once('error', (err) => {

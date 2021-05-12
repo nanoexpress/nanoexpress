@@ -3,6 +3,8 @@ import App from './App.js';
 import Config from './Config.js';
 import Route from './Route.js';
 
+const { getParts } = uWS;
+
 const nanoexpress = (options = {}) => {
   let app;
 
@@ -23,4 +25,7 @@ const nanoexpress = (options = {}) => {
   return new App(config, app, routeInstance);
 };
 
-export { nanoexpress as default };
+// Polyfill for file-upload
+nanoexpress.getParts = uWS.getParts;
+
+export { nanoexpress as default, getParts };
