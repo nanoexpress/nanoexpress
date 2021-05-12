@@ -14,4 +14,4 @@ jobs:
         with:
           target: minor
           approve: true
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GH_TOKEN }}
