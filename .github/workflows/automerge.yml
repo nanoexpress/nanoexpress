@@ -1,12 +1,13 @@
 name: Auto-merge dependabot updates
 
-on: pull_request
+on: pull_request_target
 
 jobs:
   auto-merge:
     timeout-minutes: 5
 
     runs-on: ubuntu-18.04
+    if: github.actor == 'dependabot[bot]'
 
     steps:
       - uses: actions/checkout@v2
