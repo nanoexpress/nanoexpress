@@ -5911,10 +5911,10 @@ smart-buffer@^4.1.0:
   resolved "https://registry.yarnpkg.com/smart-buffer/-/smart-buffer-4.1.0.tgz#91605c25d91652f4661ea69ccf45f1b331ca21ba"
   integrity sha512-iVICrxOzCynf/SNaBQCw34eM9jROU/s5rzIhpOvzhzuYHfJR/DhZfDkXiZSgKXfgv26HT3Yni3AV/DGw0cGnnw==
 
-smartlint@^1.1.9:
-  version "1.1.9"
-  resolved "https://registry.yarnpkg.com/smartlint/-/smartlint-1.1.9.tgz#53055d282d9fe4fde80e3741fd1fabd97bbe5c26"
-  integrity sha512-V4A/2XAEekGnoqZNNUSCc1lpSvOBYuuDn2EQcoTjH73sRCc1FZknf2PY8ALjHU9FVWkodRSQT7UgZbT4VaqvlQ==
+smartlint@^1.1.10:
+  version "1.1.10"
+  resolved "https://registry.yarnpkg.com/smartlint/-/smartlint-1.1.10.tgz#963a2207c66f8ac5f9abb87d1952ebe25bf20c54"
+  integrity sha512-Z1+jD187YNaZlsjnfe+S2ElK9umMR+R0uBsBUEgIIxhZ+SoP+OidbernI2aS357N6xicdboBuHI+q/Jj4SRffA==
   dependencies:
     "@ls-lint/ls-lint" "^1.9.2"
     "@stoplight/spectral" "^5.9.1"
