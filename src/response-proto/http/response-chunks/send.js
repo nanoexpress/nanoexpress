@@ -4,17 +4,17 @@ export default function send(result) {
   } else if (typeof result === 'object') {
     this.setHeader('Content-Type', 'application/json; charset=utf-8');
 
-    const { fastJson, rawStatusCode: statusCode } = this;
+    const { serializer, rawStatusCode: statusCode } = this;
 
-    if (fastJson) {
-      if (typeof fastJson === 'function') {
-        result = fastJson(result);
-      } else if (fastJson && typeof fastJson[statusCode] === 'function') {
-        result = fastJson[statusCode](result);
+    if (serializer) {
+      if (typeof serializer === 'function') {
+        result = serializer(result);
+      } else if (serializer && typeof serializer[statusCode] === 'function') {
+        result = serializer[statusCode](result);
       } else {
         const _statusCode = `${statusCode}`;
-        for (let code in fastJson) {
-          const fastJsonFunc = fastJson[code];
+        for (let code in serializer) {
+          const fastJsonFunc = serializer[code];
           if (code === _statusCode) {
             result = fastJsonFunc(result);
           } else if (code.indexOf('X') !== -1) {
