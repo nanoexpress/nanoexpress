@@ -21,7 +21,7 @@
     "coverage": "npm run test --coverage",
     "coveralls": "npm run coverage && cat ./tests/coverage/lcov.info | coveralls",
     "prepublishOnly": "npm run lint && npm run test && npm run build",
-    "build": "shx rm -rf cjs/*.js && shx rm -rf cjs/*.map && shx rm -rf cjs/packed && rollup -c"
+    "build": "rm -rf cjs/*.js && rm -rf cjs/*.map && rm -rf cjs/packed && rollup -c"
   },
   "engines": {
     "node": ">=12.22.1"
@@ -48,7 +48,6 @@
   "dependencies": {
     "@dalisoft/events": "^0.2.0",
     "ajv": "^8.4.0",
-    "busboy": "^0.3.1",
     "cookie": "^0.4.1",
     "uWebSockets.js": "https://github.com/uNetworking/uWebSockets.js/archive/v19.2.0.tar.gz"
   },
@@ -65,7 +64,6 @@
     "prettier": "^2.3.0",
     "prettier-config-airlight": "^1.0.0",
     "rollup": "^2.48.0",
-    "shx": "^0.3.3",
     "smartlint": "^1.1.10",
     "typescript": "4.2.4"
   }

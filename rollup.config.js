@@ -11,17 +11,6 @@ const external = dependencies.concat([
   'util'
 ]);
 
-// Prepare middlewares export
-const packedMiddleware = ['file-upload', 'index'].map((name) => ({
-  input: `./src/packed/middlewares/${name}.js`,
-  output: {
-    format: 'cjs',
-    file: `./cjs/packed/middlewares/${name}.js`,
-    sourcemap: true
-  },
-  external
-}));
-
 // Prepare defines export
 const packedDefines = ['proxy', 'webrtc-server', 'index'].map((name) => ({
   input: `./src/packed/defines/${name}.js`,
@@ -35,7 +24,6 @@ const packedDefines = ['proxy', 'webrtc-server', 'index'].map((name) => ({
 
 // Export config for Rollup
 export default [
-  ...packedMiddleware,
   ...packedDefines,
   {
     input: './src/Route.js',
@@ -51,6 +39,7 @@ export default [
     output: {
       format: 'cjs',
       file: './cjs/nanoexpress.js',
+      exports: 'default',
       esModule: false,
       sourcemap: true
     },

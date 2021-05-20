@@ -112,7 +112,7 @@ export default class Route {
     let _schema = null;
     let isAborted = false;
     let isNotFoundHandler = false;
-    const bodyAllowedMethod =
+    let bodyAllowedMethod =
       method === 'POST' || method === 'PUT' || method === 'PATCH';
 
     const findConfig = middlewares.find(
@@ -339,6 +339,13 @@ export default class Route {
             req.path = fetchUrl ? req.getUrl().substr(_baseUrl.length) : path;
             req.baseUrl = _baseUrl || '';
 
+            if (!bodyAllowedMethod || fetchMethod) {
+              bodyAllowedMethod =
+                req.method === 'POST' ||
+                req.method === 'PUT' ||
+                req.method === 'PATCH';
+            }
+
             // Cache value
             const reqPathLength = req.path.length;
 
@@ -415,7 +422,13 @@ export default class Route {
               if (!_schema || _schema.query !== false) {
                 req.query = queries(req, _schema && _schema.query);
               }
-              if (!isRaw && bodyAllowedMethod && res.onData) {
+              if (
+                req.headers &&
+                ((!isRaw && bodyAllowedMethod && res.onData) ||
+                  req.headers['transfer-encoding'] ||
+                  (req.headers['content-length'] &&
+                    +req.headers['content-length'] > 2))
+              ) {
                 stream(req, res);
                 req.pipe = pipe;
               }

@@ -19,9 +19,6 @@ export default function pipe(stream, size, compressed = false) {
     if (stream) {
       stream.destroy();
     }
-    if (stream) {
-      stream.destroy();
-    }
     isAborted = true;
   });
 
@@ -61,6 +58,10 @@ export default function pipe(stream, size, compressed = false) {
 
         // Register async handlers for drainage
         this.onWritable((offset) => {
+          if (isAborted) {
+            stream.destroy();
+            return;
+          }
           const [writeOk, writeDone] = this.tryEnd(
             buffer.slice(offset - lastOffset),
             size
@@ -77,16 +78,16 @@ export default function pipe(stream, size, compressed = false) {
   }
   stream
     .on('error', () => {
-      this.stream = -1;
+      stream.destroy();
       if (!isAborted) {
+        this.stream = -1;
         this.writeStatus('500 Internal server error');
         this.end();
       }
-      stream.destroy();
     })
     .on('end', () => {
-      this.stream = 1;
       if (!isAborted) {
+        this.stream = 1;
         this.end();
       }
     });
