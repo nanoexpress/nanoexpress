@@ -93,7 +93,8 @@ describe('body normalize', () => {
       read() {}
     });
     const fakeReq = {
-      stream
+      stream,
+      headers: { 'content-type': 'application/json' }
     };
     const fakeRes = {
       onAborted() {}
