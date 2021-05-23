@@ -18,12 +18,9 @@ export default function modifyEnd() {
         statusCode = this.statusCode;
       }
       if (_headers) {
-        if (statusCode && statusCode !== rawStatusCode) {
-          this.writeStatus(statusCode);
-        }
-
         this.applyHeadersAndStatus();
-      } else if (statusCode && statusCode !== rawStatusCode) {
+      }
+      if (statusCode && statusCode !== rawStatusCode) {
         this.writeStatus(statusCode);
       }
 
