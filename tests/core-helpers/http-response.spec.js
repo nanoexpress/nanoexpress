@@ -9,13 +9,13 @@ class Response {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  getRemoteAddress() {
+  getRemoteAddressAsText() {
     const ipBuffer = new Uint8Array(4);
 
     ipBuffer[0] = 127;
     ipBuffer[3] = 1;
 
-    return ipBuffer;
+    return ipBuffer.join('.');
   }
 
   end(result) {
@@ -31,9 +31,6 @@ class Response {
   }
 }
 Object.assign(Response.prototype, HttpResponse);
-
-// Add private method
-Response.prototype.getIP = HttpResponse._getResponseIP;
 
 describe('http response getIP', () => {
   const fakeRes = new Response();
