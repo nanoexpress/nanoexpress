@@ -1,4 +1,5 @@
 import Events from '@dalisoft/events';
+import fastQueryParse from 'fast-query-parse';
 import { Route as RouteCompiler } from './compilers/index.js';
 import {
   httpMethods,
@@ -13,7 +14,6 @@ import {
   headers,
   params,
   pipe,
-  queries,
   stream
 } from './request-proto/http/index.js';
 import { HttpResponse } from './response-proto/http/index.js';
@@ -420,7 +420,7 @@ export default class Route {
                 req.params = params(req, preparedParams);
               }
               if (!_schema || _schema.query !== false) {
-                req.query = queries(req, _schema && _schema.query);
+                req.query = fastQueryParse(req.getQuery());
               }
               if (
                 req.headers &&
