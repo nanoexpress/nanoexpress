@@ -1,12 +1,12 @@
 /* globals describe, it, expect */
+import fastQueryParse from 'fast-query-parse';
 import { Readable } from 'stream';
 import { prepareParams } from '../../src/helpers/index.js';
 import {
   body,
   cookies,
   headers,
-  params,
-  queries
+  params
 } from '../../src/request-proto/index.js';
 
 describe('headers normalize', () => {
@@ -71,7 +71,7 @@ describe('queries normalize', () => {
       }
     };
 
-    expect(queries(fakeReq)).toStrictEqual({
+    expect(fastQueryParse(fakeReq.getQuery())).toStrictEqual({
       foo: 'bar',
       bar: 'baz'
     });
@@ -83,7 +83,7 @@ describe('queries normalize', () => {
       }
     };
 
-    expect(queries(fakeReq)).toBe(undefined);
+    expect(fastQueryParse(fakeReq.getQuery())).toBe(null);
   });
 });
 
