@@ -4,5 +4,5 @@ export default function getIP() {
   // Detect self
   const _self = this.send ? this : this.__response;
 
-  return Buffer.from(_self.getRemoteAddressAsText()).toString();
+  return Buffer.from(_self.getProxiedRemoteAddressAsText()).toString();
 }

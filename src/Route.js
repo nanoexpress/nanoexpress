@@ -399,7 +399,8 @@ export default class Route {
               for (const newMethod in HttpResponse) {
                 __proto__[newMethod] = HttpResponse[newMethod];
               }
-              req.getIP = res._getResponseIP;
+              req.getIP = res.getIP;
+              req.getProxiedIP = res.getProxiedIP;
               res.writeHead.notModified = true;
             }
 

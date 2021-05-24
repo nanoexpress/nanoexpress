@@ -59,6 +59,8 @@ declare namespace nanoexpress {
     baseUrl: string;
     url: string;
     originalUrl: string;
+    getIP: () => string;
+    getProxiedIP: () => string;
     headers?: HttpRequestHeaders;
     cookies?: HttpRequestCookies;
     query?: HttpRequestQueries;

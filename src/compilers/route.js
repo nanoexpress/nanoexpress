@@ -1,9 +1,14 @@
 import http from 'http';
 import responseMethods from '../response-proto/http/HttpResponse.js';
 
-const nonSimpleProps = ['query', 'cookies', 'body', 'pipe', 'stream'].map(
-  (prop) => `req.${prop}`
-);
+const nonSimpleProps = [
+  'query',
+  'cookies',
+  'body',
+  'pipe',
+  'stream',
+  'getIP'
+].map((prop) => `req.${prop}`);
 const matchers = (raw, prop) =>
   raw.includes(`.${prop}`) ||
   raw.includes(`{ ${prop}`) ||
