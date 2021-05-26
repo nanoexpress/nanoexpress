@@ -3,10 +3,9 @@ import HttpResponse from '../../../../tests/mock/HttpResponse.js';
 import writeHead from './write-head.js';
 
 describe('writeHead status', () => {
-  it('empty status should do nothing', async (done) => {
+  it('empty status should do nothing', async () => {
     const res = new HttpResponse();
     writeHead.call(res);
-    done();
   });
   it('string status code should work', () => {
     const res = new HttpResponse();
@@ -17,10 +16,9 @@ describe('writeHead status', () => {
 });
 
 describe('writeHead headers', () => {
-  it('empty status should do nothing', async (done) => {
+  it('empty status should do nothing', async () => {
     const res = new HttpResponse();
     writeHead.call(res, 201);
-    done();
   });
   it('http headers should work', () => {
     const res = new HttpResponse();
