@@ -101,7 +101,7 @@ export default class Route {
     return this;
   }
 
-  _prepareMethod(method, { originalUrl, path, ...options }, ...middlewares) {
+  _prepareMethod(method, { originalUrl, path }, ...middlewares) {
     const { _config, _baseUrl, _middlewares, _ajv, _console } = this;
 
     const fetchMethod = method === 'ANY';
@@ -494,82 +494,6 @@ export default class Route {
             }
           };
 
-    if (isWebSocket) {
-      if (typeof options.open === 'function') {
-        return options;
-      }
-
-      Object.assign(
-        options,
-        {
-          compression: 0,
-          maxPayloadLength: 16 * 1024 * 1024,
-          idleTimeout: 120
-        },
-        options
-      );
-
-      return {
-        ...options,
-        open(ws) {
-          ws.emit('connection', ws);
-        },
-        async upgrade(res, req, context) {
-          if (!res.___events) {
-            res.on = __wsProto__.on;
-            res.once = __wsProto__.once;
-            res.off = __wsProto__.off;
-            res.emit = __wsProto__.emit;
-
-            res.___events = [];
-          }
-
-          res.emit('upgrade', req, res);
-
-          res.upgrade(
-            { req, ...res },
-            req.getHeader('sec-websocket-key'),
-            req.getHeader('sec-websocket-protocol'),
-            req.getHeader('sec-websocket-extensions'),
-            context
-          );
-        },
-        message: (ws, message, isBinary) => {
-          if (!isBinary) {
-            message = Buffer.from(message).toString('utf8');
-          }
-          if (options.schema) {
-            if (typeof message === 'string') {
-              if (message.indexOf('[') === 0 || message.indexOf('{') === 0) {
-                if (message.indexOf('[object') === -1) {
-                  message = JSON.parse(message);
-
-                  const valid = validation(message);
-                  if (!valid) {
-                    ws.emit(
-                      'message',
-                      {
-                        type: 'websocket.message',
-                        errors: validation.errors.map((err) => err.message)
-                      },
-                      isBinary
-                    );
-                    return;
-                  }
-                }
-              }
-            }
-          }
-          ws.emit('message', message, isBinary);
-        },
-        drain: (ws) => {
-          ws.emit('drain', ws.getBufferedAmount());
-        },
-        close: (ws, code, message) => {
-          ws.emit('close', code, Buffer.from(message).toString('utf8'));
-        }
-      };
-    }
     return handler;
   }
 }
@@ -601,4 +525,110 @@ for (let i = 0, len = httpMethods.length; i < len; i += 1) {
   Route.prototype[method] = exposeMethod(method);
 }
 
-Route.prototype.ws = exposeMethod('ws');
+// PubSub methods expose
+Route.prototype.publish = (topic, message, isBinary, compress) =>
+  this._app.publish(topic, message, isBinary, compress);
+
+Route.prototype.ws = function wsExpose(path, handler, options = {}) {
+  const { _baseUrl, _module, _ajv, _app } = this;
+
+  const { isRaw, isStrictRaw, schema } = options;
+
+  const _schema = (schema && schema.schema) || undefined;
+  const validation = _schema && prepareValidation(_ajv, _schema);
+
+  let originalUrl = path;
+  if (_baseUrl !== '' && _module && originalUrl.indexOf(_baseUrl) === -1) {
+    originalUrl = _baseUrl + path;
+  }
+  if (isRaw || isStrictRaw || typeof options.open === 'function') {
+    _app.ws(path, options);
+    return;
+  }
+
+  Object.assign(
+    options,
+    {
+      compression: 0,
+      maxPayloadLength: 16 * 1024 * 1024,
+      idleTimeout: 120
+    },
+    options
+  );
+
+  _app.ws(path, {
+    ...options,
+    open(ws) {
+      ws.emit('connection', ws);
+    },
+    async upgrade(res, req, context) {
+      const secWsKey = req.getHeader('sec-websocket-key');
+      const secWsProtocol = req.getHeader('sec-websocket-protocol');
+      const secWsExtensions = req.getHeader('sec-websocket-extensions');
+
+      let aborted = false;
+      res.onAborted(() => {
+        aborted = true;
+      });
+
+      if (!res.___events) {
+        res.on = __wsProto__.on;
+        res.once = __wsProto__.once;
+        res.off = __wsProto__.off;
+        res.emit = __wsProto__.emit;
+
+        res.___events = [];
+      }
+
+      res.emit('upgrade', req, res);
+
+      await handler(req, res).catch((error) => {
+        aborted = true;
+        res.emit('error', error);
+      });
+      if (!aborted) {
+        res.upgrade(
+          { req, ...res },
+          secWsKey,
+          secWsProtocol,
+          secWsExtensions,
+          context
+        );
+      }
+    },
+    message: (ws, message, isBinary) => {
+      if (!isBinary) {
+        message = Buffer.from(message).toString('utf8');
+      }
+      if (options.schema) {
+        if (typeof message === 'string') {
+          if (message.indexOf('[') === 0 || message.indexOf('{') === 0) {
+            if (message.indexOf('[object') === -1) {
+              message = JSON.parse(message);
+
+              const valid = validation(message);
+              if (!valid) {
+                ws.emit(
+                  'message',
+                  {
+                    type: 'websocket.message',
+                    errors: validation.errors.map((err) => err.message)
+                  },
+                  isBinary
+                );
+                return;
+              }
+            }
+          }
+        }
+      }
+      ws.emit('message', message, isBinary);
+    },
+    drain: (ws) => {
+      ws.emit('drain', ws.getBufferedAmount());
+    },
+    close: (ws, code, message) => {
+      ws.emit('close', code, Buffer.from(message).toString('utf8'));
+    }
+  });
+};

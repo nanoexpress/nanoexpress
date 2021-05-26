@@ -89,11 +89,14 @@ export default class App {
     return this;
   }
 
-  // TODO:
-  // Beta `app.publish` method
-  // when i will i have time, i will improve this wrapping
+  ws(path, ...middlewares) {
+    this._route.ws(path, ...middlewares);
+
+    return this;
+  }
+
   publish(topic, string, isBinary, compress) {
-    this._app.publish(topic, string, isBinary, compress);
+    return this._app.publish(topic, string, isBinary, compress);
   }
 
   listen(port, host) {
@@ -240,5 +243,3 @@ for (let i = 0, len = httpMethods.length; i < len; i += 1) {
   const method = httpMethods[i];
   App.prototype[method] = exposeAppMethodHOC(method);
 }
-
-App.prototype.ws = exposeAppMethodHOC('ws');

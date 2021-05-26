@@ -333,23 +333,19 @@ declare namespace nanoexpress {
       ...middlewares: MiddlewareRoute[]
     ): INanoexpressApp;
 
-    ws(path: string, ...middlewares: MiddlewareRoute[]): INanoexpressApp;
     ws(
       path: string,
-      options: IWebSocketOptions,
-      ...middlewares: MiddlewareRoute[]
+      handler: MiddlewareRoute | Promise<MiddlewareRoute>,
+      options?: IWebSocketOptions
     ): INanoexpressApp;
-
-    webRtcServer(): INanoexpressApp;
-    webRtcServer(path: string): INanoexpressApp;
-    webRtcServer(path: string, options: IWebSocketOptions): INanoexpressApp;
+    ws(path: string, options: IWebSocketOptions): INanoexpressApp;
 
     publish(
       topic: string,
       message: string,
       isBinary?: boolean,
       compress?: boolean
-    ): INanoexpressApp;
+    ): boolean;
 
     listen(port: number, host?: string): Promise<INanoexpressApp>;
     close(): boolean;
