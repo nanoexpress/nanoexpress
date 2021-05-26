@@ -529,32 +529,35 @@ for (let i = 0, len = httpMethods.length; i < len; i += 1) {
 Route.prototype.publish = (topic, message, isBinary, compress) =>
   this._app.publish(topic, message, isBinary, compress);
 
-Route.prototype.ws = function wsExpose(path, handler, options = {}) {
+Route.prototype.ws = function wsExpose(
+  path,
+  handler,
+  options = {
+    compression: 0,
+    maxPayloadLength: 16 * 1024 * 1024,
+    idleTimeout: 120
+  }
+) {
   const { _baseUrl, _module, _ajv, _app } = this;
-
   const { isRaw, isStrictRaw, schema } = options;
 
-  const _schema = (schema && schema.schema) || undefined;
-  const validation = _schema && prepareValidation(_ajv, _schema);
+  if (typeof handler === 'object') {
+    options = Object.assign(options, handler);
+    handler = null;
+  }
 
   let originalUrl = path;
   if (_baseUrl !== '' && _module && originalUrl.indexOf(_baseUrl) === -1) {
     originalUrl = _baseUrl + path;
   }
-  if (isRaw || isStrictRaw || typeof handler.open === 'function') {
-    _app.ws(path, handler);
+
+  if (isRaw || isStrictRaw || typeof options.open === 'function') {
+    _app.ws(path, options);
     return;
   }
 
-  Object.assign(
-    options,
-    {
-      compression: 0,
-      maxPayloadLength: 16 * 1024 * 1024,
-      idleTimeout: 120
-    },
-    options
-  );
+  const _schema = (schema && schema.schema) || undefined;
+  const validation = _schema && prepareValidation(_ajv, _schema);
 
   _app.ws(path, {
     ...options,
