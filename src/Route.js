@@ -495,6 +495,10 @@ export default class Route {
           };
 
     if (isWebSocket) {
+      if (typeof options.open === 'function') {
+        return options;
+      }
+
       Object.assign(
         options,
         {
@@ -520,16 +524,13 @@ export default class Route {
             res.___events = [];
           }
 
-          await handler(res, req);
-
           res.emit('upgrade', req, res);
 
           res.upgrade(
             { req, ...res },
-            /* Spell these correctly */
-            req.headers['sec-websocket-key'],
-            req.headers['sec-websocket-protocol'],
-            req.headers['sec-websocket-extensions'],
+            req.getHeader('sec-websocket-key'),
+            req.getHeader('sec-websocket-protocol'),
+            req.getHeader('sec-websocket-extensions'),
             context
           );
         },
