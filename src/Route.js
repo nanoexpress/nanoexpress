@@ -529,20 +529,12 @@ for (let i = 0, len = httpMethods.length; i < len; i += 1) {
 Route.prototype.publish = (topic, message, isBinary, compress) =>
   this._app.publish(topic, message, isBinary, compress);
 
-Route.prototype.ws = function wsExpose(
-  path,
-  handler,
-  options = {
-    compression: 0,
-    maxPayloadLength: 16 * 1024 * 1024,
-    idleTimeout: 120
-  }
-) {
+Route.prototype.ws = function wsExpose(path, handler, options = {}) {
   const { _baseUrl, _module, _ajv, _app } = this;
   const { isRaw, isStrictRaw, schema } = options;
 
   if (typeof handler === 'object') {
-    options = Object.assign(options, handler);
+    options = handler;
     handler = null;
   }
 
@@ -552,14 +544,14 @@ Route.prototype.ws = function wsExpose(
   }
 
   if (isRaw || isStrictRaw || typeof options.open === 'function') {
-    _app.ws(path, options);
-    return;
+    _app.ws(originalUrl, options);
+    return this;
   }
 
   const _schema = (schema && schema.schema) || undefined;
   const validation = _schema && prepareValidation(_ajv, _schema);
 
-  _app.ws(path, {
+  _app.ws(originalUrl, {
     ...options,
     open(ws) {
       ws.emit('connection', ws);
@@ -634,4 +626,6 @@ Route.prototype.ws = function wsExpose(
       ws.emit('close', code, Buffer.from(message).toString('utf8'));
     }
   });
+
+  return this;
 };

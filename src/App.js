@@ -89,8 +89,8 @@ export default class App {
     return this;
   }
 
-  ws(path, ...middlewares) {
-    this._route.ws(path, ...middlewares);
+  ws(path, handler, options) {
+    this._route.ws(path, handler, options);
 
     return this;
   }
