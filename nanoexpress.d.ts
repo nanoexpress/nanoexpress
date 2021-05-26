@@ -7,7 +7,8 @@ import {
   HttpRequest as HttpRequestBasic,
   HttpResponse as HttpResponseBasic,
   TemplatedApp as AppTemplatedApp,
-  WebSocket as WebSocketBasic
+  WebSocket as WebSocketBasic,
+  WebSocketBehavior
 } from 'uWebSockets.js';
 
 declare namespace nanoexpress {
@@ -339,6 +340,7 @@ declare namespace nanoexpress {
       options?: IWebSocketOptions
     ): INanoexpressApp;
     ws(path: string, options: IWebSocketOptions): INanoexpressApp;
+    ws(path: string, options: WebSocketBehavior): INanoexpressApp;
 
     publish(
       topic: string,

@@ -541,8 +541,8 @@ Route.prototype.ws = function wsExpose(path, handler, options = {}) {
   if (_baseUrl !== '' && _module && originalUrl.indexOf(_baseUrl) === -1) {
     originalUrl = _baseUrl + path;
   }
-  if (isRaw || isStrictRaw || typeof options.open === 'function') {
-    _app.ws(path, options);
+  if (isRaw || isStrictRaw || typeof handler.open === 'function') {
+    _app.ws(path, handler);
     return;
   }
 
