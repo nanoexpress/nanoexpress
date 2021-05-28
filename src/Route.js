@@ -8,14 +8,7 @@ import {
   prepareValidation,
   processValidation
 } from './helpers/index.js';
-import {
-  body,
-  cookies,
-  headers,
-  params,
-  pipe,
-  stream
-} from './request-proto/http/index.js';
+import { body, params, pipe, stream } from './request-proto/http/index.js';
 import { HttpResponse } from './response-proto/http/index.js';
 
 const resAbortHandler = '___$HttpResponseAbortHandler';
@@ -409,10 +402,24 @@ export default class Route {
 
             if (!isRaw && _schema !== false) {
               if (!_schema || _schema.headers !== false) {
-                req.headers = headers(req, _schema && _schema.headers);
+                let headers;
+                req.forEach((key, value) => {
+                  if (!headers) {
+                    headers = {};
+                  }
+                  headers[key] = value;
+                });
+                if (headers) {
+                  req.headers = headers;
+                }
               }
               if (!_schema || _schema.cookies !== false) {
-                req.cookies = cookies(req, _schema && _schema.cookies);
+                const cookie = req.headers
+                  ? req.headers.cookie
+                  : req.getHeader('cookie');
+                if (cookie) {
+                  req.cookies = fastQueryParse(cookie);
+                }
               }
               if (!_schema || _schema.params !== false) {
                 if (req.path !== path) {
