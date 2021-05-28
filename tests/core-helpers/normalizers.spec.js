@@ -2,37 +2,7 @@
 import fastQueryParse from 'fast-query-parse';
 import { Readable } from 'stream';
 import { prepareParams } from '../../src/helpers/index.js';
-import {
-  body,
-  cookies,
-  headers,
-  params
-} from '../../src/request-proto/index.js';
-
-describe('headers normalize', () => {
-  it('header normalize non-empty', () => {
-    const fakeReq = {
-      forEach(fn) {
-        for (let i = 1; i < 4; i += 1) {
-          fn(`header_${i}`, `header_value${i}`);
-        }
-      }
-    };
-
-    expect(headers(fakeReq)).toStrictEqual({
-      header_1: 'header_value1',
-      header_2: 'header_value2',
-      header_3: 'header_value3'
-    });
-  });
-  it('header normalize empty', () => {
-    const fakeReq = {
-      forEach() {}
-    };
-
-    expect(headers(fakeReq)).toStrictEqual(undefined);
-  });
-});
+import { body, params } from '../../src/request-proto/index.js';
 
 describe('params normalize', () => {
   it('params normalize non-empty', () => {
@@ -121,12 +91,14 @@ describe('cookie normalize', () => {
       }
     };
 
-    expect(cookies(fakeReq)).toStrictEqual({ foo: 'bar' });
+    expect(fastQueryParse(fakeReq.headers.cookie)).toStrictEqual({
+      foo: 'bar'
+    });
   });
   it('cookie normalize empty', async () => {
     const fakeReq = {};
     fakeReq.getHeader = () => '';
 
-    expect(cookies(fakeReq)).toBe(undefined);
+    expect(fastQueryParse(fakeReq.getHeader('cookie'))).toBe(null);
   });
 });
