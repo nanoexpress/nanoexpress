@@ -2761,10 +2761,10 @@ fast-memoize@^2.5.2:
   resolved "https://registry.yarnpkg.com/fast-memoize/-/fast-memoize-2.5.2.tgz#79e3bb6a4ec867ea40ba0e7146816f6cdce9b57e"
   integrity sha512-Ue0LwpDYErFbmNnZSF0UH6eImUwDmogUO1jyE+JbN2gsQz/jICm1Ve7t9QT0rNSsfJt+Hs4/S3GnsDVjL4HVrw==
 
-fast-query-parse@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/fast-query-parse/-/fast-query-parse-1.1.0.tgz#16cf3e4a10afd9c0d83b7a4f4f4638bee629886f"
-  integrity sha512-U6KyhhTByr6FH6HtSBoO71T/GLr9/qvyAGM8m1d5XRfNfq2+887hym9FVeBa9VhE28BP+8DYgEK+9tkjzx7lfg==
+fast-query-parse@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/fast-query-parse/-/fast-query-parse-1.2.0.tgz#a7dffd0e9ccf9bdc83dfd4c11396f0ac0f98656d"
+  integrity sha512-WG/7WRybzJLDow5ubKmhhYk5wHbiclPCS9OXSwqFvZAS5L2n7usuLzK+gQo+KmSVuQpjWzJZxsOWpYDMIAj5wg==
   dependencies:
     fast-decode-uri-component "^1.0.1"
 
