@@ -1,6 +1,5 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable max-lines, @typescript-eslint/no-explicit-any */
-import Ajv, { Options as AjvOptions } from 'ajv';
 import { Readable, Writable } from 'stream';
 import {
   AppOptions as AppOptionsBasic,
@@ -25,8 +24,6 @@ declare namespace nanoexpress {
       passphare: string;
     };
     is_ssl?: boolean;
-    ajv?: AjvOptions;
-    configureAjv(ajv: Ajv): Ajv;
     swagger?: SwaggerOptions;
   }
 
