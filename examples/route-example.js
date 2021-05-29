@@ -3,7 +3,6 @@ import Route from '../src/Route.js';
 
 const app = nanoexpress();
 const route = new Route();
-app.use('/foo', route);
 
 route.use(async (req, res) => {
   req.m = 1;
@@ -20,5 +19,6 @@ route.get('/', (req, res) => {
 route.get('/bar', (req, res) => {
   res.end('/foo/bar');
 });
+app.use('/foo', route);
 
 app.listen(4000);

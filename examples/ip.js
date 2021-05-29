@@ -2,7 +2,7 @@ import nanoexpress from '../src/nanoexpress.js';
 
 const app = nanoexpress();
 
-app.get('/', (req, res) => {
+app.any('/*', (req, res) => {
   res.end(`ip address is ${req.getIP()}`);
 });
 
