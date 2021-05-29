@@ -89,8 +89,6 @@ jobs:
 
       - name: Install
         run: yarn --frozen-lockfile
-      - name: semantic-release Prepare
-        run: yarn add semantic-release @semantic-release/git -D -W
 
       - name: Build
         run: yarn build
