@@ -72,16 +72,20 @@ export default class App {
     }
     middlewares.forEach((handler) => {
       if (handler instanceof Route) {
-        const { _routers } = handler;
+        const { _routers, _pubs } = handler;
         _routers.forEach(({ method, path, handler: routeHandler }) => {
           const routePath =
             // eslint-disable-next-line no-nested-ternary
             basePath === '*' ? '*' : path === '/' ? basePath : basePath + path;
           this._router.on(method, routePath, routeHandler);
         });
+        _pubs.forEach(({ topic, string, isBinary, compress }) => {
+          this._app.publish(topic, string, isBinary, compress);
+        });
         handler._app = this;
         handler._basePath = basePath;
         _routers.length = 0;
+        _pubs.length = 0;
       } else {
         this._router.on(httpMethods, basePath, handler);
       }
@@ -103,7 +107,7 @@ export default class App {
   }
 
   publish(topic, string, isBinary, compress) {
-    this._pubs.push({ topic, string, isBinary, compress });
+    this._app.publish(topic, string, isBinary, compress);
 
     return this;
   }

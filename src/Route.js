@@ -58,7 +58,11 @@ for (let i = 0, len = httpMethods.length; i < len; i += 1) {
 
 // PubSub methods expose
 Route.prototype.publish = (topic, message, isBinary, compress) => {
-  this._pubs.push({ topic, message, isBinary, compress });
+  if (this._app) {
+    this._app.publish(topic, message, isBinary, compress);
+  } else {
+    this._pubs.push({ topic, message, isBinary, compress });
+  }
   return this;
 };
 

@@ -3,7 +3,8 @@ export default [
   'post',
   'put',
   'patch',
-  'delete',
+  'del',
+  'any',
   'head',
   'options',
   'trace'
