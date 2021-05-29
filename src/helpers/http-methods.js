@@ -3,9 +3,8 @@ export default [
   'post',
   'put',
   'patch',
-  'del',
-  'any',
+  'delete',
   'head',
   'options',
   'trace'
-];
+].map((m) => m.toUpperCase());

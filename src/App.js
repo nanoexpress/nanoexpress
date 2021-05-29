@@ -1,5 +1,10 @@
+import fastQueryParse from 'fast-query-parse';
 import uWS from 'uWebSockets.js';
+import FindRoute from './find-route.js';
 import { httpMethods } from './helpers/index.js';
+import { body, pipe, stream } from './request-proto/index.js';
+import { HttpResponse } from './response-proto/index.js';
+import Route from './Route.js';
 
 export default class App {
   get config() {
@@ -31,32 +36,21 @@ export default class App {
     return address;
   }
 
-  constructor(config, app, route) {
+  constructor(config, app) {
     this._config = config;
     this._app = app;
-    this._route = route;
+    this._router = new FindRoute(config);
+
+    this._ws = [];
+    this._pubs = [];
 
     this.time = Date.now();
 
     this._instance = null;
 
-    if (config && config.swagger) {
-      this.activateDocs();
-    }
-
-    this._routeCalled = false;
-    this._optionsCalled = false;
-
     this._console = config.console || console;
 
     return this;
-  }
-
-  activateDocs() {
-    this._app.get('/docs/swagger.json', (res) => {
-      res.writeHeader('Content-Type', 'application/json; charset=utf-8');
-      res.end(JSON.stringify(this._config.swagger, null, 4));
-    });
   }
 
   setErrorHandler(fn) {
@@ -66,19 +60,32 @@ export default class App {
   }
 
   setNotFoundHandler(fn) {
-    this._config._notFoundHandler = fn;
+    this._router.defaultRoute = fn;
 
     return this;
   }
 
-  setValidationErrorHandler(fn) {
-    this._config._validationErrorHandler = fn;
-
-    return this;
-  }
-
-  use(...args) {
-    this._route.use(...args);
+  use(basePath, ...middlewares) {
+    if (typeof basePath === 'function') {
+      middlewares.unshift(basePath);
+      basePath = '*';
+    }
+    middlewares.forEach((handler) => {
+      if (handler instanceof Route) {
+        const { _routers } = handler;
+        _routers.forEach(({ method, path, handler: routeHandler }) => {
+          const routePath =
+            // eslint-disable-next-line no-nested-ternary
+            basePath === '*' ? '*' : path === '/' ? basePath : basePath + path;
+          this._router.on(method, routePath, routeHandler);
+        });
+        handler._app = this;
+        handler._basePath = basePath;
+        _routers.length = 0;
+      } else {
+        this._router.on(httpMethods, basePath, handler);
+      }
+    });
 
     return this;
   }
@@ -90,23 +97,19 @@ export default class App {
   }
 
   ws(path, handler, options) {
-    this._route.ws(path, handler, options);
+    this._ws.push({ path, handler, options });
 
     return this;
   }
 
   publish(topic, string, isBinary, compress) {
-    return this._app.publish(topic, string, isBinary, compress);
+    this._pubs.push({ topic, string, isBinary, compress });
+
+    return this;
   }
 
   listen(port, host) {
-    const {
-      _config: config,
-      _app: app,
-      _routeCalled,
-      _optionsCalled,
-      _console
-    } = this;
+    const { _config: config, _app: app, _router: router, _console } = this;
 
     if (typeof port === 'string') {
       if (port.indexOf('.') !== -1) {
@@ -117,30 +120,81 @@ export default class App {
       }
     }
 
-    if (!_routeCalled) {
-      const _errorContext = _console.error ? _console : console;
+    app.any('/*', async (res, req) => {
+      req.url = req.getUrl();
 
-      _errorContext.error(
-        'nanoexpress [Server]: None of middleware will be called until you define route'
-      );
-    }
+      req.path = req.url;
+      req.query = fastQueryParse(req.getQuery());
+      req.method = req.getMethod().toUpperCase();
 
-    // Polyfill for plugins like CORS
-    // Detaching it from every method for performance reason
-    if (_routeCalled && !_optionsCalled) {
-      this.options('/*', () => {});
-    }
+      const bodyAllowedMethod =
+        req.method === 'POST' || req.method === 'PUT' || req.method === 'PATCH';
 
-    if (!this._anyRouteCalled) {
-      const notFoundHandler =
-        config._notFoundHandler ||
-        ((req, res) => {
-          res.statusCode = 404;
-          res.send({ code: 404, message: 'The route does not exist' });
+      req.__response = res;
+      res.__request = req;
+
+      // Extending proto
+      const { __proto__ } = res;
+      for (const newMethod in HttpResponse) {
+        __proto__[newMethod] = HttpResponse[newMethod];
+      }
+      req.getIP = res.getIP;
+      req.getProxiedIP = res.getProxiedIP;
+      res.writeHead.notModified = true;
+
+      // Default HTTP Raw Status Code Integer
+      res.rawStatusCode = 200;
+
+      let headers;
+      let aborted = false;
+      req.forEach((key, value) => {
+        if (!headers) {
+          headers = {};
+        }
+        headers[key] = value;
+      });
+      if (headers) {
+        req.headers = headers;
+      }
+      if (headers && headers.cookie) {
+        req.cookies = fastQueryParse(req.headers.cookie);
+      }
+      if (
+        req.headers &&
+        ((bodyAllowedMethod && res.onData) ||
+          req.headers['transfer-encoding'] ||
+          (req.headers['content-length'] && +req.headers['content-length'] > 2))
+      ) {
+        res.onAborted(() => {
+          aborted = true;
         });
-      notFoundHandler.handler = 2;
-      this.get('/*', notFoundHandler);
-    }
+        stream(req, res);
+        req.pipe = pipe;
+      }
+      if (req.stream && !aborted) {
+        await body(req);
+      }
+
+      if (
+        aborted ||
+        req.method === 'OPTIONS' ||
+        res.stream === true ||
+        res.stream === 1
+      ) {
+        return;
+      }
+
+      if (router.async && router.await) {
+        if (!req.stream) {
+          res.onAborted(() => {
+            aborted = true;
+          });
+        }
+        return router.lookup(req, res);
+      }
+
+      router.lookup(req, res);
+    });
 
     return new Promise((resolve, reject) => {
       if (port === undefined) {
@@ -215,31 +269,13 @@ export default class App {
 
 const exposeAppMethodHOC = (method) =>
   function exposeAppMethod(path, ...fns) {
-    const { _app, _route, _anyRouteCalled } = this;
-
-    if (fns.length > 0) {
-      const preparedRouteFunction = _route._prepareMethod(
-        method.toUpperCase(),
-        { path, originalUrl: path },
-        ...fns
-      );
-
-      _app[method](path, preparedRouteFunction);
-
-      this._routeCalled = true;
-
-      if (!_anyRouteCalled && method !== 'options') {
-        this._anyRouteCalled = path === '/*';
-      }
-
-      if (method === 'options') {
-        this._optionsCalled = true;
-      }
-    }
+    fns.forEach((handler) => {
+      this._router.on(method.toUpperCase(), path, handler);
+    });
     return this;
   };
 
 for (let i = 0, len = httpMethods.length; i < len; i += 1) {
-  const method = httpMethods[i];
+  const method = httpMethods[i].toLocaleLowerCase();
   App.prototype[method] = exposeAppMethodHOC(method);
 }

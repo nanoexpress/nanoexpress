@@ -1,6 +1,10 @@
 import nanoexpress from '../src/nanoexpress.js';
 
 const app = nanoexpress();
+app.setNotFoundHandler((req, res) => {
+  res.status(404);
+  res.send({ status: 'error' });
+});
 app
   .get('/', (_, response) => {
     response.end('');
