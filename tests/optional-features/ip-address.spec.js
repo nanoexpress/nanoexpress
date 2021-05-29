@@ -7,10 +7,10 @@ describe('bind to specific host', () => {
   let app = null;
 
   beforeAll(() => {
-    app = nanoexpress().any('/*', (req, res) => {
+    app = nanoexpress().any('/*', (req, res) =>
       // console.log("got request")
-      res.end(Buffer.from(res.getRemoteAddress()).join('.'));
-    });
+      res.end(req.getIP())
+    );
     return app.listen(3000, '127.0.0.1');
   });
 

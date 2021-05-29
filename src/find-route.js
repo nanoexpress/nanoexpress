@@ -96,9 +96,11 @@ export default class FindRoute {
     for (let i = 0, len = routes.length; i < len; i += 1) {
       const route = routes[i];
 
-      if (route.method === req.method) {
+      if (route.method === 'ANY' || route.method === req.method) {
         let found = false;
-        if (route.regex && route.path.test(req.path)) {
+        if (route.all) {
+          found = true;
+        } else if (route.regex && route.path.test(req.path)) {
           found = true;
         } else if (route.path === req.path) {
           found = true;
@@ -132,8 +134,11 @@ export default class FindRoute {
         }
       }
     }
+
     if (response === undefined && this.defaultRoute) {
-      this.defaultRoute(req, res);
+      return this.defaultRoute(req, res);
     }
+
+    return response;
   }
 }
