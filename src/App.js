@@ -87,7 +87,7 @@ export default class App {
         _routers.length = 0;
         _pubs.length = 0;
       } else {
-        this._router.on(httpMethods, basePath, handler);
+        this._router.on('ANY', basePath, handler);
       }
     });
 

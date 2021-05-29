@@ -6,7 +6,21 @@ export default class FindRoute {
     this.routes = [];
     this.async = false;
     this.await = false;
+    this.fetchParams = true;
     this.defaultRoute = null;
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  shimLegacy(func) {
+    return async (req, res) =>
+      new Promise((resolve, reject) =>
+        func(req, res, (err, done) => {
+          if (err) {
+            return reject(err);
+          }
+          return resolve(done);
+        })
+      );
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -36,13 +50,17 @@ export default class FindRoute {
       route.regex = true;
     }
     route.async = route.handler.constructor.name === 'AsyncFunction';
-    route.await = route.toString().includes('await');
+    route.await = route.handler.toString().includes('await');
+    route.legacy = route.handler.toString().includes('next(');
 
     if (!this.async && route.async) {
       this.async = true;
     }
     if (!this.await && route.await) {
       this.await = true;
+    }
+    if (route.legacy) {
+      route.handler = this.shimLegacy(route.handler);
     }
     return route;
   }
@@ -118,7 +136,7 @@ export default class FindRoute {
               req.params[key] = value;
             }
           }
-          if (route.async) {
+          if (route.async || route.legacy) {
             // eslint-disable-next-line no-await-in-loop
             response = await route.handler(req, res);
           } else {
