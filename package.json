@@ -53,6 +53,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^12.1.4",
+    "@semantic-release/git": "^9.0.0",
     "commitlint-config-airlight": "^1.0.3",
     "coveralls": "^3.1.0",
     "eslint": "^7.27.0",
@@ -64,7 +65,9 @@
     "prettier": "^2.3.0",
     "prettier-config-airlight": "^1.0.0",
     "rollup": "^2.50.3",
+    "semantic-release": "^17.4.3",
     "smartlint": "^1.1.11",
     "typescript": "4.3.2"
-  }
+  },
+  "version": "6.0.1"
 }
