@@ -1,37 +1,7 @@
 /* globals describe, it, expect */
 import fastQueryParse from 'fast-query-parse';
 import { Readable } from 'stream';
-import { prepareParams } from '../../src/helpers/index.js';
-import { body, params } from '../../src/request-proto/index.js';
-
-describe('params normalize', () => {
-  it('params normalize non-empty', () => {
-    const paramsValues = ['paramValue1', 'paramValue2'];
-
-    const fakeReq = {
-      rawPath: '/:p1/:p2',
-      getParameter(index) {
-        return paramsValues[index];
-      }
-    };
-
-    const preparedParams = prepareParams(fakeReq.rawPath);
-
-    expect(params(fakeReq, preparedParams)).toStrictEqual({
-      p1: 'paramValue1',
-      p2: 'paramValue2'
-    });
-  });
-  it('params normalize empty', () => {
-    const fakeReq = {
-      rawPath: '/',
-      forEach() {},
-      getParameter() {}
-    };
-
-    expect(params(fakeReq)).toBe(undefined);
-  });
-});
+import { body } from '../../src/request-proto/index.js';
 
 describe('queries normalize', () => {
   it('queries normalize non-empty', () => {
