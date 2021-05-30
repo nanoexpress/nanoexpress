@@ -1,5 +1,5 @@
 {
-  "include": ["src", "tests", "examples", "*.js", "*.cjs", "*.d.ts"],
+  "include": ["src", "tests", "examples", "*.js", "*.cjs", "*.d.ts", "exposes"],
   "exclude": ["node_modules"],
   "compilerOptions": {
     "target": "es5",

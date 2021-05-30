@@ -9,7 +9,8 @@
     ".": "./cjs/nanoexpress.js",
     "./module": "./src/nanoexpress.js",
     "./cjs/*": "./cjs/*",
-    "./src/*": "./src/*"
+    "./src/*": "./src/*",
+    "./exposes/*": "./exposes/*"
   },
   "typings": "nanoexpress.d.ts",
   "funding": {
