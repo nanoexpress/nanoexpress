@@ -1,6 +1,6 @@
 {
   "name": "nanoexpress",
-  "version": "7.1.1",
+  "version": "7.1.2",
   "description": "Nano-framework for Node.js",
   "type": "module",
   "main": "cjs/nanoexpress.js",
