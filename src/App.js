@@ -42,7 +42,6 @@ export default class App {
     this._router = new FindRoute(config);
 
     this._ws = [];
-    this._pubs = [];
 
     this.time = Date.now();
 
@@ -72,20 +71,27 @@ export default class App {
     }
     middlewares.forEach((handler) => {
       if (handler instanceof Route) {
-        const { _routers, _pubs } = handler;
+        const { _routers, _ws } = handler;
         _routers.forEach(({ method, path, handler: routeHandler }) => {
           const routePath =
             // eslint-disable-next-line no-nested-ternary
             basePath === '*' ? '*' : path === '/' ? basePath : basePath + path;
           this._router.on(method, routePath, routeHandler);
         });
-        _pubs.forEach(({ topic, string, isBinary, compress }) => {
-          this._app.publish(topic, string, isBinary, compress);
+        _ws.forEach((websocket) => {
+          websocket.path =
+            // eslint-disable-next-line no-nested-ternary
+            basePath === '*'
+              ? '*'
+              : websocket.path === '/'
+              ? basePath
+              : basePath + websocket.path;
+          this._ws.push(websocket);
         });
         handler._app = this;
         handler._basePath = basePath;
         _routers.length = 0;
-        _pubs.length = 0;
+        _ws.length = 0;
       } else {
         this._router.on('ANY', basePath, handler);
       }
@@ -100,20 +106,23 @@ export default class App {
     return this;
   }
 
-  ws(path, handler, options) {
+  ws(path, handler, options = {}) {
+    if (typeof handler === 'object') {
+      options = handler;
+      handler = null;
+    }
+
     this._ws.push({ path, handler, options });
 
     return this;
   }
 
   publish(topic, string, isBinary, compress) {
-    this._app.publish(topic, string, isBinary, compress);
-
-    return this;
+    return this._app.publish(topic, string, isBinary, compress);
   }
 
   listen(port, host) {
-    const { _config: config, _app: app, _router: router, _console } = this;
+    const { _config: config, _app: app, _router: router, _ws, _console } = this;
 
     if (typeof port === 'string') {
       if (port.indexOf('.') !== -1) {
@@ -199,6 +208,12 @@ export default class App {
 
       router.lookup(req, res);
     });
+
+    _ws.forEach(({ path, handler, options }) => {
+      this._app.ws(path, handler, options);
+    });
+    // Cleanup GC
+    _ws.length = 0;
 
     return new Promise((resolve, reject) => {
       if (port === undefined) {

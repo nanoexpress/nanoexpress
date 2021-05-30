@@ -1,10 +1,9 @@
-import { httpMethods } from './helpers/index.js';
+import { httpMethods, invalid } from './helpers/index.js';
 
 export default class Route {
   constructor() {
     this._routers = [];
     this._ws = [];
-    this._pubs = [];
     this._app = null;
     this._basePath = '';
 
@@ -59,11 +58,11 @@ for (let i = 0, len = httpMethods.length; i < len; i += 1) {
 // PubSub methods expose
 Route.prototype.publish = (topic, message, isBinary, compress) => {
   if (this._app) {
-    this._app.publish(topic, message, isBinary, compress);
-  } else {
-    this._pubs.push({ topic, message, isBinary, compress });
+    return this._app.publish(topic, message, isBinary, compress);
   }
-  return this;
+  invalid(
+    'nanoexpress [Router]: Please attach to `Application` before using publish'
+  );
 };
 
 Route.prototype.ws = function wsExpose(path, handler, options = {}) {
