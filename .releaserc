@@ -38,7 +38,7 @@
     [
       "@semantic-release/github",
       {
-        "assets": "dist/nanoexpress-${nextRelease.version}.tgz"
+        "assets": "dist/*-${nextRelease.version}.tgz"
       }
     ]
   ]
