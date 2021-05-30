@@ -28,14 +28,15 @@ export default class FindRoute {
     if (typeof route.path === 'string') {
       if (route.path === '*' || route.path === '/*') {
         route.all = true;
-      }
-      if (route.path.indexOf(':') !== -1) {
+      } else if (route.path.indexOf(':') !== -1) {
         route.fetch_params = true;
         route.params_id = [];
         route.path = pathToRegexp(route.path, route.params_id);
         route.regex = true;
       } else if (route.path.indexOf('*') !== -1) {
-        route.path = pathToRegexp(route.path);
+        route.params_id = [];
+        route.path = pathToRegexp(route.path, route.params_id);
+        route.fetch_params = route.params_id.length > 0;
         route.regex = true;
       }
     } else if (route.path instanceof RegExp) {
