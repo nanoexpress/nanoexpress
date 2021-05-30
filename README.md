@@ -22,8 +22,8 @@
 - [Routes and route expose](https://nanoexpress.js.org/routes)
 - [WebSocket](https://nanoexpress.js.org/websocket)
 - [Docker](https://nanoexpress.js.org/docker-linux)
-- [Benchmarks](https://nanoexpress.js.org/benchmark) and [Live benchmarks](https://github.com/the-benchmarker/web-frameworks#results)
-- [FAQ](https://nanoexpress.js.org/support/faq)
+- [Live benchmarks](https://github.com/the-benchmarker/web-frameworks#results)
+- [FAQ](https://nanoexpress.js.org/faq)
 
 ## Support
 

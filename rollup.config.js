@@ -11,20 +11,8 @@ const external = dependencies.concat([
   'util'
 ]);
 
-// Prepare defines export
-const packedDefines = ['proxy', 'webrtc-server', 'index'].map((name) => ({
-  input: `./src/packed/defines/${name}.js`,
-  output: {
-    format: 'cjs',
-    file: `./cjs/packed/defines/${name}.js`,
-    sourcemap: true
-  },
-  external
-}));
-
 // Export config for Rollup
 export default [
-  ...packedDefines,
   {
     input: './src/Route.js',
     output: {
