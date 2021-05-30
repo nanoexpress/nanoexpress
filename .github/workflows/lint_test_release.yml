@@ -27,10 +27,8 @@ jobs:
       - name: Cache
         uses: actions/cache@v2
         with:
-          path: node_modules
-          key: ${{ runner.os }}-yarn-cache-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-cache-
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install
         run: yarn --frozen-lockfile
@@ -57,10 +55,8 @@ jobs:
       - name: Cache
         uses: actions/cache@v2
         with:
-          path: node_modules
-          key: ${{ runner.os }}-yarn-cache-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-cache-
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install
         run: yarn --frozen-lockfile
@@ -82,10 +78,8 @@ jobs:
       - name: Cache
         uses: actions/cache@v2
         with:
-          path: node_modules
-          key: ${{ runner.os }}-yarn-cache-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-cache-
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Install
         run: yarn --frozen-lockfile
