@@ -26,6 +26,11 @@ export default class FindRoute {
 
   // eslint-disable-next-line class-methods-use-this
   parse(route) {
+    // Initialize default config
+    route.all = false;
+    route.regex = false;
+    route.fetch_params = false;
+
     if (typeof route.path === 'string') {
       route.path = fastDecodeURI(route.path);
       if (route.path === '*' || route.path === '/*') {
@@ -85,6 +90,36 @@ export default class FindRoute {
     return this;
   }
 
+  off(method, path, handler) {
+    const parsed = this.parse({ method, path, handler });
+
+    if (!handler) {
+      this.routes = this.routes.filter(
+        (route) =>
+          !(route.method === parsed.method && route.path === parsed.path)
+      );
+    } else {
+      this.routes = this.routes.filter(
+        (route) =>
+          !(
+            route.method === parsed.method &&
+            route.path === parsed.path &&
+            route.handler === parsed.handler
+          )
+      );
+    }
+
+    return this;
+  }
+
+  search(param) {
+    const { routes } = this;
+
+    return routes.filter((route) =>
+      Object.keys(param).every((key) => param[key] === route[key])
+    );
+  }
+
   find(method, path, handlers = []) {
     const { routes } = this;
 
@@ -113,9 +148,9 @@ export default class FindRoute {
         let found = false;
         if (route.all) {
           found = true;
-        } else if (route.regex && route.path.test(req.path)) {
-          found = true;
         } else if (route.path === req.path) {
+          found = true;
+        } else if (route.regex && route.path.test(req.path)) {
           found = true;
         }
 
@@ -139,10 +174,10 @@ export default class FindRoute {
           }
 
           if (response !== undefined && response !== res) {
-            res.end(JSON.stringify(response));
-            break;
-          } else if (response === res) {
-            break;
+            return res.end(JSON.stringify(response));
+          }
+          if (response === res) {
+            return res;
           }
         }
       }
