@@ -30,7 +30,7 @@
           "CHANGELOG.md",
           "package.json",
           "yarn.lock",
-          "*-${nextRelease.version}.tgz"
+          "dist/*-${nextRelease.version}.tgz"
         ],
         "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
       }
