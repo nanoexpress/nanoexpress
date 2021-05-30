@@ -49,6 +49,7 @@
   "homepage": "https://github.com/nanoexpress/nanoexpress#readme",
   "dependencies": {
     "cookie": "^0.4.1",
+    "fast-decode-uri-component": "^1.0.1",
     "fast-query-parse": "^1.2.0",
     "path-to-regexp": "^6.2.0",
     "uWebSockets.js": "https://github.com/uNetworking/uWebSockets.js/archive/v19.2.0.tar.gz"
