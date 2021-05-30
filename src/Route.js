@@ -56,7 +56,7 @@ for (let i = 0, len = httpMethods.length; i < len; i += 1) {
 }
 
 // PubSub methods expose
-Route.prototype.publish = (topic, message, isBinary, compress) => {
+Route.prototype.publish = function publish(topic, message, isBinary, compress) {
   if (this._app) {
     return this._app.publish(topic, message, isBinary, compress);
   }

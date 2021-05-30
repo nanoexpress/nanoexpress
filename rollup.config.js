@@ -18,6 +18,7 @@ export default [
     output: {
       format: 'cjs',
       file: './cjs/Route.js',
+      exports: 'default',
       sourcemap: true
     },
     external
