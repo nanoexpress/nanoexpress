@@ -47,7 +47,6 @@
   },
   "homepage": "https://github.com/nanoexpress/nanoexpress#readme",
   "dependencies": {
-    "@dalisoft/events": "^0.2.0",
     "cookie": "^0.4.1",
     "fast-query-parse": "^1.2.0",
     "path-to-regexp": "^6.2.0",

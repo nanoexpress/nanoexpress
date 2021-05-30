@@ -610,18 +610,6 @@
   dependencies:
     chalk "^4.0.0"
 
-"@dalisoft/args@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@dalisoft/args/-/args-0.1.1.tgz#54a8e8e932de3ac0ef7ab39e83c58f1464d7d306"
-  integrity sha512-PwmLEhnTyK6+AUwD0oqS57nLs1vpB17vEDlMc1i27zH8mrtFJmBmYfQv4FszoUHDHv3PtFk8M0X9yWxry2TSwA==
-
-"@dalisoft/events@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@dalisoft/events/-/events-0.2.0.tgz#30ea60c77a8479afd272a19b401e562dcad04dc8"
-  integrity sha512-2NS/0vS9eL8ZxhgCVZQgPS4uoqbcSk9FN3G8Eqakcej7wOpH72z1kmDEDGI5T+MOp9IueKT2qI0XUdXhKeK9GA==
-  dependencies:
-    "@dalisoft/args" "^0.1.1"
-
 "@eslint/eslintrc@^0.4.1":
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/@eslint/eslintrc/-/eslintrc-0.4.1.tgz#442763b88cecbe3ee0ec7ca6d6dd6168550cbf14"
