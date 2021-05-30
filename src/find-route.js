@@ -1,6 +1,5 @@
 import fastDecodeURI from 'fast-decode-uri-component';
 import { pathToRegexp } from 'path-to-regexp';
-import { invalid } from './helpers/index.js';
 
 export default class FindRoute {
   constructor(options = {}) {
@@ -49,11 +48,6 @@ export default class FindRoute {
     route.await = route.handler.toString().includes('await');
     route.legacy = route.handler.toString().includes('next(');
 
-    if (!route.async && !route.legacy) {
-      invalid(
-        'nanoexpress: Route or Middleware should be either async or legacy mode (express middleware like)'
-      );
-    }
     if (!this.async && route.async) {
       this.async = true;
     }
