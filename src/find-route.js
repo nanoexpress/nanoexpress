@@ -1,4 +1,4 @@
-import { prepareParams } from './helpers/index.js';
+import { pathToRegexp } from 'path-to-regexp';
 
 export default class FindRoute {
   constructor(options = {}) {
@@ -31,19 +31,11 @@ export default class FindRoute {
       }
       if (route.path.indexOf(':') !== -1) {
         route.fetch_params = true;
-        route.params_id = prepareParams(route.path);
-        route.params_id.forEach((key) => {
-          route.path = route.path.replace(`:${key}`, '([^/]+?)');
-        });
-        // eslint-disable-next-line security-node/non-literal-reg-expr
-        route.path = new RegExp(`^${route.path}\\/?$`, 'i');
+        route.params_id = [];
+        route.path = pathToRegexp(route.path, route.params_id);
         route.regex = true;
       } else if (route.path.indexOf('*') !== -1) {
-        route.path = new RegExp(
-          // eslint-disable-next-line security-node/non-literal-reg-expr
-          `^${route.path.replace(/\*/g, '(.*)')}\\/?$`,
-          'i'
-        );
+        route.path = pathToRegexp(route.path);
         route.regex = true;
       }
     } else if (route.path instanceof RegExp) {
