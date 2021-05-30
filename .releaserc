@@ -29,7 +29,8 @@
         "assets": [
           "CHANGELOG.md",
           "package.json",
-          "yarn.lock"
+          "yarn.lock",
+          "*-${nextRelease.version}.tgz"
         ],
         "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
       }
