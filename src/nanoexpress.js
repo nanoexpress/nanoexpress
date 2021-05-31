@@ -1,7 +1,7 @@
 import uWS from 'uWebSockets.js';
 import App from './App.js';
 
-const nanoexpress = (options = {}) => {
+function nanoexpress(options = {}) {
   let app;
 
   if (options.https && options.isSSL !== false) {
@@ -12,7 +12,7 @@ const nanoexpress = (options = {}) => {
 
   // Initialize App instance
   return new App(options, app);
-};
+}
 
 // Polyfill for file-upload
 nanoexpress.getParts = uWS.getParts;

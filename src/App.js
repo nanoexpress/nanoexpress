@@ -133,7 +133,7 @@ export default class App {
       }
     }
 
-    app.any('/*', async (res, req) => {
+    app.any('/*', async function requestsProcessor(res, req) {
       req.url = req.getUrl();
 
       req.path = req.url;
@@ -160,7 +160,7 @@ export default class App {
 
       let headers;
       let aborted = false;
-      req.forEach((key, value) => {
+      req.forEach(function getHeader(key, value) {
         if (!headers) {
           headers = {};
         }
@@ -199,7 +199,7 @@ export default class App {
 
       if (router.async && router.await) {
         if (!req.stream) {
-          res.onAborted(() => {
+          res.onAborted(function onAborted() {
             aborted = true;
           });
         }
@@ -215,7 +215,7 @@ export default class App {
     // Cleanup GC
     _ws.length = 0;
 
-    return new Promise((resolve, reject) => {
+    const listenerWrapper = (resolve, reject) => {
       if (port === undefined) {
         const _errorContext = _console.error ? _console : console;
 
@@ -263,7 +263,8 @@ export default class App {
       } else {
         app.listen(port, onListenHandler);
       }
-    });
+    };
+    return new Promise(listenerWrapper);
   }
 
   close() {

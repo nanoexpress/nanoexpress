@@ -5,6 +5,7 @@
     "extraFileExtensions": [".cjs"]
   },
   "rules": {
+    "prefer-arrow-callback": "off",
     "@typescript-eslint/indent": "off",
     "indent": "off",
     "@typescript-eslint/no-redeclare": "off", // TODO: Do it later

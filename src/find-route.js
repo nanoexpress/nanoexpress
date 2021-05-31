@@ -13,15 +13,16 @@ export default class FindRoute {
 
   // eslint-disable-next-line class-methods-use-this
   shimLegacy(func) {
-    return async (req, res) =>
-      new Promise((resolve, reject) =>
+    return async function shimLegacyWrapper(req, res) {
+      return new Promise(function shimLegacyConverter(resolve, reject) {
         func(req, res, (err, done) => {
           if (err) {
             return reject(err);
           }
           return resolve(done);
-        })
-      );
+        });
+      });
+    };
   }
 
   // eslint-disable-next-line class-methods-use-this
