@@ -106,14 +106,8 @@ export default class App {
     return this;
   }
 
-  ws(path, handler, options = {}) {
-    if (typeof handler === 'object') {
-      options = handler;
-      handler = null;
-    }
-
-    this._ws.push({ path, handler, options });
-
+  ws(path, options) {
+    this._ws.push({ path, options });
     return this;
   }
 
@@ -209,8 +203,8 @@ export default class App {
       router.lookup(req, res);
     });
 
-    _ws.forEach(({ path, handler, options }) => {
-      this._app.ws(path, handler, options);
+    _ws.forEach(({ path, options }) => {
+      this._app.ws(path, options);
     });
     // Cleanup GC
     _ws.length = 0;
