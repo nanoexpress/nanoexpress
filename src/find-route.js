@@ -1,3 +1,5 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable max-lines */
 import fastDecodeURI from 'fast-decode-uri-component';
 import { pathToRegexp } from 'path-to-regexp';
 
@@ -25,13 +27,17 @@ export default class FindRoute {
     };
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  parse(route) {
-    // Initialize default config
-    route.all = false;
-    route.regex = false;
-    route.fetch_params = false;
-
+  // eslint-disable-next-line class-methods-use-this, max-lines-per-function
+  parse(incomingRoute) {
+    const route = {
+      ...incomingRoute,
+      all: false,
+      regex: false,
+      fetch_params: false,
+      async: false,
+      await: false,
+      legacy: false
+    };
     if (typeof route.path === 'string') {
       route.path = fastDecodeURI(route.path);
       if (route.path === '*' || route.path === '/*') {
@@ -138,6 +144,7 @@ export default class FindRoute {
     return handlers;
   }
 
+  // eslint-disable-next-line max-lines-per-function, complexity
   async lookup(req, res) {
     const { routes } = this;
     let response;
@@ -156,12 +163,15 @@ export default class FindRoute {
         }
 
         if (found) {
-          if (route.fetch_params) {
+          if (route.fetch_params && route.params_id) {
             const exec = route.path.exec(req.path);
             req.params = {};
-
-            for (let p = 0, lenp = route.params_id.length; p < lenp; p += 1) {
-              const key = route.params_id[p];
+            for (
+              let p = 0, lenp = route.params_id.length;
+              exec && p < lenp;
+              p += 1
+            ) {
+              const key = route.params_id[p].name;
               const value = exec[p + 1];
 
               req.params[key] = value;
