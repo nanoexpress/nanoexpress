@@ -150,12 +150,6 @@ declare namespace nanoexpress {
     body?: false | SchemaValue;
     response?: false | SchemaValue;
   }
-  export interface IWebSocketOptions {
-    compression?: number;
-    maxPayloadLength?: number;
-    idleTimeout?: number;
-    schema?: ISchema;
-  }
   interface IRouteOption {
     schema?: ISchema;
     isRaw?: boolean;
@@ -331,12 +325,6 @@ declare namespace nanoexpress {
       ...middlewares: MiddlewareRoute[]
     ): INanoexpressApp;
 
-    ws(
-      path: string,
-      handler: MiddlewareRoute | Promise<MiddlewareRoute>,
-      options?: IWebSocketOptions
-    ): INanoexpressApp;
-    ws(path: string, options: IWebSocketOptions): INanoexpressApp;
     ws(path: string, options: WebSocketBehavior): INanoexpressApp;
 
     publish(
