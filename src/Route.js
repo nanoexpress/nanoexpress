@@ -24,9 +24,9 @@ export default class Route {
             : path === '/'
             ? this._basePath
             : this._basePath + path;
-        this._app._router.all(routePath, handler);
+        this._app._router.on('ANY', routePath, handler);
       } else {
-        this._routers.push({ method: httpMethods, path, handler });
+        this._routers.push({ method: 'ANY', path, handler });
       }
     });
 
@@ -65,18 +65,7 @@ Route.prototype.publish = function publish(topic, message, isBinary, compress) {
   );
 };
 
-Route.prototype.ws = function wsExpose(path, handler, options = {}) {
-  if (typeof handler === 'object') {
-    options = handler;
-    handler = null;
-  }
-
-  if (typeof options.open === 'function') {
-    this._ws.push({ path, handler: options });
-    return this;
-  }
-
-  this._ws.push({ path, handler, options });
-
+Route.prototype.ws = function wsExpose(path, options) {
+  this._ws.push({ path, options });
   return this;
 };
