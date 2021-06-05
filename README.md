@@ -31,7 +31,7 @@ Thank you, all previous sponsors, backers and supporters
 
 ### Sponsors
 
-See [here](https://nanoexpress.js.org/support/sponsors)
+See [here](https://nanoexpress.js.org/sponsors)
 
 ## License
 
