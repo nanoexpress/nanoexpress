@@ -6,8 +6,6 @@ name: Linting, Testing and Release
 on:
   push:
     branches: [master]
-  pull_request:
-    branches: [master]
 
 env:
   CI: true
