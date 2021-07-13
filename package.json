@@ -20,6 +20,7 @@
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --config jest.config.json",
     "coverage": "npm run test --coverage",
     "coveralls": "npm run coverage && cat ./tests/coverage/lcov.info | coveralls",
+    "prepare": "yarn build && husky install",
     "prepublishOnly": "npm run lint && npm run test && npm run build",
     "build": "rm -rf cjs/*.js && rm -rf cjs/*.map && rm -rf cjs/packed && rollup -c"
   },
