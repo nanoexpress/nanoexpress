@@ -61,7 +61,7 @@
     "eslint-config-airlight-node": "^1.1.9",
     "husky": "^7.0.1",
     "jest": "^27.0.6",
-    "lint-staged": "^11.1.0",
+    "lint-staged": "^11.1.1",
     "lint-staged-config-airlight": "^2.0.0",
     "prettier": "^2.3.2",
     "prettier-config-airlight": "^1.0.0",
