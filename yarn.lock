@@ -836,10 +836,10 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
-"@ls-lint/ls-lint@^1.9.2":
-  version "1.9.2"
-  resolved "https://registry.yarnpkg.com/@ls-lint/ls-lint/-/ls-lint-1.9.2.tgz#689f1f4c06072823a726802ba167340efcefe19c"
-  integrity sha512-sugEjWjSSy9OHF6t1ZBLZCAROj52cZthB9dIePmzZzzMwmWwy3qAEMSdJheHeS1FOwDZI7Ipm1H/bWgzJNnSAw==
+"@ls-lint/ls-lint@^1.10.0":
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/@ls-lint/ls-lint/-/ls-lint-1.10.0.tgz#cad20085edc010a3e938aa01bb66d05e5e12b3f3"
+  integrity sha512-C1vrI8zFp/28CiqCQHtfu/GqUg2iLYZqtlJHCYfqlg6OJopv7lHAPS0rzk06Ev1121yj4Gi/GmXMBlF+j35DcQ==
 
 "@nodelib/fs.scandir@2.1.3":
   version "2.1.3"
@@ -3074,10 +3074,22 @@ globby@^11.0.1:
     merge2 "^1.3.0"
     slash "^3.0.0"
 
-globby@^11.0.3, globby@~11.0.3:
+globby@^11.0.3:
   version "11.0.3"
   resolved "https://registry.yarnpkg.com/globby/-/globby-11.0.3.tgz#9b1f0cb523e171dd1ad8c7b2a9fb4b644b9593cb"
   integrity sha512-ffdmosjA807y7+lA1NM0jELARVmYul/715xiILEjo3hBLPTcirgQNnXECn5g3mtR8TOLCVbkfua1Hpen25/Xcg==
+  dependencies:
+    array-union "^2.1.0"
+    dir-glob "^3.0.1"
+    fast-glob "^3.1.1"
+    ignore "^5.1.4"
+    merge2 "^1.3.0"
+    slash "^3.0.0"
+
+globby@~11.0.4:
+  version "11.0.4"
+  resolved "https://registry.yarnpkg.com/globby/-/globby-11.0.4.tgz#2cbaff77c2f2a62e71e9b2813a67b97a3a3001a5"
+  integrity sha512-9O4MVG9ioZJ08ffbcyVYyLOJLk5JQ688pJ4eMGLpdWLHq/Wr1D9BlriLQyL0E+jbkuePVZXYFj47QM/v093wHg==
   dependencies:
     array-union "^2.1.0"
     dir-glob "^3.0.1"
@@ -4430,16 +4442,16 @@ markdownlint-cli2-formatter-default@^0.0.2:
   resolved "https://registry.yarnpkg.com/markdownlint-cli2-formatter-default/-/markdownlint-cli2-formatter-default-0.0.2.tgz#76f1a064d70966178dfe3bb489af9423d830ca79"
   integrity sha512-jIz1X3SIC8sX4NDFqQFUXL+JEtfnDoN4i+xocEu+etcxGX455pHb6sx86f/yVk4mKJ2o7aNe2ydSx9an22BfBg==
 
-markdownlint-cli2@0.1.3:
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/markdownlint-cli2/-/markdownlint-cli2-0.1.3.tgz#15ac14edea7816c96978f5f1de9256e637b691c5"
-  integrity sha512-4pbrSEDe/G9PjJnrxKXKTQXyXERHvFH+RjvZrCRiNrVPB0p1/wmQXCkdsKNWlaf+gc4gz4k9u1fj2x28GvFenw==
+markdownlint-cli2@0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/markdownlint-cli2/-/markdownlint-cli2-0.2.0.tgz#cecbd8a85ab21b070668e57c3aaa7f6f3056e2fc"
+  integrity sha512-/MIaG2MOlm39SBApQbeHK847/bgX6FfUPZMpCzA2UMYXR8NTwzTdjQAXjjLBK6+zG52GWKyhdmBKobkhLnq8wQ==
   dependencies:
-    globby "~11.0.3"
+    globby "~11.0.4"
     markdownlint "~0.23.1"
     markdownlint-cli2-formatter-default "^0.0.2"
     markdownlint-rule-helpers "~0.14.0"
-    micromatch "~4.0.2"
+    micromatch "~4.0.4"
     strip-json-comments "~3.1.1"
     yaml "~1.10.2"
 
@@ -4546,7 +4558,7 @@ micromark@~2.11.0:
     debug "^4.0.0"
     parse-entities "^2.0.0"
 
-micromatch@^4.0.2, micromatch@^4.0.4, micromatch@~4.0.2:
+micromatch@^4.0.2, micromatch@^4.0.4, micromatch@~4.0.4:
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/micromatch/-/micromatch-4.0.4.tgz#896d519dfe9db25fce94ceb7a500919bf881ebf9"
   integrity sha512-pRmzw/XUcwXGpD9aI9q/0XOwLNygjETJ8y0ao0wdqprrzDa4YnxLcz7fQRZr8voh8V10kGhABbNcHVk5wHgWwg==
@@ -5552,16 +5564,16 @@ smart-buffer@^4.1.0:
   resolved "https://registry.yarnpkg.com/smart-buffer/-/smart-buffer-4.1.0.tgz#91605c25d91652f4661ea69ccf45f1b331ca21ba"
   integrity sha512-iVICrxOzCynf/SNaBQCw34eM9jROU/s5rzIhpOvzhzuYHfJR/DhZfDkXiZSgKXfgv26HT3Yni3AV/DGw0cGnnw==
 
-smartlint@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/smartlint/-/smartlint-2.0.1.tgz#d3a7c33342ddb5b6352dc1c9b0a1344ae46a4443"
-  integrity sha512-JtXRXSDdHseckChZM23ftD9JaL2o4ieCe01Zx2puu0QJ8bOOAW1nPznuXtmjttGKlUHaoI8sFyowFmIUBgI8rA==
+smartlint@^2.1.3:
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/smartlint/-/smartlint-2.1.3.tgz#2b4bdadd642ee36bfba9ebe0dd1b25172888d2b0"
+  integrity sha512-OSC+CtIU4EGrV0sVzlGI/xTBotNjxUti6L4uLsJYPyEwYm3ootyikOVILy6Iiyr5hmSwaLGZ3NRq38r5koLfnQ==
   dependencies:
-    "@ls-lint/ls-lint" "^1.9.2"
+    "@ls-lint/ls-lint" "^1.10.0"
     "@stoplight/spectral" "^5.9.1"
     dockerfilelint "^1.8.0"
     eslint "^7.27.0"
-    markdownlint-cli2 "0.1.3"
+    markdownlint-cli2 "0.2.0"
     prettier "^2.3.0"
     stylelint "^13.13.1"
 
