@@ -57,7 +57,7 @@
     "@commitlint/cli": "^12.1.4",
     "commitlint-config-airlight": "^1.0.4",
     "coveralls": "^3.1.1",
-    "eslint": "^7.31.0",
+    "eslint": "^7.32.0",
     "eslint-config-airlight-node": "^1.1.9",
     "husky": "^7.0.1",
     "jest": "^27.0.6",
