@@ -23,7 +23,7 @@
 - [WebSocket](https://nanoexpress.js.org/websocket)
 - [Docker](https://nanoexpress.js.org/docker-linux)
 - [Benchmarks](https://nanoexpress.js.org/benchmark) and [Live benchmarks](https://github.com/the-benchmarker/web-frameworks#results)
-- [FAQ](https://nanoexpress.js.org/support/faq)
+- [FAQ](https://nanoexpress.js.org/faq)
 
 ## Support
 
