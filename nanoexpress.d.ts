@@ -1,7 +1,7 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable max-lines, @typescript-eslint/no-explicit-any */
 import Ajv, { Options as AjvOptions } from 'ajv';
-import { Readable, Writable } from 'stream';
+import { Stream } from 'stream';
 import {
   AppOptions as AppOptionsBasic,
   HttpRequest as HttpRequestBasic,
@@ -28,6 +28,7 @@ declare namespace nanoexpress {
     ajv?: AjvOptions;
     configureAjv(ajv: Ajv): Ajv;
     swagger?: SwaggerOptions;
+    console?: Pick<Console, 'log' | 'error' | 'warn' | 'info' | 'debug'>;
   }
 
   export type HttpRequestHeaders = Record<string, string>;
@@ -67,7 +68,7 @@ declare namespace nanoexpress {
     query?: HttpRequestQueries;
     params?: HttpRequestParams;
     body?: string | HttpRequestBody;
-    pipe(callback: (pipe: Writable) => void): IHttpRequest;
+    pipe(stream: Stream): IHttpRequest;
     onAborted(onAborted: () => void): void;
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __response?: IHttpResponse;
@@ -97,11 +98,7 @@ declare namespace nanoexpress {
     redirect(code: number | string, path?: string): IHttpResponse;
     send(result: string | Record<string, any> | any[]): IHttpResponse;
     json(result: Record<string, any> | any[]): IHttpResponse;
-    pipe(
-      callback: (pipe: Readable) => void,
-      size?: number,
-      compressed?: boolean
-    ): IHttpResponse;
+    pipe(stream: Stream, size?: number, compressed?: boolean): IHttpResponse;
     sendFile(
       filename: string,
       lastModified?: boolean,
