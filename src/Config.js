@@ -10,7 +10,17 @@ export default class Config {
   }
 
   get console() {
-    return this._options.console;
+    if (this._options.console === false) {
+      return {
+        log: () => {},
+        error: () => {},
+        warn: () => {},
+        debug: () => {},
+        info: () => {}
+      };
+    }
+
+    return this._options.console || console;
   }
 
   constructor(options = {}) {
