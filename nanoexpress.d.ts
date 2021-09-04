@@ -28,7 +28,7 @@ declare namespace nanoexpress {
     ajv?: AjvOptions;
     configureAjv(ajv: Ajv): Ajv;
     swagger?: SwaggerOptions;
-    console?: Pick<Console, 'log' | 'error' | 'warn' | 'info' | 'debug'>;
+    console?: Pick<Console, 'log' | 'error' | 'warn' | 'info' | 'debug'> | false;
   }
 
   export type HttpRequestHeaders = Record<string, string>;
