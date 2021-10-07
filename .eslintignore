@@ -3,6 +3,7 @@
 .gitignore
 .gitattributes
 .vscode
+.history
 
 build
 node_modules
