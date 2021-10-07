@@ -12,7 +12,7 @@ export default (req) =>
     }
     if (
       req.headers['content-length'] &&
-      +req.headers['content-length'] > 512_000
+      +req.headers['content-length'] > 2_048_000
     ) {
       return resolve();
     }
