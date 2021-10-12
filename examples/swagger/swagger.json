@@ -1,0 +1,178 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "MyScreen",
+    "version": "1.0.0",
+    "description": "Документация для сервиса MyScreen"
+  },
+  "basePath": "/",
+  "components": {
+    "securitySchemes": {
+      "cookieAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "access_token",
+        "description": "Токен авторизации"
+      }
+    }
+  },
+  "responses": {
+    "errors": {
+      "common": {
+        "type": "object",
+        "properties": {
+          "status": { "type": "string", "example": "error" },
+          "code": { "type": "string", "example": "server-error.10000" },
+          "message": { "type": "string" }
+        }
+      },
+      "user": {
+        "not_found": {
+          "type": "object",
+          "properties": {
+            "status": { "type": "string", "example": "error" },
+            "code": { "type": "string", "example": "server-error.10003" },
+            "message": {
+              "type": "string",
+              "example": "The user does not exist"
+            }
+          }
+        },
+        "exists": {
+          "type": "object",
+          "properties": {
+            "status": { "type": "string", "example": "error" },
+            "code": { "type": "string", "example": "server-error.10004" },
+            "message": {
+              "type": "string",
+              "example": "The user already exists"
+            }
+          }
+        },
+        "not_authorized": {
+          "type": "object",
+          "properties": {
+            "status": { "type": "string", "example": "error" },
+            "code": { "type": "string", "example": "server-error.10002" },
+            "message": {
+              "type": "string",
+              "example": "The user is not logged in"
+            },
+            "data": {
+              "type": "object"
+            }
+          }
+        },
+        "invalid_token": {
+          "type": "object",
+          "properties": {
+            "status": { "type": "string", "example": "error" },
+            "code": { "type": "string", "example": "server-error.10001" },
+            "message": {
+              "type": "string",
+              "example": "The authorization token signature is invalid or corrupted"
+            }
+          }
+        }
+      },
+      "media": {
+        "not_found": {
+          "type": "object",
+          "properties": {
+            "status": { "type": "string", "example": "error" },
+            "code": { "type": "string", "example": "server-error.10005" },
+            "message": {
+              "type": "string",
+              "example": "MEDIA_ID does not exist in file storage"
+            }
+          }
+        },
+        "disallowed_files": {
+          "type": "object",
+          "properties": {
+            "status": { "type": "string", "example": "error" },
+            "code": { "type": "string", "example": "server-error.10006" },
+            "message": {
+              "type": "string",
+              "example": "Unsupported content format of discharge"
+            }
+          }
+        }
+      },
+      "code": {
+        "duplicated": {
+          "type": "object",
+          "properties": {
+            "status": { "type": "string", "example": "error" },
+            "code": { "type": "string", "example": "server-error.10040" },
+            "message": {
+              "type": "string",
+              "example": "The monitor ID must be unique"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [{ "cookieAuth": [] }],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "tags": [
+    {
+      "name": "auth",
+      "description": "Аутентификация пользователя"
+    },
+    {
+      "name": "monitors",
+      "description": "Точки пользователя"
+    },
+    {
+      "name": "video",
+      "description": "Видео путь для загрузки и мета-данные"
+    },
+    {
+      "name": "editor",
+      "description": "Путь для манипуляция с редактором"
+    },
+    {
+      "name": "files",
+      "description": "Путь для манипуляция с файлами"
+    },
+    {
+      "name": "media",
+      "description": "Путь для манипуляция с файлами редактора"
+    },
+    {
+      "name": "folders",
+      "description": "Путь для манипуляция с папками"
+    },
+    {
+      "name": "upload",
+      "description": "Путь для загрузки файлов"
+    },
+    {
+      "name": "users",
+      "description": "Путь для манипуляция с пользователям"
+    },
+    {
+      "name": "orders",
+      "description": "Путь для манипуляция с заказами"
+    },
+    {
+      "name": "payments",
+      "description": "Путь для манипуляция с оплатами"
+    },
+    {
+      "name": "uptime",
+      "description": "Путь для проверки аптайм мониторов"
+    },
+    {
+      "name": "playlists",
+      "description": "Плейлисты пользователя"
+    },
+    {
+      "name": "logs",
+      "description": "Путь для манипуляция с логами"
+    }
+  ]
+}
