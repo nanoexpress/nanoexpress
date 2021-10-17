@@ -128,7 +128,9 @@ export default class App {
     // Polyfill for plugins like CORS
     // Detaching it from every method for performance reason
     if (_routeCalled && !_optionsCalled) {
-      this.options('/*', () => {});
+      this.options('/*', () => {
+        // empty handler
+      });
     }
 
     if (!this._anyRouteCalled) {

@@ -10,7 +10,9 @@ async function two(req) {
 
 nanoexpress()
   .use(one, two)
-  .get('/favicon.ico', () => {})
+  .get('/favicon.ico', () => {
+    //
+  })
   .get('/', (req, res) => res.end('Hello'))
   .get('/user/:id', (req, res) =>
     res.end(`User: ${JSON.stringify(req.params.id)}`)

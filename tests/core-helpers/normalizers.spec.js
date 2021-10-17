@@ -25,8 +25,12 @@ describe('params normalize', () => {
   it('params normalize empty', () => {
     const fakeReq = {
       rawPath: '/',
-      forEach() {},
-      getParameter() {}
+      forEach() {
+        // mock method
+      },
+      getParameter() {
+        // mock method
+      }
     };
 
     expect(params(fakeReq)).toBe(undefined);
@@ -60,14 +64,18 @@ describe('queries normalize', () => {
 describe('body normalize', () => {
   it('body normalize non-empty', async () => {
     const stream = new Readable({
-      read() {}
+      read() {
+        // mock read
+      }
     });
     const fakeReq = {
       stream,
       headers: { 'content-type': 'application/json' }
     };
     const fakeRes = {
-      onAborted() {}
+      onAborted() {
+        // mock handler
+      }
     };
 
     stream.push(Buffer.concat([Buffer.from('fake body')]));

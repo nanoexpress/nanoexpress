@@ -6,7 +6,11 @@ const app = nanoexpress({ swagger: {} });
 const sseApp = sse();
 
 app.use(async (req, res) => {
-  res.socket = { setNoDelay: () => {} };
+  res.socket = {
+    setNoDelay: () => {
+      //
+    }
+  };
   const _oldWrite = res.write;
   res.write = function resWrite(data, charset, callback) {
     _oldWrite.call(this, data, charset);

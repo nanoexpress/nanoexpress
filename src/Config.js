@@ -12,11 +12,21 @@ export default class Config {
   get console() {
     if (this._options.console === false) {
       return {
-        log: () => {},
-        error: () => {},
-        warn: () => {},
-        debug: () => {},
-        info: () => {}
+        log: () => {
+          // empty by default?
+        },
+        error: () => {
+          // empty by default?
+        },
+        warn: () => {
+          // empty by default?
+        },
+        debug: () => {
+          // empty by default?
+        },
+        info: () => {
+          // empty by default?
+        }
       };
     }
 
