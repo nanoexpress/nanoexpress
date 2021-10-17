@@ -14,8 +14,8 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x]
-        os: [ubuntu-18.04]
+        node-version: [16.x]
+        os: [ubuntu-20.04]
 
     steps:
       - uses: actions/checkout@v2
@@ -46,7 +46,7 @@ jobs:
     needs: lint_test_build
     timeout-minutes: 5
 
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     if: github.actor == 'dependabot[bot]'
 
     steps:
