@@ -1595,10 +1595,10 @@ commander@^8.2.0:
   resolved "https://registry.yarnpkg.com/commander/-/commander-8.2.0.tgz#37fe2bde301d87d47a53adeff8b5915db1381ca8"
   integrity sha512-LLKxDvHeL91/8MIyTAD5BFMNtoIwztGPMiM/7Bl8rIPmHCZXRxmSWr91h57dpOpnQ6jIUqEWdXE/uBYMfiVZDA==
 
-commitlint-config-airlight@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/commitlint-config-airlight/-/commitlint-config-airlight-2.0.0.tgz#9ec76662efa27ce0c3fcd8d5e1597a1ed533cb8b"
-  integrity sha512-6qt6PevkSs0sNgG9rpCGz2Zat0rYd1LwvJuulB61KkuxEgjLV8PT6JT+2C9+bBaSs3QpZP/uZhZ0nM9IpJjB8w==
+commitlint-config-airlight@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/commitlint-config-airlight/-/commitlint-config-airlight-3.0.0.tgz#cc981c15372042019a69cab87ff8d7f083fe17e0"
+  integrity sha512-zXUEXa+L+JVUgAs3tXrlz6F/dxONn3IFANouw5+cOR/arzOx13eji2veHnWJtJH182mp5WFgVLtq08ddlYS/Xg==
   dependencies:
     "@commitlint/config-conventional" "^13.2.0"
 
