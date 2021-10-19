@@ -2353,10 +2353,10 @@ fast-levenshtein@^2.0.6, fast-levenshtein@~2.0.6:
   resolved "https://registry.yarnpkg.com/fast-levenshtein/-/fast-levenshtein-2.0.6.tgz#3d8a5c66883a16a30ca8643e851f19baa7797917"
   integrity sha1-PYpcZog6FqMMqGQ+hR8Zuqd5eRc=
 
-fast-query-parse@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/fast-query-parse/-/fast-query-parse-1.2.0.tgz#a7dffd0e9ccf9bdc83dfd4c11396f0ac0f98656d"
-  integrity sha512-WG/7WRybzJLDow5ubKmhhYk5wHbiclPCS9OXSwqFvZAS5L2n7usuLzK+gQo+KmSVuQpjWzJZxsOWpYDMIAj5wg==
+fast-query-parse@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/fast-query-parse/-/fast-query-parse-2.0.0.tgz#8fd4d46b55148c3cbceaf40213a8aab3dd4eaeff"
+  integrity sha512-p/XHlULLOKYCQ5ssgyAKzTrASR4Msj9hmDnxYW8SzCmoe4gEymGlyWCE4XzXyCX7mjTH/mauHjUatcFIWP+MAA==
   dependencies:
     fast-decode-uri-component "^1.0.1"
 
