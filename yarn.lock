@@ -2020,10 +2020,10 @@ eslint-config-airbnb-typescript@^14.0.0:
   dependencies:
     eslint-config-airbnb-base "14.2.1"
 
-eslint-config-airlight-base@^3.x.x:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/eslint-config-airlight-base/-/eslint-config-airlight-base-3.0.0.tgz#3127616edebd756f32e18aaa6c807e9cf48e5a57"
-  integrity sha512-fEACCPb4Hs0NC+SOARaCpkhoUEEg5tKS3D/PpVR0m8v4MiJASgAybPQNRqW0iuh0KWLbyQNXwMBOPLP2nLeDug==
+eslint-config-airlight-base@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/eslint-config-airlight-base/-/eslint-config-airlight-base-3.0.1.tgz#f955dafd64ab63d7faa4c49da8d9037e18f09192"
+  integrity sha512-MJ5MXGPvj2+Y5uL6nAubrm6hiA0F+XV/G82UBmSEGH48RT1RaYebeHdMNZP+fsgH6w9ewsyacSf0xAY60KMiMw==
   dependencies:
     "@typescript-eslint/eslint-plugin" "^5.0.0"
     "@typescript-eslint/parser" "^5.0.0"
@@ -2037,12 +2037,12 @@ eslint-config-airlight-base@^3.x.x:
     eslint-plugin-optimize-regex "^1.2.1"
     eslint-plugin-promise "^5.1.0"
 
-eslint-config-airlight-node@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/eslint-config-airlight-node/-/eslint-config-airlight-node-2.0.0.tgz#871eb8da1b34adeb3340a23df622046372a61698"
-  integrity sha512-wcF4MlA2VlE0W6gZbx1R5yqzjFumlaTHuzzle+goO+NkMbiyUK8Vr/JOjMDFjdu/2M6F05i8Y2+8+WL2R1QEKw==
+eslint-config-airlight-node@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/eslint-config-airlight-node/-/eslint-config-airlight-node-3.0.1.tgz#663038baadf0ac9107b8474e5ab04d797f628c85"
+  integrity sha512-WqCzWRZaTdh0nfBCOGJj6kSDXW/bqDBG1Dxsrima8AwTyPevY9YMDhIRezfteRm8eiHmpWBo9tIyShqHPFCDdw==
   dependencies:
-    eslint-config-airlight-base "^3.x.x"
+    eslint-config-airlight-base "^3.0.1"
     eslint-plugin-node "^11.1.0"
     eslint-plugin-security-node "^1.0.12"
 
