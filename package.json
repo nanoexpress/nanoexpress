@@ -63,7 +63,7 @@
     "jest": "^27.3.1",
     "lint-staged": "^12.1.2",
     "lint-staged-config-airlight": "^2.0.1",
-    "prettier": "^2.4.1",
+    "prettier": "^2.5.0",
     "prettier-config-airlight": "^1.0.1",
     "rollup": "^2.60.1",
     "smartlint": "^5.0.1",
