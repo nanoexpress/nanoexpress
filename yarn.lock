@@ -3660,10 +3660,10 @@ lint-staged-config-airlight@^2.0.1:
   resolved "https://registry.yarnpkg.com/lint-staged-config-airlight/-/lint-staged-config-airlight-2.0.1.tgz#29e43377143c90cd08af93c0505479a35fd279a2"
   integrity sha512-+b3TIBlKMcrQVRjpSVNPtm75HCNE8s1D3WdvSU4sQaihEOHSt0ck7GRbVjDcMSljjwvA92bwgCd4zSgLjOiVOw==
 
-lint-staged@^12.1.3:
-  version "12.1.3"
-  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-12.1.3.tgz#a16e885c0a5e77de9cf559724d29a10348670e68"
-  integrity sha512-ajapdkaFxx+MVhvq6xQRg9zCnCLz49iQLJZP7+w8XaA3U4B35Z9xJJGq9vxmWo73QTvJLG+N2NxhjWiSexbAWQ==
+lint-staged@^12.1.4:
+  version "12.1.4"
+  resolved "https://registry.yarnpkg.com/lint-staged/-/lint-staged-12.1.4.tgz#a92ec8509f13018caaafade61d515c2d5873316e"
+  integrity sha512-RgDz9nsFsE0/5eL9Vat0AvCuk0+j5mEuzBIVfrRH5FRtt5wibYe8zTjZs2nuqLFrLAGQGYnj8+HJxolcj08i/A==
   dependencies:
     cli-truncate "^3.1.0"
     colorette "^2.0.16"
