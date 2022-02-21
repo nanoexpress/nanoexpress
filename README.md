@@ -27,7 +27,7 @@
 
 ## How to Contribute
 
-Whether you're helping us fix bugs, improve the docs, or spread the word, we'd love to have you as part of the Nanoexpress community!
+Whether you're helping us fix bugs, improve the docs, or spread the word, we'd love to have you as part of the nanoexpress community!
 
 Check out our [Contributing Guide](https://github.com/nanoexpress/nanoexpress/blob/master/CONTRIBUTING.md) for ideas on contributing and setup steps for getting our repositories up and running on your local machine.
 
