@@ -111,6 +111,10 @@ If the commit reverts a previous commit, it should begin with `revert:`, followe
 the reverted commit. In the body it should say: `This reverts commit <hash>.`, where the hash is
 the SHA of the commit being reverted.
 
+### Type
+
+Must be one of the following:
+
 - **feat**: A new feature
 - **fix**: A bug fix
 - **docs**: Documentation only changes
@@ -144,28 +148,83 @@ The rest of the commit message is then used for this.
 
 ### Examples
 
-Fix and close issue:
-
-```text
-fix: resolve issues uppercase route names
-
-Closes: #1234
-```
-
 Implement new feature:
 
 ```text
-feat: implement new parser
+feat(query): implement support array query params
 
-This new feature parse xml content
+feat: implement new parser
 
 Closes: #12345
 ```
 
-Breaking change:
+Fix and close issue:
 
 ```text
-refactor: refactor query params parser
+fix(route): resolve issues uppercase route names
 
-BREAKING CHANGE: description of breaking change in query params parser
+fix(12345): fix 12345 issue
+
+Closes: #12345
+```
+
+Docs update:
+
+```text
+docs(contributing): add commits examples
+
+docs: update request type
+```
+
+Changes that do not affect the meaning of the code:
+
+```text
+style(route): change duble quotes to single
+
+style: format via prettier route.js
+```
+
+Refactor code:
+
+```text
+refactor(route): fixed infinite loop
+
+ref: parse query with an array
+```
+
+Pperformance changes:
+
+```text
+perf(route): implement lookup algorithm via stack data structure
+
+perf: implement fast json serialization then performance rose 25%
+
+Note: Indicate changes in performance in as  numbers as possible. Explain the indicators with clear evidence and tests. 
+  This will help you review the change you made even faster.
+```
+
+Adding missing tests or correcting existing tests:
+
+```text
+test(benchmark): test lookup routes perfomance
+
+test: test query parser parse array in query
+```
+
+Changes that affect the build system, CI configuration or external dependencies:
+
+```text
+build(eslint): setup eslint 
+
+build: add lint stage to CI step 
+
+Closes: #12345
+```
+
+Other changes that don't modify `src` or `test` files:
+
+```text
+chore(gh-action): fix gh-actions config for future releases
+
+chore: fix linting errors
 ```
