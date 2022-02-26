@@ -1,7 +1,6 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable max-lines, @typescript-eslint/no-explicit-any */
 import Ajv, { Options as AjvOptions } from 'ajv';
-import { Stream } from 'stream';
 import {
   AppOptions as AppOptionsBasic,
   HttpRequest as HttpRequestBasic,
@@ -70,7 +69,7 @@ declare namespace nanoexpress {
     query?: HttpRequestQueries;
     params?: HttpRequestParams;
     body?: string | HttpRequestBody;
-    pipe(stream: Stream): IHttpRequest;
+    pipe(stream: WritableStream): IHttpRequest;
     onAborted(onAborted: () => void): void;
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __response?: IHttpResponse;
@@ -100,7 +99,11 @@ declare namespace nanoexpress {
     redirect(code: number | string, path?: string): IHttpResponse;
     send(result: string | Record<string, any> | any[]): IHttpResponse;
     json(result: Record<string, any> | any[]): IHttpResponse;
-    pipe(stream: Stream, size?: number, compressed?: boolean): IHttpResponse;
+    pipe(
+      stream: ReadableStream,
+      size?: number,
+      compressed?: boolean
+    ): IHttpResponse;
     sendFile(
       filename: string,
       lastModified?: boolean,
