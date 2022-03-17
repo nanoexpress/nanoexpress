@@ -51,7 +51,7 @@
     "uWebSockets.js": "https://github.com/uNetworking/uWebSockets.js/archive/v20.6.0.tar.gz"
   },
   "devDependencies": {
-    "@commitlint/cli": "^16.2.1",
+    "@commitlint/cli": "^16.2.3",
     "commitlint-config-airlight": "^4.0.0",
     "coveralls": "^3.1.1",
     "eslint": "^8.11.0",
