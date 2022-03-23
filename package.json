@@ -45,7 +45,7 @@
   "homepage": "https://github.com/nanoexpress/nanoexpress#readme",
   "dependencies": {
     "@dalisoft/events": "^0.2.0",
-    "ajv": "^8.10.0",
+    "ajv": "^8.11.0",
     "cookie": "^0.4.2",
     "fast-query-parse": "^2.0.3",
     "uWebSockets.js": "https://github.com/uNetworking/uWebSockets.js/archive/v20.6.0.tar.gz"
