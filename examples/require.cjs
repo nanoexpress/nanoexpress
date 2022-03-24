@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/extensions
 const nanoexpress = require('../cjs');
 
 const app = nanoexpress();
