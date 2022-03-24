@@ -1,11 +1,19 @@
 {
   "name": "nanoexpress",
   "description": "Nano-framework for Node.js",
-  "type": "module",
-  "main": "src/nanoexpress.js",
+  "main": "cjs/nanoexpress.cjs",
+  "module": "src/nanoexpress.js",
   "exports": {
-    ".": "./src/nanoexpress.js",
-    "./cjs/*": "./cjs/*"
+    ".": {
+      "import": "./src/nanoexpress.js",
+      "require": "./cjs/nanoexpress.cjs",
+      "types": "./nanoexpress.d.ts"
+    },
+    "./Route": {
+      "import": "./src/Route.js",
+      "require": "./cjs/Route.cjs",
+      "types": "./nanoexpress.d.ts"
+    }
   },
   "typings": "nanoexpress.d.ts",
   "funding": {

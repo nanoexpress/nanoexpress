@@ -29,7 +29,7 @@ export default [
     input: './src/Route.js',
     output: {
       format: 'cjs',
-      file: './cjs/Route.js',
+      file: './cjs/Route.cjs',
       sourcemap: true
     },
     external
@@ -38,7 +38,7 @@ export default [
     input: './src/nanoexpress.js',
     output: {
       format: 'cjs',
-      file: './cjs/nanoexpress.js',
+      file: './cjs/nanoexpress.cjs',
       exports: 'default',
       esModule: false,
       sourcemap: true

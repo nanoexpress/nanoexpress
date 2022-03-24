@@ -82,7 +82,7 @@ jobs:
       - name: Install
         run: yarn --frozen-lockfile
       - name: semantic-release Prepare
-        run: yarn add semantic-release -W
+        run: yarn add semantic-release -W -D
 
       - name: Build
         run: yarn build

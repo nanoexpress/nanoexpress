@@ -2,7 +2,9 @@
   "extends": "airlight-node",
   "parserOptions": {
     "project": "./tsconfig.json",
-    "extraFileExtensions": [".cjs"]
+    "extraFileExtensions": [
+      ".cjs"
+    ]
   },
   "rules": {
     "@typescript-eslint/indent": "off",
@@ -20,6 +22,7 @@
     "no-restricted-syntax": "off", // TODO: Do it later
     "filename-rules/match": "off", // TODO: Do it later
     "max-nested-callbacks": "off", // TODO: Do it later
-    "consistent-return": "off" // TODO: Do it later
+    "consistent-return": "off", // TODO: Do it later
+    "node/no-unsupported-features/es-syntax": "off" // TODO: Do it later,
   }
 }
