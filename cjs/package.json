@@ -1,4 +1,4 @@
 {
   "type": "commonjs",
-  "main": "nanoexpress.js"
+  "main": "nanoexpress.cjs"
 }

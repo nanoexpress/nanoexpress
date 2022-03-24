@@ -1,8 +1,8 @@
 {
   "name": "nanoexpress",
   "description": "Nano-framework for Node.js",
-  "main": "cjs/nanoexpress.cjs",
-  "module": "src/nanoexpress.js",
+  "type": "module",
+  "main": "src/nanoexpress.js",
   "exports": {
     ".": {
       "import": "./src/nanoexpress.js",
