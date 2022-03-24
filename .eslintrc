@@ -2,9 +2,7 @@
   "extends": "airlight-node",
   "parserOptions": {
     "project": "./tsconfig.json",
-    "extraFileExtensions": [
-      ".cjs"
-    ]
+    "extraFileExtensions": [".cjs"]
   },
   "rules": {
     "@typescript-eslint/indent": "off",
