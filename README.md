@@ -16,7 +16,7 @@
 
 ## Deprecation note
 
-This project now marked as **Deprecated** because of some of internet open-source projects copied from codebase (even with TypeScript typings) without reference back to project, no donation nor activate code contribution from community.
+This project now marked as **Deprecated** because of some of internet open-source projects copied from codebase (even with TypeScript typings) without reference back to project. No donation nor active code contribution from community.
 I love and respect open-source so i keep this project as open-source but without any future updates even bug-fixes. Any commits and updates (if ever will be) goes as private.
 The reason of deprecation as i don't have enough time to support project, add features and i have bills to pay, no one pays that for me.
 
