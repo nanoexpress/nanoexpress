@@ -14,17 +14,7 @@
 
 <!-- [![Coverage Status](https://coveralls.io/repos/github/nanoexpress/nanoexpress/badge.svg?branch=master)](https://coveralls.io/github/nanoexpress/nanoexpress?branch=master) -->
 
-## Deprecation note
-
-This project now marked as **Deprecated** because of some of internet open-source projects copied from codebase (even with TypeScript typings) without reference back to project. No donation nor active code contribution from community.
-I love and respect open-source so i keep this project as open-source but without any future updates even bug-fixes. Any commits and updates (if ever will be) goes as private.
-The reason of deprecation as i don't have enough time to support project, add features and i have bills to pay, no one pays that for me.
-
-If you want better performance, look at [**uWebSockets.js**](https://github.com/uNetworking/uWebSockets.js) or _uWebSockets.js powered_ [**HyperExpress**](https://github.com/kartikk221/hyper-express) for Express.js compatibility
-
-> There have been plans, see **TO-DO / Roadmap** section (below)
-
-Special thanks as company sponsoring open-source:
+## Special thanks
 
 - JetBrains (from 2019)
 - MacStadium (from 2020)
@@ -33,8 +23,6 @@ Special thanks as company sponsoring open-source:
 
 as well as [Sergey NN](https://github.com/mrauhu) and
 [Yaroslav Dobzhanskij](https://github.com/yarsky-tgz) as a Gold+ sponsors
-
-I hope you understand me.
 
 ## TO-DO / Roadmap
 
