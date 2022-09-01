@@ -39,7 +39,7 @@ const prepareProxy = (
       'Accept-Encoding'
     ]
   } = {},
-  WebsocketInstance
+  WebsocketInstance = null
 ) => {
   const isAny = method === undefined;
   const fetchUrl = url.indexOf('*') !== -1 || url.indexOf(':') !== -1;

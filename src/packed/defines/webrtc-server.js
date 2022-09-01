@@ -3,7 +3,7 @@
 // thank you
 
 export default (app) => {
-  app.webRTCServer = (path = '/webrtc', options = {}, ajv) => {
+  app.webRTCServer = (path = '/webrtc', options = {}, ajv = null) => {
     const connections = {};
 
     app.ws(
@@ -12,7 +12,12 @@ export default (app) => {
       (req, ws) => {
         ws.on(
           'message',
-          ({ action, error, credentials: { id, targetId } = {}, payload }) => {
+          ({
+            action,
+            error,
+            credentials: { id, targetId } = {},
+            payload = null
+          }) => {
             switch (action) {
               case 'register': {
                 if (connections[id]) {
