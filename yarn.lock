@@ -1886,16 +1886,16 @@ cosmiconfig@^7.0.0:
     path-type "^4.0.0"
     yaml "^1.10.0"
 
-coveralls-next@^4.1.2:
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/coveralls-next/-/coveralls-next-4.1.2.tgz#d727e3e885f45adf9ee01efe078dc5acef544656"
-  integrity sha512-5z/g62BOjE9GN9QLml1E5LEiu1iaWSFqeBc2ECzRfXDTVrUpo4C6qYdOzfBSTXvdoXuG9rGZqLjLoEtShYNeFA==
+coveralls-next@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.yarnpkg.com/coveralls-next/-/coveralls-next-4.2.0.tgz#821fb802f98284a3c11c96577b7fd0eaf4d4473e"
+  integrity sha512-zg41a/4QDSASPtlV6gp+6owoU43U5CguxuPZR3nPZ26M5ZYdEK3MdUe7HwE+AnCZPkucudfhqqJZehCNkz2rYg==
   dependencies:
     form-data "4.0.0"
     js-yaml "4.1.0"
     lcov-parse "1.0.0"
     log-driver "1.2.7"
-    minimist "1.2.6"
+    minimist "1.2.7"
 
 create-require@^1.1.0:
   version "1.1.1"
@@ -3862,10 +3862,10 @@ minimist-options@4.1.0:
     is-plain-obj "^1.1.0"
     kind-of "^6.0.3"
 
-minimist@1.2.6, minimist@^1.2.0, minimist@^1.2.5, minimist@^1.2.6:
-  version "1.2.6"
-  resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.6.tgz#8637a5b759ea0d6e98702cfb3a9283323c93af44"
-  integrity sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q==
+minimist@1.2.7, minimist@^1.2.0, minimist@^1.2.5, minimist@^1.2.6:
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.7.tgz#daa1c4d91f507390437c6a8bc01078e7000c4d18"
+  integrity sha512-bzfL1YUZsP41gmu/qjrEk0Q6i2ix/cVeAhbCbqH9u3zYutS1cLg00qhrD0M2MVdCcx4Sc0UpP2eBWo9rotpq6g==
 
 ms@2.0.0:
   version "2.0.0"
