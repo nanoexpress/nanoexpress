@@ -61,7 +61,7 @@
   "devDependencies": {
     "@commitlint/cli": "^17.3.0",
     "commitlint-config-airlight": "^5.0.2",
-    "coveralls-next": "^4.1.2",
+    "coveralls-next": "^4.2.0",
     "eslint": "^8.29.0",
     "eslint-config-airlight-node": "^3.0.5",
     "husky": "^8.0.2",
