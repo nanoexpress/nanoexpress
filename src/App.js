@@ -98,6 +98,10 @@ export default class App {
   publish(topic, string, isBinary, compress) {
     return this._app.publish(topic, string, isBinary, compress);
   }
+  
+  numSubscribers(topic) {
+    return this._app.numSubscribers(topic);
+  }
 
   listen(port, host) {
     const {
