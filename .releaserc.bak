@@ -1,13 +1,14 @@
 {
   "branches": [
     "master",
+    "next",
     {
       "name": "rc",
       "channel": "rc",
       "prerelease": "rc"
     },
     {
-      "name": "next",
+      "name": "beta",
       "channel": "beta",
       "prerelease": "beta"
     }
