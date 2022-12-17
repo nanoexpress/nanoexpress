@@ -20,7 +20,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v2-beta
         with:
-          node-version: 16.x
+          node-version: 18.x
 
       - name: Cache
         uses: actions/cache@v2
@@ -39,7 +39,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x]
+        node-version: [18.x]
         os: [ubuntu-20.04, macos-11]
 
     steps:
@@ -71,7 +71,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v2-beta
         with:
-          node-version: 16.x
+          node-version: 18.x
 
       - name: Cache
         uses: actions/cache@v2
