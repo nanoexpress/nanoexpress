@@ -15,18 +15,18 @@ jobs:
     strategy:
       matrix:
         node-version: [18.x]
-        os: [ubuntu-20.04]
+        os: [ubuntu-22.04]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Use Node.js
-        uses: actions/setup-node@v2-beta
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
       - name: Cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
@@ -46,11 +46,11 @@ jobs:
     needs: lint_test_build
     timeout-minutes: 5
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     if: github.actor == 'dependabot[bot]'
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: ahmadnassri/action-dependabot-auto-merge@v2
         with:
           target: minor
