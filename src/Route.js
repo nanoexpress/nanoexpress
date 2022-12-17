@@ -533,8 +533,9 @@ for (let i = 0, len = httpMethods.length; i < len; i += 1) {
 }
 
 // PubSub methods expose
-Route.prototype.publish = (topic, message, isBinary, compress) =>
-  this._app.publish(topic, message, isBinary, compress);
+Route.prototype.publish = function (topic, message, isBinary, compress) {
+  return this._app.publish(topic, message, isBinary, compress);
+};
 
 Route.prototype.ws = function wsExpose(path, handler, options = {}) {
   const { _baseUrl, _module, _ajv, _app } = this;
