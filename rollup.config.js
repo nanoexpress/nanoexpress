@@ -1,4 +1,4 @@
-import pkg from './package.json';
+import pkg from './package.json' assert { type: 'json' };
 
 const dependencies = Object.keys(pkg.dependencies);
 const external = dependencies.concat([
@@ -6,6 +6,7 @@ const external = dependencies.concat([
   'path',
   'querystring',
   'http',
+  'https',
   'zlib',
   'stream',
   'util'
