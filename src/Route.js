@@ -36,7 +36,7 @@ export default class Route {
       this._middlewares = _middlewares;
     }
 
-    if (typeof path === 'function' || (path && path._module)) {
+    if (typeof path === 'function' || path?._module) {
       middlewares.unshift(path);
       path = undefined;
     }
@@ -119,12 +119,12 @@ export default class Route {
           middleware.onAborted ||
           middleware.schema)
     );
-    const isRaw = findConfig && findConfig.isRaw;
-    const isStrictRaw = findConfig && findConfig.isStrictRaw;
-    const forceRaw = findConfig && findConfig.forceRaw;
-    const noMiddleware = findConfig && findConfig.noMiddleware;
-    const onAborted = findConfig && findConfig.onAborted;
-    let schema = findConfig && findConfig.schema && findConfig;
+    const isRaw = findConfig?.isRaw;
+    const isStrictRaw = findConfig?.isStrictRaw;
+    const forceRaw = findConfig?.forceRaw;
+    const noMiddleware = findConfig?.noMiddleware;
+    const onAborted = findConfig?.onAborted;
+    let schema = findConfig?.schema && findConfig;
 
     let isCanCompiled = false;
     let compilePath;
@@ -197,7 +197,7 @@ export default class Route {
 
     const isShouldReduceTaks = isCanCompiled || isStrictRaw;
     if (!isShouldReduceTaks && !isRaw) {
-      _schema = (schema && schema.schema) || undefined;
+      _schema = schema?.schema || undefined;
       validation = _schema && prepareValidation(_ajv, _schema);
       // eslint-disable-next-line prefer-const
 
@@ -255,7 +255,7 @@ export default class Route {
         .filter((middleware) => typeof middleware === 'function');
     }
 
-    if (_config && _config.swagger && schema) {
+    if (_config?.swagger && schema) {
       prepareSwaggerDocs(
         _config.swagger,
         originalUrl,
@@ -556,7 +556,7 @@ Route.prototype.ws = function wsExpose(path, handler, options = {}) {
     return this;
   }
 
-  const _schema = (schema && schema.schema) || undefined;
+  const _schema = schema?.schema || undefined;
   const validation = _schema && prepareValidation(_ajv, _schema);
 
   _app.ws(originalUrl, {
