@@ -2146,10 +2146,10 @@ eslint-config-airlight-base@*:
     eslint-plugin-optimize-regex "^1.2.1"
     eslint-plugin-promise "^6.0.1"
 
-eslint-config-airlight-node@^3.0.5:
-  version "3.0.5"
-  resolved "https://registry.yarnpkg.com/eslint-config-airlight-node/-/eslint-config-airlight-node-3.0.5.tgz#413e0954211dea075d0dea252eada0235e7904f3"
-  integrity sha512-V/dj4jr0kuTrQidaGM0I4vMw70NsFro9RcU1cSLh5EuoRSiSkKScQYKXzEDK9hY5f6PgTAFCocklyyPpqwf8+g==
+eslint-config-airlight-node@^3.0.6:
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/eslint-config-airlight-node/-/eslint-config-airlight-node-3.0.6.tgz#166986bcce8334ef16a57795a5a30d59398c6a5a"
+  integrity sha512-b1HH7tnkG5kYQ1OkcS3zQSOkgSq1M2xidAjs2baVOpXClJTtpc5/HQMuH2rm4iBvTzQ7lqppVheWWg95UHDDOw==
   dependencies:
     eslint-config-airlight-base "*"
     eslint-plugin-node "^11.1.0"
