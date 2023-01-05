@@ -623,10 +623,10 @@
     resolve-global "1.0.0"
     yargs "^17.0.0"
 
-"@commitlint/config-conventional@^17.0.3":
-  version "17.0.3"
-  resolved "https://registry.yarnpkg.com/@commitlint/config-conventional/-/config-conventional-17.0.3.tgz#61e937357ce63ea08a2017e58b918748fcf3abc5"
-  integrity sha512-HCnzTm5ATwwwzNVq5Y57poS0a1oOOcd5pc1MmBpLbGmSysc4i7F/++JuwtdFPu16sgM3H9J/j2zznRLOSGVO2A==
+"@commitlint/config-conventional@^17.4.0":
+  version "17.4.0"
+  resolved "https://registry.yarnpkg.com/@commitlint/config-conventional/-/config-conventional-17.4.0.tgz#9188d793886d8a1c633834602f06a642dd16ed64"
+  integrity sha512-G4XBf45J4ZMspO4NwBFzY3g/1Kb+B42BcIxeikF8wucQxcyxcmhRdjeQpRpS1XEcBq5pdtEEQFipuB9IuiNFhw==
   dependencies:
     conventional-changelog-conventionalcommits "^5.0.0"
 
@@ -1783,12 +1783,12 @@ commander@^9.4.1:
   resolved "https://registry.yarnpkg.com/commander/-/commander-9.4.1.tgz#d1dd8f2ce6faf93147295c0df13c7c21141cfbdd"
   integrity sha512-5EEkTNyHNGFPD2H+c/dXXfQZYa/scCKasxWcXJaWnNJ99pnQN9Vnmqow+p+PlFPE63Q6mThaZws1T+HxfpgtPw==
 
-commitlint-config-airlight@^5.0.2:
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/commitlint-config-airlight/-/commitlint-config-airlight-5.0.2.tgz#460c2af0692e32d762e5ea43d449ade9d3fae76d"
-  integrity sha512-J+nHJT2xX/sVhJzaiegzyikaMpbc+W+Bh6y1NBZvoMkGT7qjcL0MMo4uxYw80b5T6tLRWjdsRa3/xr4ym6YXLw==
+commitlint-config-airlight@^5.0.3:
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/commitlint-config-airlight/-/commitlint-config-airlight-5.0.3.tgz#8d9411a6fc06fc9a6b8fa01a959ba1dff4064ea2"
+  integrity sha512-ZwTeRJ8VJjEWBjFFtoVVFld7c7B6TSnrrF2abLeNV2tTbR6wb1cT62GHV+cc0j7vuKsAwTiUTvH9BB9w6KrTTg==
   dependencies:
-    "@commitlint/config-conventional" "^17.0.3"
+    "@commitlint/config-conventional" "^17.4.0"
 
 compare-func@^2.0.0:
   version "2.0.0"

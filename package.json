@@ -60,7 +60,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "^17.4.0",
-    "commitlint-config-airlight": "^5.0.2",
+    "commitlint-config-airlight": "^5.0.3",
     "coveralls-next": "^4.2.0",
     "eslint": "^8.31.0",
     "eslint-config-airlight-node": "^3.0.6",
