@@ -2286,7 +2286,7 @@ eslint-visitor-keys@^3.3.0:
   resolved "https://registry.yarnpkg.com/eslint-visitor-keys/-/eslint-visitor-keys-3.3.0.tgz#f6480fa6b1f30efe2d1968aa8ac745b862469826"
   integrity sha512-mQ+suqKJVyeuwGYHAdjMFqjCyfl8+Ldnxuyp3ldiMBFKkvytrXUZWaiPCEav8qDHKty44bD+qV1IP4T+w+xXRA==
 
-eslint@^8.31.0, eslint@^8.32.0:
+eslint@^8.32.0:
   version "8.32.0"
   resolved "https://registry.yarnpkg.com/eslint/-/eslint-8.32.0.tgz#d9690056bb6f1a302bd991e7090f5b68fbaea861"
   integrity sha512-nETVXpnthqKPFyuY2FNjz/bEd6nbosRgKbkgS/y1C7LJop96gYHWpiguLecMHQ2XCPxn77DS0P+68WzG6vkZSQ==
@@ -4476,13 +4476,13 @@ slice-ansi@^5.0.0:
     ansi-styles "^6.0.0"
     is-fullwidth-code-point "^4.0.0"
 
-smartlint@^5.0.7:
-  version "5.0.7"
-  resolved "https://registry.yarnpkg.com/smartlint/-/smartlint-5.0.7.tgz#7a16eae1c8e27d2f2e379927094a906cf531ad7d"
-  integrity sha512-N49DYKJLXXRF1O0TRyimo2R4Cd7dyvPrO44jFTzb2fGKBjUiXYgItdLfB0dPLi4YMNO+SteLMWgpjlk2ozRr/w==
+smartlint@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/smartlint/-/smartlint-6.0.0.tgz#95d787510b1425fb879bcc6469d3c12a428f046e"
+  integrity sha512-ExsEiX/tPeyxISFXzHSs4l8SqLAgKszHJKLMm5+qq10N+zQmkUcdrxPnX8v/uJYCqH3Ceg4sIuVyDncoW5sL0g==
   dependencies:
     "@ls-lint/ls-lint" "^1.11.2"
-    eslint "^8.31.0"
+    eslint "^8.32.0"
     markdownlint-cli2 "^0.6.0"
     prettier "^2.7.1"
 
