@@ -1,4 +1,4 @@
-// eslint-disable-next-line node/no-unpublished-import
+// eslint-disable-next-line n/no-unpublished-import
 import nanoexpress from '../../src/nanoexpress.js';
 import * as swagger from './swagger.js';
 

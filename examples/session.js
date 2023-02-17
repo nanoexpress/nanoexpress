@@ -1,5 +1,5 @@
 // eslint-disable-next-line eslint-comments/disable-enable-pair
-/* eslint-disable import/no-unresolved, node/no-missing-import */
+/* eslint-disable import/no-unresolved, n/no-missing-import */
 import expressSession from 'express-session';
 import nanoexpress from '../src/nanoexpress.js';
 

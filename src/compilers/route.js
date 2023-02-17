@@ -258,7 +258,7 @@ export default function compileRoute(fn, params) {
     compiled = new Function(`return ${contentLines}`)();
   } catch (funcEvalErr) {
     try {
-      // eslint-disable-next-line security-node/detect-eval-with-expr, no-eval
+      // eslint-disable-next-line, no-eval
       compiled = eval(contentLines);
     } catch (evalErr) {
       compiled = null;
