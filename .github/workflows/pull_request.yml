@@ -24,24 +24,19 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-
-      - name: Cache
-        uses: actions/cache@v3
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+          cache: 'npm'
 
       - name: Install
-        run: yarn --frozen-lockfile
+        run: npm ci
 
       - name: Lint code
-        run: yarn lint
+        run: npm run lint
 
       - name: Test code
-        run: yarn test
+        run: npm run test
 
       - name: Build
-        run: yarn build
+        run: npm run build
   auto-merge:
     needs: lint_test_build
     timeout-minutes: 5
