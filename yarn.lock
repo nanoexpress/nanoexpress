@@ -2159,13 +2159,13 @@ eslint-config-airlight-base@*:
     eslint-plugin-optimize-regex "^1.2.1"
     eslint-plugin-promise "^6.0.1"
 
-eslint-config-airlight-node@^4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/eslint-config-airlight-node/-/eslint-config-airlight-node-4.0.1.tgz#351f8cb108398c620b14549d9803cc2655ce1c45"
-  integrity sha512-FFSLCxk03MLb5K856Lb0HYcXQrYuouWtptDoOKttqMJ+icAOlZaSrrJFRye1hvHq85AoDnqxjHYo9S8XJyndRA==
+eslint-config-airlight-node@^4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/eslint-config-airlight-node/-/eslint-config-airlight-node-4.0.2.tgz#2f74be32c1137e51b8dc9d095959cefff182adb3"
+  integrity sha512-KAMjZKiYdxU2CrOsu06rR+fgt7RDXaweB/5CSnGy+u4fAQwkFcNfFTnhgoeV9MUHYkWqRX4Jvpr+op8fsCXKlQ==
   dependencies:
     eslint-config-airlight-base "*"
-    eslint-plugin-n "^15.6.1"
+    eslint-plugin-n "^15.7.0"
 
 eslint-config-prettier@^8.3.0:
   version "8.3.0"
@@ -2227,10 +2227,10 @@ eslint-plugin-import@^2.26.0:
     resolve "^1.22.0"
     tsconfig-paths "^3.14.1"
 
-eslint-plugin-n@^15.6.1:
-  version "15.6.1"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-n/-/eslint-plugin-n-15.6.1.tgz#f7e77f24abb92a550115cf11e29695da122c398c"
-  integrity sha512-R9xw9OtCRxxaxaszTQmQAlPgM+RdGjaL1akWuY/Fv9fRAi8Wj4CUKc6iYVG8QNRjRuo8/BqVYIpfqberJUEacA==
+eslint-plugin-n@^15.7.0:
+  version "15.7.0"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-n/-/eslint-plugin-n-15.7.0.tgz#e29221d8f5174f84d18f2eb94765f2eeea033b90"
+  integrity sha512-jDex9s7D/Qial8AGVIHq4W7NswpUD5DPDL2RH8Lzd9EloWUuvUkHfv4FRLMipH5q2UtyurorBkPeNi1wVWNh3Q==
   dependencies:
     builtins "^5.0.1"
     eslint-plugin-es "^4.1.0"
@@ -2303,7 +2303,7 @@ eslint-visitor-keys@^3.3.0, eslint-visitor-keys@^3.4.0:
   resolved "https://registry.yarnpkg.com/eslint-visitor-keys/-/eslint-visitor-keys-3.4.0.tgz#c7f0f956124ce677047ddbc192a68f999454dedc"
   integrity sha512-HPpKPUBQcAsZOsHAFwTtIKcYlCje62XB7SEAcxjtmW6TD1WVpkS6i6/hOVtTZIl4zGj/mBqpFVGvaDneik+VoQ==
 
-eslint@^8.35.0, eslint@^8.37.0:
+eslint@^8.37.0:
   version "8.37.0"
   resolved "https://registry.yarnpkg.com/eslint/-/eslint-8.37.0.tgz#1f660ef2ce49a0bfdec0b0d698e0b8b627287412"
   integrity sha512-NU3Ps9nI05GUoVMxcZx1J8CNR6xOvUT4jAUMH5+z8lpp3aEdPVCImKw6PWG4PY+Vfkpr+jvMpxs/qoE7wq0sPw==
@@ -4141,7 +4141,7 @@ prettier-config-airlight@^2.0.1:
   resolved "https://registry.yarnpkg.com/prettier-config-airlight/-/prettier-config-airlight-2.0.1.tgz#d709652e564536d7b6da4c0399da4208beaafd19"
   integrity sha512-K7Dajb7HnY23NH8jn3xL+HvgrkKSkLVft9l9qjx3Qr8MqMSvjbYi9464tUAYwLBKU46Ycteu+xloLHeKqenl6A==
 
-prettier@^2.7.1, prettier@^2.8.7:
+prettier@^2.8.4, prettier@^2.8.7:
   version "2.8.7"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.7.tgz#bb79fc8729308549d28fe3a98fce73d2c0656450"
   integrity sha512-yPngTo3aXUUmyuTjeTUT75txrf+aMh9FiD7q9ZE/i6r0bPb22g4FsE6Y338PQX1bmfy08i9QQCB7/rcUAVntfw==
@@ -4455,15 +4455,15 @@ slice-ansi@^5.0.0:
     ansi-styles "^6.0.0"
     is-fullwidth-code-point "^4.0.0"
 
-smartlint@^6.0.1:
-  version "6.0.1"
-  resolved "https://registry.yarnpkg.com/smartlint/-/smartlint-6.0.1.tgz#132c3105c643d61d00c0f2c7c6b1c75da6b3736b"
-  integrity sha512-jQYpSQMzpry39hilvlkHj1u6nNH7/8D4L+Hc35pWiPsNmlal6c0AvTKpcv2eO3fu0FHP6Votsu+rzzctoXybhw==
+smartlint@^6.0.3:
+  version "6.0.3"
+  resolved "https://registry.yarnpkg.com/smartlint/-/smartlint-6.0.3.tgz#b3a0c319b6f99e03e246ea8fad173ed38b69ad64"
+  integrity sha512-du4aZmK2wrarZowiOeHE89OoJxPymeDxb6v+JlIlqq6O4vm2nllxgHcgqrvlD1y7l58fsXiHu/Js7tlLb9JFcA==
   dependencies:
     "@ls-lint/ls-lint" "^1.11.2"
-    eslint "^8.35.0"
+    eslint "^8.37.0"
     markdownlint-cli2 "^0.6.0"
-    prettier "^2.7.1"
+    prettier "^2.8.4"
 
 source-map-support@0.5.13:
   version "0.5.13"
@@ -4804,19 +4804,14 @@ type-fest@^0.8.1:
   resolved "https://registry.yarnpkg.com/type-fest/-/type-fest-0.8.1.tgz#09e249ebde851d3b1e48d27c105444667f17b83d"
   integrity sha512-4dbzIzqvjtgiM5rw1k5rEHtBANKmdudhGyBEajN01fEyhaAIhsoKNy6y7+IN93IfpFtwY9iqi7kD+xwKhQsNJA==
 
-"typescript@^4.6.4 || ^5.0.0":
+"typescript@^4.6.4 || ^5.0.0", typescript@^5.0.2:
   version "5.0.2"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.0.2.tgz#891e1a90c5189d8506af64b9ef929fca99ba1ee5"
   integrity sha512-wVORMBGO/FAs/++blGNeAVdbNKtIh1rbBL2EyQ1+J9lClJ93KiiKe8PmFIVdXhHcyv44SL9oglmfeSsndo0jRw==
 
-typescript@^4.9.5:
-  version "4.9.5"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.9.5.tgz#095979f9bcc0d09da324d58d03ce8f8374cbe65a"
-  integrity sha512-1FXk9E2Hm+QzZQ7z+McJiHL4NW1F2EzMu9Nq9i3zAaGqibafqYwCVU6WyWAuyQRRzOlxou8xZSyXLEN8oKj24g==
-
-"uWebSockets.js@https://github.com/uNetworking/uWebSockets.js/archive/v20.15.0.tar.gz":
-  version "20.15.0"
-  resolved "https://github.com/uNetworking/uWebSockets.js/archive/v20.15.0.tar.gz#aa08caacb308b54820728afbb76a02bd5a7c8d95"
+"uWebSockets.js@https://github.com/uNetworking/uWebSockets.js/archive/v20.20.0.tar.gz":
+  version "20.20.0"
+  resolved "https://github.com/uNetworking/uWebSockets.js/archive/v20.20.0.tar.gz#dd583a682375fbc5aad00c7921411df485ea5962"
 
 uc.micro@^1.0.1, uc.micro@^1.0.5:
   version "1.0.6"
