@@ -70,7 +70,7 @@
     "lint-staged-config-airlight": "^4.0.1",
     "prettier": "^2.8.8",
     "prettier-config-airlight": "^2.0.1",
-    "rollup": "^3.21.0",
+    "rollup": "^3.21.2",
     "smartlint": "^6.0.3",
     "typescript": "^5.0.4"
   }
