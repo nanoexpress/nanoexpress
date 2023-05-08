@@ -30,7 +30,7 @@
     "build": "rm -rf cjs/*.js && rm -rf cjs/*.map && rm -rf cjs/packed && rollup -c"
   },
   "engines": {
-    "node": ">=18.14.1"
+    "node": ">=18.16.0"
   },
   "repository": {
     "type": "git",
