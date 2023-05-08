@@ -428,7 +428,7 @@ export default class Route {
                 req.params = params(req, preparedParams);
               }
               if (!_schema || _schema.query !== false) {
-                req.query = fastQueryParse(req.getQuery());
+                req.query = fastQueryParse(req.getQuery() || '');
               }
               if (
                 req.headers &&
