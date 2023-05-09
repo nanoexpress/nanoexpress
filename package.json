@@ -55,7 +55,7 @@
     "@dalisoft/events": "^0.2.0",
     "ajv": "^8.12.0",
     "cookie": "^0.5.0",
-    "fast-query-parse": "^2.0.3",
+    "fast-query-parse": "^2.0.4",
     "uWebSockets.js": "https://github.com/uNetworking/uWebSockets.js/archive/v20.24.0.tar.gz"
   },
   "devDependencies": {
