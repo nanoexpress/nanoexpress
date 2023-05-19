@@ -206,7 +206,7 @@ Note: Indicate changes in performance in as  numbers as possible. Explain the in
 Adding missing tests or correcting existing tests:
 
 ```text
-test(benchmark): test lookup routes perfomance
+test(benchmark): test lookup routes performance
 
 test: test query parser parse array in query
 ```
