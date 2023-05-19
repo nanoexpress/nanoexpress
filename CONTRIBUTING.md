@@ -192,7 +192,7 @@ refactor(route): fixed infinite loop
 ref: parse query with an array
 ```
 
-Pperformance changes:
+Performance changes:
 
 ```text
 perf(route): implement lookup algorithm via stack data structure
