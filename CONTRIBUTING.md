@@ -179,7 +179,7 @@ docs: update request type
 Changes that do not affect the meaning of the code:
 
 ```text
-style(route): change duble quotes to single
+style(route): change double quotes to single
 
 style: format via prettier route.js
 ```
@@ -192,21 +192,21 @@ refactor(route): fixed infinite loop
 ref: parse query with an array
 ```
 
-Pperformance changes:
+Performance changes:
 
 ```text
 perf(route): implement lookup algorithm via stack data structure
 
 perf: implement fast json serialization then performance rose 25%
 
-Note: Indicate changes in performance in as  numbers as possible. Explain the indicators with clear evidence and tests. 
+Note: Indicate changes in performance in as  numbers as possible. Explain the indicators with clear evidence and tests.
   This will help you review the change you made even faster.
 ```
 
 Adding missing tests or correcting existing tests:
 
 ```text
-test(benchmark): test lookup routes perfomance
+test(benchmark): test lookup routes performance
 
 test: test query parser parse array in query
 ```
@@ -214,9 +214,9 @@ test: test query parser parse array in query
 Changes that affect the build system, CI configuration or external dependencies:
 
 ```text
-build(eslint): setup eslint 
+build(eslint): setup eslint
 
-build: add lint stage to CI step 
+build: add lint stage to CI step
 
 Closes: #12345
 ```
