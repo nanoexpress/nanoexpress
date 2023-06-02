@@ -60,7 +60,6 @@ export default (req, res, config, validation = {}) => {
           return config._validationErrorHandler(errors, req, res);
         }
       }
-      res.writeHeader('400 Bad Request');
       res.writeHeader('Content-Type', 'application/json; charset=utf-8');
       return res.end(JSON.stringify(errors));
     }
