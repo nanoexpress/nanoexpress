@@ -25,22 +25,23 @@ Before you submit your Pull Request (PR) consider the following guidelines:
   that relates to your submission. You don't want to duplicate effort.
 - Make your changes in a new git branch:
 
-     ```shell
-     git checkout -b my-branch master
-     ```
+  ```shell
+  git checkout -b my-branch master
+  ```
 
 - Create your patch, **including appropriate test cases**. Without tests your PR will not be accepted.
 
-     ```shell
-     git commit -a
+  ```shell
+  git commit -a
 
-    Note: the optional commit -a command line option will automatically "add" and "rm" edited files.
+  Note: the optional commit -a command line option will automatically "add" and "rm" edited files.
+  ```
 
 - Push your branch to GitHub:
 
-    ```shell
-    git push origin -u my-branch
-    ```
+  ```shell
+  git push origin -u my-branch
+  ```
 
 - In GitHub, send a pull request to `nanoexpress/nanoexpress:master`.
 - If we suggest changes then:
@@ -61,37 +62,37 @@ from the main (upstream) repository:
 
 - Delete the remote branch on GitHub either through the GitHub web UI or your local shell as follows:
 
-    ```shell
-    git push origin --delete my-branch
-    ```
+  ```shell
+  git push origin --delete my-branch
+  ```
 
 - Check out the master branch:
 
-    ```shell
-    git checkout master -f
-    ```
+  ```shell
+  git checkout master -f
+  ```
 
 - Delete the local branch:
 
-    ```shell
-    git branch -D my-branch
-    ```
+  ```shell
+  git branch -D my-branch
+  ```
 
 - Update your master with the latest upstream version:
 
-    ```shell
-    git pull --ff upstream master
-    ```
+  ```shell
+  git pull --ff upstream master
+  ```
 
 ## <a name="commit"></a> Commit Message Guidelines
 
-We have very precise rules over how our git commit messages can be formatted.  This leads to **more
-readable messages** that are easy to follow when looking through the **project history**.  But also,
+We have very precise rules over how our git commit messages can be formatted. This leads to **more
+readable messages** that are easy to follow when looking through the **project history**. But also,
 we use the git commit messages to **generate changelog**.
 
 ### Commit Message Format
 
-Each commit message consists of a **header**, a **body** and a **footer**.  The header has a special
+Each commit message consists of a **header**, a **body** and a **footer**. The header has a special
 format that includes a **type** and a **subject**:
 
 ```text

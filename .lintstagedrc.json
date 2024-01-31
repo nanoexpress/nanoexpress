@@ -1,0 +1,5 @@
+{
+  "*.ts": ["eslint", "biome check"],
+  "*.js": ["eslint", "biome check"],
+  "*.md": "dprint check"
+}

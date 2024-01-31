@@ -1,6 +1,6 @@
+import { resolve } from 'path';
 // eslint-disable-next-line import/no-unresolved, n/no-missing-import
 import staticMiddleware from '@nanoexpress/middlewares/static';
-import { resolve } from 'path';
 import nanoexpress from '../src/nanoexpress.js';
 import { webRTCServer } from '../src/packed/defines/index.js';
 

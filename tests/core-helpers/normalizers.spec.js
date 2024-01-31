@@ -1,6 +1,6 @@
+import { Readable } from 'stream';
 /* globals describe, it, expect */
 import fastQueryParse from 'fast-query-parse';
-import { Readable } from 'stream';
 import { prepareParams } from '../../src/helpers/index.js';
 import { body, params } from '../../src/request-proto/index.js';
 

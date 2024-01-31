@@ -48,11 +48,11 @@ export default function swaggerDocsGenerator(
       typeName === 'params'
         ? 'path'
         : // eslint-disable-next-line no-nested-ternary
-        typeName === 'response'
-        ? 'responses'
-        : typeName === 'body'
-        ? 'requestBody'
-        : typeName;
+          typeName === 'response'
+          ? 'responses'
+          : typeName === 'body'
+            ? 'requestBody'
+            : typeName;
 
     if (swaggerDef.paths[path] === undefined) {
       swaggerDef.paths[path] = {};

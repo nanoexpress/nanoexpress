@@ -1,5 +1,5 @@
-import nanoexpress from '../src/nanoexpress.js';
 import Route from '../src/Route.js';
+import nanoexpress from '../src/nanoexpress.js';
 
 const app = nanoexpress();
 const route = new Route();

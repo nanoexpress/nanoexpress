@@ -14,11 +14,11 @@ export default (stream, headers) => {
     encoding === 'br'
       ? createBrotliCompress()
       : // eslint-disable-next-line no-nested-ternary
-      encoding === 'gzip'
-      ? createGzip()
-      : encoding === 'deflate'
-      ? createDeflate()
-      : null;
+        encoding === 'gzip'
+        ? createGzip()
+        : encoding === 'deflate'
+          ? createDeflate()
+          : null;
 
   if (compression) {
     stream.pipe(compression);

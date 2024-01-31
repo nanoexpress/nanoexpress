@@ -8,7 +8,7 @@ import {
   prepareValidation,
   processValidation
 } from './helpers/index.js';
-import { body, params, pipe, stream } from './request-proto/http/index.js';
+import { stream, body, params, pipe } from './request-proto/http/index.js';
 import { HttpResponse } from './response-proto/http/index.js';
 
 const resAbortHandler = '___$HttpResponseAbortHandler';

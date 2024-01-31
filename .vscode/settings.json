@@ -1,10 +1,14 @@
 {
-  "eslint.validate": [
-    "javascript"
-  ],
+  "eslint.validate": ["javascript"],
   "typescript.validate.enable": true,
   "javascript.validate.enable": false,
   "prettier.requireConfig": false,
+  "[javascript][typescript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "dprint.dprint"
+  },
   "files.associations": {
     "*.js": "javascript",
     "*.d.ts": "typescript"
