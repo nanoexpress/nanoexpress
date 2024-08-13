@@ -23,7 +23,7 @@ jobs:
         uses: oven-sh/setup-bun@v2
 
       - name: Install
-        run: bun run install
+        run: bun install
 
       - name: Lint code
         run: bun run lint
