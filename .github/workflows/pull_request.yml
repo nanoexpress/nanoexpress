@@ -14,29 +14,25 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20]
         os: [ubuntu-22.04]
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+      - name: Use Bun.sh
+        uses: oven-sh/setup-bun@v2
 
       - name: Install
-        run: npm ci
+        run: bun run install
 
       - name: Lint code
-        run: npm run lint
+        run: bun run lint
 
       - name: Test code
-        run: npm run test
+        run: bun run test
 
       - name: Build
-        run: npm run build
+        run: bun run build
   auto-merge:
     needs: lint_test_build
     timeout-minutes: 5
