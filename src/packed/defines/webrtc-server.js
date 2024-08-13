@@ -9,7 +9,7 @@ export default (app) => {
     app.ws(
       path,
       options,
-      (req, ws) => {
+      (_, ws) => {
         ws.on(
           'message',
           ({

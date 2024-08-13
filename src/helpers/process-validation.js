@@ -7,7 +7,7 @@ export default (req, res, config, validation = {}) => {
       const reqValue = req[type];
 
       if (reqValue === undefined) {
-        if (schema && schema.required) {
+        if (schema?.required) {
           if (!errors) {
             errors = {
               type: 'errors',
@@ -54,7 +54,7 @@ export default (req, res, config, validation = {}) => {
           res
         );
 
-        if (validationHandlerResult && validationHandlerResult.errors) {
+        if (validationHandlerResult?.errors) {
           errors = validationHandlerResult;
         } else {
           return config._validationErrorHandler(errors, req, res);

@@ -1,10 +1,30 @@
+import { debug } from '../../../helpers/logs.js';
+
 export default function modifyEnd() {
   if (!this._modifiedEnd) {
     const _oldEnd = this.end;
 
     this.end = function modifiedEnd(chunk, encoding) {
-      // eslint-disable-next-line prefer-const
-      let { _headers, statusCode, rawStatusCode } = this;
+      let { _headers, statusCode, rawStatusCode, aborted, corked } = this;
+
+      if (aborted) {
+        return this;
+      }
+
+      if (!corked) {
+        debug({
+          message: 'cork is not called, call it first',
+          file: 'modify-end.js',
+          line: [15, 25],
+          kind: 'handler',
+          case: 'log',
+          meta: {
+            isCorked: corked,
+            isAborted: aborted
+          }
+        });
+        return;
+      }
 
       // Polyfill for express-session and on-headers module
       if (!this.writeHead.notModified) {
@@ -17,16 +37,22 @@ export default function modifyEnd() {
         this.status(statusCode);
         statusCode = this.statusCode;
       }
-      if (_headers) {
-        this.applyHeadersAndStatus();
-      }
-      if (statusCode && statusCode !== rawStatusCode) {
-        this.writeStatus(statusCode);
-      }
+      const handler = () => {
+        this.corked = true;
 
-      return encoding
-        ? _oldEnd.call(this, chunk, encoding)
-        : _oldEnd.call(this, chunk);
+        if (_headers) {
+          this.applyHeadersAndStatus();
+        }
+        if (statusCode && statusCode !== rawStatusCode) {
+          this.writeStatus(statusCode);
+        }
+
+        return encoding
+          ? _oldEnd.call(this, chunk, encoding)
+          : _oldEnd.call(this, chunk);
+      };
+
+      return this.cork(handler);
     };
 
     this._modifiedEnd = true;

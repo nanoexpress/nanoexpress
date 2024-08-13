@@ -11,6 +11,6 @@ node_modules
 coverage
 tests/coverage
 
-cjs/
+examples/
 
 CODE_OF_CONDUCT.md

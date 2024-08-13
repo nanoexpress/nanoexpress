@@ -10,6 +10,8 @@ import {
 } from './helpers/index.js';
 import { stream, body, params, pipe } from './request-proto/http/index.js';
 import { HttpResponse } from './response-proto/http/index.js';
+import { debug } from './helpers/logs.js';
+import withResolvers from './helpers/with-resolvers.js';
 
 const resAbortHandler = '___$HttpResponseAbortHandler';
 const __wsProto__ = Events.prototype;
@@ -28,8 +30,9 @@ export default class Route {
     this._console = config.console || console;
   }
 
-  use(path, ...middlewares) {
+  use(_path, ...middlewares) {
     let { _middlewares } = this;
+    let path = _path;
 
     if (!_middlewares) {
       _middlewares = [];
@@ -94,8 +97,9 @@ export default class Route {
     return this;
   }
 
-  _prepareMethod(method, { originalUrl, path }, ...middlewares) {
+  _prepareMethod(method, { originalUrl, path }, ...$middlewares) {
     const { _config, _baseUrl, _middlewares, _ajv, _console } = this;
+    let middlewares = $middlewares;
 
     const fetchMethod = method === 'ANY';
     const isWebSocket = method === 'WS';
@@ -150,7 +154,7 @@ export default class Route {
         const _errorContext = _console.error ? _console : console;
 
         _errorContext.error(
-          'nanoexpress [Server]: Option `forceRaw` availbale only for HTTP Routes'
+          'nanoexpress [Server]: Option `forceRaw` available only for HTTP Routes'
         );
       }
       return (res, req) => routeFunction(req, res);
@@ -195,11 +199,10 @@ export default class Route {
       path = path.substr(0, path.length - 1);
     }
 
-    const isShouldReduceTaks = isCanCompiled || isStrictRaw;
-    if (!isShouldReduceTaks && !isRaw) {
+    const isShouldReduceTasks = isCanCompiled || isStrictRaw;
+    if (!isShouldReduceTasks && !isRaw) {
       _schema = schema?.schema || undefined;
       validation = _schema && prepareValidation(_ajv, _schema);
-      // eslint-disable-next-line prefer-const
 
       isNotFoundHandler = routeFunction.handler === 2;
       if (
@@ -209,8 +212,22 @@ export default class Route {
       ) {
         if (!/res\.(s?end|json)/g.test(routeFunction.toString())) {
           const _oldRouteFunction = routeFunction;
+
           routeFunction = async (req, res) => {
+            debug({
+              message: 'polyfill res.send for await response',
+              file: 'Route.js',
+              line: [215, 225],
+              kind: 'polyfill',
+              case: 'convert-compatibility',
+              meta: {
+                isCorked: res.corked,
+                isAborted
+              }
+            });
+
             const data = await _oldRouteFunction(req, res);
+
             if (!isAborted && data && data !== res) {
               isAborted = true;
               return res.send(data);
@@ -223,7 +240,9 @@ export default class Route {
 
       middlewares = middlewares
         .filter((middleware, index, self) => self.indexOf(middleware) === index)
-        .map((middleware) => {
+        .map((_middleware) => {
+          let middleware = _middleware;
+
           if (middleware.override && isNotFoundHandler) {
             isNotFoundHandler = false;
           }
@@ -239,15 +258,29 @@ export default class Route {
           }
           const _oldMiddleware = middleware;
           middleware = function refactoredMiddleware(req, res) {
-            return new Promise((resolve, reject) => {
-              _oldMiddleware(req, res, (err, done) => {
-                if (err) {
-                  reject(err);
-                } else {
-                  resolve(done);
-                }
-              });
+            debug({
+              message: 'refactor old-style middleware to modern',
+              file: 'Route.js',
+              line: [270, 280],
+              kind: 'polyfill',
+              case: 'convert-compatibility',
+              meta: {
+                isCorked: res.corked,
+                isAborted
+              }
             });
+
+            const { promise, resolve, reject } = withResolvers();
+
+            _oldMiddleware(req, res, (err, done) => {
+              if (err) {
+                reject(err);
+              } else {
+                resolve(done);
+              }
+            });
+
+            return promise;
           };
 
           return middleware;
@@ -268,9 +301,9 @@ export default class Route {
       originalUrl = originalUrl.substr(0, originalUrl.length - 1);
     }
 
-    const _onAbortedCallbacks = (!isShouldReduceTaks || isWebSocket) && [];
+    const _onAbortedCallbacks = (!isShouldReduceTasks || isWebSocket) && [];
     const _handleOnAborted =
-      (!isShouldReduceTaks || isWebSocket) &&
+      (!isShouldReduceTasks || isWebSocket) &&
       (() => {
         isAborted = true;
         if (onAborted) {
@@ -285,17 +318,24 @@ export default class Route {
       });
 
     const attachOnAborted =
-      (!isShouldReduceTaks || isWebSocket) &&
+      (!isShouldReduceTasks || isWebSocket) &&
       ((fn) => {
         _onAbortedCallbacks.push(fn);
       });
 
     const handler =
-      // eslint-disable-next-line no-nested-ternary
-      isShouldReduceTaks && !isWebSocket
+      isShouldReduceTasks && !isWebSocket
         ? !compilePath && !compileMethod
           ? (res, req) => routeFunction(req, res)
           : (res, req) => {
+              debug({
+                message: 'called handler',
+                file: 'Route.js',
+                line: [365, 375],
+                kind: 2,
+                case: 'early_log'
+              });
+
               req.method = fetchMethod ? req.getMethod().toUpperCase() : method;
               req.path = fetchUrl ? req.getUrl().substr(_baseUrl.length) : path;
               req.baseUrl = _baseUrl || '';
@@ -315,18 +355,30 @@ export default class Route {
               req.url = req.path;
               req.originalUrl = originalUrl;
 
-              return routeFunction(req, res);
+              return res.cork(() => routeFunction(req, res));
             }
         : async (res, req) => {
+            debug({
+              message: 'called handler',
+              file: 'Route.js',
+              line: [395, 405],
+              kind: 3,
+              case: 'early_log',
+              meta: {
+                isRaw
+              }
+            });
+
             isAborted = false;
-            _onAbortedCallbacks.length = 0;
             if (!isRaw) {
               res.onAborted(_handleOnAborted);
             }
             attachOnAborted(() => {
               res.aborted = true;
+              isAborted = true;
             });
             res[resAbortHandler] = true;
+            res.corked = false;
 
             req.method = fetchMethod ? req.getMethod().toUpperCase() : method;
             req.path = fetchUrl ? req.getUrl().substr(_baseUrl.length) : path;
@@ -344,6 +396,35 @@ export default class Route {
 
             // Cache function
             const handleError = (err) => {
+              debug({
+                message: 'handleError was called',
+                file: 'Route.js',
+                line: [430, 440],
+                kind: 'error',
+                case: 'handling',
+                meta: {
+                  isCorked: res.corked,
+                  isAborted,
+                  isRaw,
+                  stack: err
+                }
+              });
+              if (isAborted) {
+                return debug({
+                  message: 'request abort until error handler',
+                  file: 'Route.js',
+                  line: [455, 465],
+                  kind: 'error',
+                  case: 'handling',
+                  meta: {
+                    isCorked: res.corked,
+                    isAborted,
+                    isRaw,
+                    stack: err
+                  }
+                });
+              }
+
               isAborted = true;
 
               res.setHeader('Content-Type', 'application/json');
@@ -447,20 +528,99 @@ export default class Route {
 
             if (
               !isRaw &&
+              !res._modifiedEnd &&
+              (!res.writeHead.notModified ||
+                (res.statusCode && res.statusCode !== 200) ||
+                res._headers)
+            ) {
+              debug({
+                message: 'res.modifyEnd called',
+                file: 'Route.js',
+                line: [655, 665],
+                kind: 'polyfill',
+                case: 'method_fill',
+                meta: {
+                  isCorked: res.corked,
+                  isAborted,
+                  isRaw
+                }
+              });
+              res.modifyEnd();
+            }
+
+            if (
+              isAborted ||
+              (!isRaw &&
+                validation &&
+                processValidation(req, res, _config, validation))
+            ) {
+              debug({
+                message: 'early return due of validation',
+                file: 'Route.js',
+                line: [675, 685],
+                kind: 'validation',
+                case: 'abort',
+                meta: {
+                  isCorked: res.corked,
+                  isAborted,
+                  isRaw
+                }
+              });
+              return;
+            }
+
+            if (
+              !isRaw &&
               !isAborted &&
               !isNotFoundHandler &&
               middlewares &&
               middlewares.length > 0
             ) {
               for await (const middleware of middlewares) {
+                debug({
+                  message: 'middlewares applying',
+                  file: 'Route.js',
+                  line: [565, 575],
+                  kind: 'middleware',
+                  case: 'start',
+                  meta: {
+                    isCorked: res.corked,
+                    isAborted,
+                    isRaw
+                  }
+                });
+
                 if (isAborted) {
+                  debug({
+                    message: 'middlewares applying stop, isAborted',
+                    file: 'Route.js',
+                    line: [580, 590],
+                    kind: 'middleware',
+                    case: 'abort',
+                    meta: {
+                      isCorked: res.corked,
+                      isAborted,
+                      isRaw
+                    }
+                  });
                   break;
                 }
 
                 const response = await middleware(req, res).catch(handleError);
 
                 if (response === res) {
-                  return;
+                  return debug({
+                    message: 'middleware used HttpResponse',
+                    file: 'Route.js',
+                    line: [610, 620],
+                    kind: 'middleware',
+                    case: 'early_return',
+                    meta: {
+                      isCorked: res.corked,
+                      isAborted,
+                      isRaw
+                    }
+                  });
                 }
               }
             }
@@ -471,32 +631,64 @@ export default class Route {
               res.stream === true ||
               res.stream === 1
             ) {
+              debug({
+                message: 'route either OPTIONS, STREAM or aborted',
+                file: 'Route.js',
+                line: [630, 640],
+                kind: 'handler',
+                case: 'abort',
+                meta: {
+                  isCorked: res.corked,
+                  isAborted,
+                  isRaw
+                }
+              });
+
               return;
             }
 
             if (_direct || !fetchUrl || req.path === path) {
-              if (
-                !isRaw &&
-                !res._modifiedEnd &&
-                (!res.writeHead.notModified ||
-                  (res.statusCode && res.statusCode !== 200) ||
-                  res._headers)
-              ) {
-                res.modifyEnd();
-              }
-
-              if (
-                isAborted ||
-                (!isRaw &&
-                  validation &&
-                  processValidation(req, res, _config, validation))
-              ) {
-                return;
-              }
+              debug({
+                message: 'res.cork is called',
+                file: 'Route.js',
+                line: [690, 700],
+                kind: 'handler',
+                case: 'log',
+                meta: {
+                  isCorked: res.corked,
+                  isAborted,
+                  isRaw
+                }
+              });
 
               if (routeFunction.isAsync) {
+                debug({
+                  message: 'async route is called with error handler',
+                  file: 'Route.js',
+                  line: [705, 715],
+                  kind: 'handler',
+                  case: 'log',
+                  meta: {
+                    isCorked: res.corked,
+                    isAborted,
+                    isRaw
+                  }
+                });
                 return routeFunction(req, res).catch(handleError);
               }
+
+              debug({
+                message: 'route called and return',
+                file: 'Route.js',
+                line: [720, 730],
+                kind: 'handler',
+                case: 'log',
+                meta: {
+                  isCorked: res.corked,
+                  isAborted,
+                  isRaw
+                }
+              });
               return routeFunction(req, res);
             }
           };
@@ -537,7 +729,10 @@ Route.prototype.publish = function (topic, message, isBinary, compress) {
   return this._app.publish(topic, message, isBinary, compress);
 };
 
-Route.prototype.ws = function wsExpose(path, handler, options = {}) {
+Route.prototype.ws = function wsExpose(path, _handler, _options = {}) {
+  let handler = _handler;
+  let options = _options;
+
   const { _baseUrl, _module, _ajv, _app } = this;
   const { isRaw, isStrictRaw, schema } = options;
 
@@ -599,7 +794,9 @@ Route.prototype.ws = function wsExpose(path, handler, options = {}) {
         );
       }
     },
-    message: (ws, message, isBinary) => {
+    message: (ws, _message, isBinary) => {
+      let message = _message;
+
       if (!isBinary) {
         message = Buffer.from(message).toString('utf8');
       }

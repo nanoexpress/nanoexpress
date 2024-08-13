@@ -1,7 +1,11 @@
-import { Readable } from 'stream';
+import { Readable } from 'node:stream';
 
+/**
+ *
+ * @param {import('uWebSockets.js').HttpRequest} req
+ * @param {import('uWebSockets.js').HttpResponse} res
+ */
 export default function requestStream(req, res) {
-  const cache = [];
   const stream = new Readable({
     read() {
       // any read?
@@ -10,13 +14,10 @@ export default function requestStream(req, res) {
   req.stream = stream;
 
   res.onData((chunk, isLast) => {
-    cache[0] = Buffer.from(chunk);
-
-    stream.push(Buffer.concat(cache));
+    stream.push(new Uint8Array(chunk));
 
     if (isLast) {
       stream.push(null);
-      cache[0] = null;
     }
   });
 }

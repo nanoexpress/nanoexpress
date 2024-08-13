@@ -1,17 +1,19 @@
-// eslint-disable-next-line eslint-comments/disable-enable-pair
-/* eslint-disable max-lines, @typescript-eslint/no-explicit-any */
-import Ajv, { Options as AjvOptions } from 'ajv';
-import {
+// eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import type Ajv from 'ajv';
+import type { Options as AjvOptions } from 'ajv';
+import type {
   AppOptions as AppOptionsBasic,
   HttpRequest as HttpRequestBasic,
   HttpResponse as HttpResponseBasic,
   TemplatedApp as AppTemplatedApp,
   WebSocket as WebSocketBasic,
-  WebSocketBehavior
+  WebSocketBehavior,
+  WebSocket
 } from 'uWebSockets.js';
+import type { Writable, Readable } from 'node:stream';
 
 declare namespace nanoexpress {
-  // eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
   interface IRecord {
     [key: string]: string | string[] | IRecord;
   }
@@ -35,10 +37,10 @@ declare namespace nanoexpress {
   export type HttpRequestHeaders = Record<string, string>;
   export type HttpRequestQueries = Record<string, string>;
   export type HttpRequestParams = Record<string, string>;
-  export type HttpRequestBody = Record<string, string | any>;
+  export type HttpRequestBody = Record<string, any>;
   export type HttpRequestCookies = Record<string, string>;
 
-  export interface IWebSocket extends WebSocketBasic {
+  export interface IWebSocket<UserData> extends WebSocketBasic<UserData> {
     emit(name: string, ...args: any[]): void;
 
     on(
@@ -49,12 +51,21 @@ declare namespace nanoexpress {
     on(event: 'close', listener: (code: number, message: string) => void): void;
     on(
       event: 'message',
-      listener: (message: string | any, isBinary?: boolean) => void
+      listener: (message: string | Buffer, isBinary?: boolean) => void
     ): void;
 
-    on(event: string, listener: (...args: any[]) => void): void;
-    once(event: string, listener: (...args: any[]) => void): void;
-    off(event: string, listener?: (...args: any[]) => void): void;
+    on(
+      event: string,
+      listener: (...args: Array<string | number>) => void
+    ): void;
+    once(
+      event: string,
+      listener: (...args: Array<string | number>) => void
+    ): void;
+    off(
+      event: string,
+      listener?: (...args: Array<string | number>) => void
+    ): void;
   }
   export interface IHttpRequest extends HttpRequestBasic {
     method: string;
@@ -69,9 +80,9 @@ declare namespace nanoexpress {
     query?: HttpRequestQueries;
     params?: HttpRequestParams;
     body?: string | HttpRequestBody;
-    pipe(stream: WritableStream): IHttpRequest;
+    pipe(stream: Writable): IHttpRequest;
     onAborted(onAborted: () => void): void;
-    // eslint-disable-next-line @typescript-eslint/naming-convention
+
     __response?: IHttpResponse;
   }
 
@@ -99,11 +110,7 @@ declare namespace nanoexpress {
     redirect(code: number | string, path?: string): IHttpResponse;
     send(result: string | Record<string, any> | any[]): IHttpResponse;
     json(result: Record<string, any> | any[]): IHttpResponse;
-    pipe(
-      stream: ReadableStream,
-      size?: number,
-      compressed?: boolean
-    ): IHttpResponse;
+    pipe(stream: Readable, size?: number, compressed?: boolean): IHttpResponse;
     sendFile(
       filename: string,
       lastModified?: boolean,
@@ -117,20 +124,20 @@ declare namespace nanoexpress {
     cookie(key: string, value: string, options?: ICookieOptions): IHttpResponse;
     hasCookie(key: string): IHttpResponse;
     removeCookie(key: string, options?: ICookieOptions): IHttpResponse;
-    // eslint-disable-next-line @typescript-eslint/naming-convention
+
     __request?: IHttpResponse;
-    on(event: 'connection', ws: WebSocket): void;
+    on(event: 'connection', ws: WebSocket<unknown>): void;
   }
 
-  type HttpRoute = (
+  type HttpRoute<Response = IHttpResponse> = (
     req: IHttpRequest,
-    res: IHttpResponse
-  ) => any | Promise<any>;
+    res: Response
+  ) => Response | Promise<Response>;
 
   type MiddlewareRoute = (
     req: IHttpRequest,
     res: IHttpResponse,
-    next?: (err: Error | null | undefined, done: boolean | undefined) => any
+    next?: (err: Error | null | undefined, done: boolean | undefined) => void
   ) => INanoexpressApp;
 
   export interface IAppRoute {
@@ -341,8 +348,14 @@ declare namespace nanoexpress {
       handler: MiddlewareRoute | Promise<MiddlewareRoute>,
       options?: IWebSocketOptions
     ): INanoexpressApp;
-    ws(path: string, options: IWebSocketOptions): INanoexpressApp;
-    ws(path: string, options: WebSocketBehavior): INanoexpressApp;
+    ws(
+      path: string,
+      options: IWebSocketOptions | WebSocketBehavior<any>
+    ): INanoexpressApp;
+    ws<UserData>(
+      path: string,
+      options: WebSocketBehavior<UserData>
+    ): INanoexpressApp;
 
     publish(
       topic: string,

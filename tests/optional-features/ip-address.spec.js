@@ -1,13 +1,12 @@
-// eslint-disable-next-line no-redeclare
 /* globals describe, it, expect, beforeAll, afterAll */
-import http from 'http';
+import http from 'node:http';
 import nanoexpress from '../../src/nanoexpress.js';
 
 describe('bind to specific host', () => {
   let app = null;
 
   beforeAll(() => {
-    app = nanoexpress().any('/*', (req, res) => {
+    app = nanoexpress().any('/*', (_, res) => {
       // console.log("got request")
       res.end(Buffer.from(res.getRemoteAddress()).join('.'));
     });

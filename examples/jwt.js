@@ -1,5 +1,5 @@
-// eslint-disable-next-line eslint-comments/disable-enable-pair
-/* eslint-disable import/no-unresolved, n/no-missing-import */
+// eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
+/* eslint-disable import-x/no-unresolved, n/no-missing-import */
 
 import expressJwt from 'express-jwt';
 import jwt from 'jsonwebtoken';

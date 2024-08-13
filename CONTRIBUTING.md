@@ -45,6 +45,7 @@ Before you submit your Pull Request (PR) consider the following guidelines:
 
 - In GitHub, send a pull request to `nanoexpress/nanoexpress:master`.
 - If we suggest changes then:
+
   - Make the required updates.
   - Rebase your branch and force push to your GitHub repository (this will update your Pull Request):
 

@@ -1,4 +1,4 @@
-import { createBrotliCompress, createDeflate, createGzip } from 'zlib';
+import { createBrotliCompress, createDeflate, createGzip } from 'node:zlib';
 
 const priority = ['gzip', 'br', 'deflate'];
 
@@ -10,11 +10,9 @@ export default (stream, headers) => {
   );
 
   const compression =
-    // eslint-disable-next-line no-nested-ternary
     encoding === 'br'
       ? createBrotliCompress()
-      : // eslint-disable-next-line no-nested-ternary
-        encoding === 'gzip'
+      : encoding === 'gzip'
         ? createGzip()
         : encoding === 'deflate'
           ? createDeflate()

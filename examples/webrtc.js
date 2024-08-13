@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-// eslint-disable-next-line import/no-unresolved, n/no-missing-import
+// eslint-disable-next-line import-x/no-unresolved, n/no-missing-import
 import staticMiddleware from '@nanoexpress/middlewares/static';
 import nanoexpress from '../src/nanoexpress.js';
 import { webRTCServer } from '../src/packed/defines/index.js';

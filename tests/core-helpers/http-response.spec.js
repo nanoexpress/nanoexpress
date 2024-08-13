@@ -8,7 +8,6 @@ class Response {
     this.headers = {};
   }
 
-  // eslint-disable-next-line class-methods-use-this
   getRemoteAddressAsText() {
     const ipBuffer = new Uint8Array(4);
 

@@ -2,9 +2,9 @@
   "include": ["src", "tests", "examples", "*.js", "*.cjs", "*.d.ts"],
   "exclude": ["node_modules"],
   "compilerOptions": {
-    "target": "es5",
-    "module": "commonjs",
-    // "lib": [],
+    "target": "es2015",
+    "module": "node16",
+    "lib": ["ESNext.Promise"],
     "allowJs": true,
     "incremental": true,
     "checkJs": true,
@@ -36,7 +36,7 @@
     "noFallthroughCasesInSwitch": true,
     "forceConsistentCasingInFileNames": true,
 
-    "moduleResolution": "node",
+    "moduleResolution": "node16",
     // "baseUrl": "src" ,
     // "paths": {},
     // "rootDirs": [],

@@ -1,22 +1,44 @@
+import { debug } from '../../../helpers/logs.js';
+
 export default function send(result) {
-  if (!result) {
-    result = '';
-  } else if (typeof result === 'object') {
-    this.setHeader('Content-Type', 'application/json; charset=utf-8');
+  let _result = '';
+  let corkHandler = () => {
+    // noop
+  };
+
+  if (this.aborted) {
+    debug({
+      message: 'request was aborted',
+      file: 'send.js',
+      line: [20, 30],
+      kind: 'handler',
+      case: 'log',
+      meta: {
+        isCorked: this.corked,
+        isAborted: this.aborted
+      }
+    });
+    return;
+  }
+
+  if (typeof result === 'object') {
+    corkHandler = () => {
+      this.setHeader('Content-Type', 'application/json; charset=utf-8');
+    };
 
     const { serializer, rawStatusCode: statusCode } = this;
 
     if (serializer) {
       if (typeof serializer === 'function') {
-        result = serializer(result);
+        _result = serializer(result);
       } else if (serializer && typeof serializer[statusCode] === 'function') {
-        result = serializer[statusCode](result);
+        _result = serializer[statusCode](result);
       } else {
         const _statusCode = `${statusCode}`;
         for (let code in serializer) {
           const fastJsonFunc = serializer[code];
           if (code === _statusCode) {
-            result = fastJsonFunc(result);
+            _result = fastJsonFunc(result);
           } else if (code.indexOf('X') !== -1) {
             for (let i = 0; i < 3; i += 1) {
               if (code.charAt(i) === 'X') {
@@ -27,17 +49,23 @@ export default function send(result) {
               }
             }
 
-            // eslint-disable-next-line eqeqeq
-            if (code == _statusCode) {
-              result = fastJsonFunc(result);
+            if (code === _statusCode) {
+              _result = fastJsonFunc(result);
             }
           }
         }
       }
     } else {
-      result = JSON.stringify(result);
+      _result = JSON.stringify(result);
     }
+  } else {
+    _result = result;
   }
 
-  return this.end(result);
+  return this.cork(() => {
+    this.corked = true;
+
+    corkHandler();
+    return this.end(_result);
+  });
 }

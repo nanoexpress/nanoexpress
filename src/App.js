@@ -1,5 +1,6 @@
 import uWS from 'uWebSockets.js';
 import { httpMethods } from './helpers/index.js';
+import withResolvers from './helpers/with-resolvers.js';
 
 export default class App {
   get config() {
@@ -40,7 +41,7 @@ export default class App {
 
     this._instance = null;
 
-    if (config && config.swagger) {
+    if (config?.swagger) {
       this.activateDocs();
     }
 
@@ -48,8 +49,6 @@ export default class App {
     this._optionsCalled = false;
 
     this._console = config.console || console;
-
-    return this;
   }
 
   activateDocs() {
@@ -103,7 +102,7 @@ export default class App {
     return this._app.numSubscribers(topic);
   }
 
-  listen(port, host) {
+  listen(_port, _host) {
     const {
       _config: config,
       _app: app,
@@ -112,12 +111,15 @@ export default class App {
       _console
     } = this;
 
+    let port = _port;
+    let host = _host;
+
     if (typeof port === 'string') {
       if (port.indexOf('.') !== -1) {
-        const _host = host;
+        const _$host = host;
 
         host = port;
-        port = _host || undefined;
+        port = _$host || undefined;
       }
     }
 
@@ -140,7 +142,7 @@ export default class App {
     if (!this._anyRouteCalled) {
       const notFoundHandler =
         config._notFoundHandler ||
-        ((req, res) => {
+        ((_, res) => {
           res.statusCode = 404;
           res.send({ code: 404, message: 'The route does not exist' });
         });
@@ -148,55 +150,57 @@ export default class App {
       this.get('/*', notFoundHandler);
     }
 
-    return new Promise((resolve, reject) => {
-      if (port === undefined) {
+    const { promise, resolve, reject } = withResolvers();
+
+    if (port === undefined) {
+      const _errorContext = _console.error ? _console : console;
+
+      _errorContext.error('[Server]: PORT is required');
+      return undefined;
+    }
+    port = Number(port);
+
+    const onListenHandler = (token) => {
+      if (typeof host === 'string') {
+        config.host = host;
+      } else {
+        config.host = 'localhost';
+      }
+      if (typeof port === 'number') {
+        config.port = port;
+      }
+
+      if (token) {
+        const _debugContext = _console.debug ? _console : console;
+
+        this._instance = token;
+        _debugContext.debug(
+          `[Server]: started successfully at [${config.host}:${port}] in [${
+            Date.now() - this.time
+          }ms] as PID [${process.pid}]`
+        );
+        resolve(this);
+      } else {
         const _errorContext = _console.error ? _console : console;
 
-        _errorContext.error('[Server]: PORT is required');
-        return undefined;
+        _errorContext.error(
+          `[Server]: failed to host at [${config.host}:${port}]`
+        );
+        reject(
+          new Error(`[Server]: failed to host at [${config.host}:${port}]`)
+        );
+        config.host = null;
+        config.port = null;
       }
-      port = Number(port);
+    };
 
-      const onListenHandler = (token) => {
-        if (typeof host === 'string') {
-          config.host = host;
-        } else {
-          config.host = 'localhost';
-        }
-        if (typeof port === 'number') {
-          config.port = port;
-        }
+    if (host) {
+      app.listen(host, port, onListenHandler);
+    } else {
+      app.listen(port, onListenHandler);
+    }
 
-        if (token) {
-          const _debugContext = _console.debug ? _console : console;
-
-          this._instance = token;
-          _debugContext.debug(
-            `[Server]: started successfully at [${config.host}:${port}] in [${
-              Date.now() - this.time
-            }ms]`
-          );
-          resolve(this);
-        } else {
-          const _errorContext = _console.error ? _console : console;
-
-          _errorContext.error(
-            `[Server]: failed to host at [${config.host}:${port}]`
-          );
-          reject(
-            new Error(`[Server]: failed to host at [${config.host}:${port}]`)
-          );
-          config.host = null;
-          config.port = null;
-        }
-      };
-
-      if (host) {
-        app.listen(host, port, onListenHandler);
-      } else {
-        app.listen(port, onListenHandler);
-      }
-    });
+    return promise;
   }
 
   close() {

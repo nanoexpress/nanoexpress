@@ -44,11 +44,9 @@ export default function swaggerDocsGenerator(
     }
 
     const type =
-      // eslint-disable-next-line no-nested-ternary
       typeName === 'params'
         ? 'path'
-        : // eslint-disable-next-line no-nested-ternary
-          typeName === 'response'
+        : typeName === 'response'
           ? 'responses'
           : typeName === 'body'
             ? 'requestBody'

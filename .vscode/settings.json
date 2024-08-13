@@ -1,10 +1,20 @@
 {
   "eslint.validate": ["javascript"],
+  "eslint.useFlatConfig": false,
   "typescript.validate.enable": true,
   "javascript.validate.enable": false,
-  "prettier.requireConfig": false,
-  "[javascript][typescript]": {
-    "editor.defaultFormatter": "biomejs.biome"
+  "prettier.requireConfig": true,
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[markdown]": {
     "editor.defaultFormatter": "dprint.dprint"

@@ -1,4 +1,4 @@
-import http from 'http';
+import http from 'node:http';
 import responseMethods from '../response-proto/http/HttpResponse.js';
 
 const nonSimpleProps = [
@@ -40,7 +40,10 @@ const convertParams = (params) => {
 };
 const babelCompilerManipulationNormalize = (content) => {
   if (content.includes('const {\n') || content.includes('let {\n')) {
-    return content.split('\n').reduce((all, currLine, index) => {
+    return content.split('\n').reduce((_all, _currLine, index) => {
+      let all = _all;
+      let currLine = _currLine;
+
       if (currLine.includes('{') && index > 0) {
         all += '\n';
       }
@@ -55,16 +58,19 @@ const babelCompilerManipulationNormalize = (content) => {
 };
 
 export default function compileRoute(fn, params) {
+  /** @type {string} */
   const content = babelCompilerManipulationNormalize(fn.toString().trim());
   const preparedParams = convertParams(params);
 
   // Don't parse dummy functions
   if (content === '() => {}') {
-    return (req, res) => res.end('');
+    return (_, res) => res.end('');
   }
 
+  /** @type {string[]} */
   const lines = content.split('\n');
 
+  /** @type {string} */
   let argumentsLine = lines.shift().trim();
 
   if (lines.length === 0) {
@@ -75,6 +81,25 @@ export default function compileRoute(fn, params) {
           '($1) => {\nres.end($2)\n}'
         )
       );
+    }
+  } else if (lines.length <= 2) {
+    let isComment = false;
+    let isEnd = false;
+    let otherCommands = false;
+
+    for (const line of lines) {
+      if (line.trim().startsWith('//')) {
+        isComment = true;
+      } else if (line.trim().endsWith('}')) {
+        isEnd = true;
+      } else {
+        otherCommands = true;
+      }
+    }
+
+    // Fast approx match empty routes and handlers
+    if (isComment && isEnd && !otherCommands) {
+      return (_, res) => res.end('');
     }
   }
 
@@ -95,8 +120,22 @@ export default function compileRoute(fn, params) {
     }
   }
 
+  let isAwait = false;
+  let isCorked = false;
+
   if (argumentsLine.includes('async') && !content.includes('await')) {
     argumentsLine = argumentsLine.substr(5);
+  } else if (
+    argumentsLine.includes('async') &&
+    content.includes('await') &&
+    !content.includes('// await')
+  ) {
+    argumentsLine += `
+    let $$aborted = false;
+    res.onAborted(() => {
+      $$aborted = true;
+  })`;
+    isAwait = true;
   }
 
   if (!argumentsLine.includes('(req, res)')) {
@@ -106,9 +145,12 @@ export default function compileRoute(fn, params) {
         '(req, res)'
       );
     } else {
-      argumentsLine = `(req, res) ${argumentsLine.substr(
+      argumentsLine = `(req, res)${argumentsLine.substr(
         argumentsLine.indexOf('()') + 2
       )}`;
+    }
+    if (isAwait) {
+      argumentsLine = `async ${argumentsLine}`;
     }
   }
 
@@ -118,7 +160,7 @@ export default function compileRoute(fn, params) {
   }
 
   if (returnLine) {
-    if (returnLine.includes('return')) {
+    if (returnLine.includes('return') && !returnLine.includes('end(')) {
       const tripLeft = returnLine.trim().substr(7);
       returnLine = `res.end(${tripLeft.replace(RETURN_TRIP_REGEX, '')})`;
 
@@ -140,6 +182,13 @@ export default function compileRoute(fn, params) {
 
   let contentLines = `${argumentsLine}\n`;
 
+  const assumeCorked = () => {
+    if (!isCorked) {
+      contentLines += 'res.cork(() => {\n';
+      returnLine += '\n});\n';
+      isCorked = true;
+    }
+  };
   if (lines.length > 0) {
     for (const line of lines) {
       if (line.includes('//')) {
@@ -168,7 +217,7 @@ export default function compileRoute(fn, params) {
             const extractConstants = line.match(HEADER_PARAM_KEY_CONST_REGEX);
             const leftPad = line.indexOf(matchDefine);
 
-            if (extractConstants && extractConstants[2]) {
+            if (extractConstants?.[2]) {
               const constants = extractConstants[2].trim().split(',');
 
               for (const header of constants) {
@@ -205,7 +254,7 @@ export default function compileRoute(fn, params) {
             const extractConstants = line.match(HEADER_PARAM_KEY_CONST_REGEX);
             const leftPad = line.indexOf(matchDefine);
 
-            if (extractConstants && extractConstants[2]) {
+            if (extractConstants?.[2]) {
               const constants = extractConstants[2].trim().split(',');
 
               for (const param of constants) {
@@ -221,10 +270,12 @@ export default function compileRoute(fn, params) {
           }
         }
       } else if (line.includes('setHeader')) {
+        assumeCorked();
         contentLines += line.replace('setHeader', 'writeHeader');
       } else if (line.includes('status(')) {
+        assumeCorked();
         const statusPrepare = line.substr(line.indexOf('status(') + 7);
-        const code = parseInt(
+        const code = Number.parseInt(
           statusPrepare.substr(0, statusPrepare.indexOf(')')),
           10
         );
@@ -243,6 +294,17 @@ export default function compileRoute(fn, params) {
       contentLines += '\n';
     }
   }
+
+  if (isAwait) {
+    contentLines += `
+    if ($$aborted) {
+      return;
+    }
+    `;
+  }
+
+  assumeCorked();
+
   if (returnLine) {
     contentLines += returnLine;
   }
@@ -254,13 +316,12 @@ export default function compileRoute(fn, params) {
 
   let compiled;
   try {
-    // eslint-disable-next-line @typescript-eslint/no-implied-eval
     compiled = new Function(`return ${contentLines}`)();
-  } catch (funcEvalErr) {
+  } catch {
     try {
-      // eslint-disable-next-line, no-eval
+      // biome-ignore lint/security/noGlobalEval: <explanation>
       compiled = eval(contentLines);
-    } catch (evalErr) {
+    } catch {
       compiled = null;
     }
   }

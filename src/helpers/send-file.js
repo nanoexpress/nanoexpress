@@ -1,4 +1,4 @@
-import { createReadStream, statSync } from 'fs';
+import { createReadStream, statSync } from 'node:fs';
 import { getMime } from './mime.js';
 
 export default function sendFile(
@@ -21,7 +21,7 @@ export default function sendFile(
     const mtimeutc = mtime.toUTCString();
 
     // Return 304 if last-modified
-    if (headers && headers['if-modified-since']) {
+    if (headers?.['if-modified-since']) {
       if (new Date(headers['if-modified-since']) >= mtime) {
         this.writeStatus('304 Not Modified');
         return this.end();
@@ -35,13 +35,13 @@ export default function sendFile(
   let start = 0;
   let end = 0;
 
-  if (headers && headers.range) {
+  if (headers?.range) {
     [start, end] = headers.range
       .substr(6)
       .split('-')
-      .map((byte) => (byte ? parseInt(byte, 10) : undefined));
+      .map((byte) => (byte ? Number.parseInt(byte, 10) : undefined));
 
-    // Chrome patch for work
+    // Chrome patch to make it work
     if (end === undefined) {
       end = size - 1;
     }
