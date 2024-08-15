@@ -53,7 +53,7 @@
     "@commitlint/cli": "^19.4.0",
     "@ls-lint/ls-lint": "^2.2.3",
     "@types/cookie": "~0.6.0",
-    "@types/eslint": "~8",
+    "@types/eslint": "~9",
     "@types/lint-staged": "~13.3.0",
     "@types/node": "^22.3.0",
     "commitlint-config-airlight": "^6.0.7",
