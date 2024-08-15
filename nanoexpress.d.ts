@@ -1,7 +1,6 @@
 // eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type Ajv from 'ajv';
-import type { Options as AjvOptions } from 'ajv';
+import type { Ajv, Options as AjvOptions } from 'ajv';
 import type {
   AppOptions as AppOptionsBasic,
   HttpRequest as HttpRequestBasic,
@@ -82,8 +81,6 @@ declare namespace nanoexpress {
     body?: string | HttpRequestBody;
     pipe(stream: Writable): IHttpRequest;
     onAborted(onAborted: () => void): void;
-
-    __response?: IHttpResponse;
   }
 
   export interface ICookieOptions {
@@ -124,8 +121,6 @@ declare namespace nanoexpress {
     cookie(key: string, value: string, options?: ICookieOptions): IHttpResponse;
     hasCookie(key: string): IHttpResponse;
     removeCookie(key: string, options?: ICookieOptions): IHttpResponse;
-
-    __request?: IHttpResponse;
     on(event: 'connection', ws: WebSocket<unknown>): void;
   }
 
@@ -139,19 +134,6 @@ declare namespace nanoexpress {
     res: IHttpResponse,
     next?: (err: Error | null | undefined, done: boolean | undefined) => void
   ) => INanoexpressApp;
-
-  export interface IAppRoute {
-    get: HttpRoute;
-    post: HttpRoute;
-    put: HttpRoute;
-    patch: HttpRoute;
-    head: HttpRoute;
-    delete: HttpRoute;
-    options: HttpRoute;
-    trace: HttpRoute;
-    any: HttpRoute;
-    ws: HttpRoute;
-  }
 
   type SchemaValue = IRecord;
   interface ISchema {
@@ -175,6 +157,17 @@ declare namespace nanoexpress {
     forceRaw?: boolean;
     noMiddleware?: boolean;
     onAborted?: () => any;
+  }
+  interface IRouteOptionPrecompile extends IRouteOption {
+    /**
+     * Compiles route at startup and cache the response
+     * Cache is immutable and cannot be changed later
+     * due of performance reason
+     *
+     * Recommended for simple, basic routes like `healthcheck`
+     * Available only for `GET` route
+     */
+    precompile: boolean;
   }
 
   export interface IPerRoute {
@@ -232,12 +225,22 @@ declare namespace nanoexpress {
       options: IRouteOption,
       callback: HttpRoute
     ): INanoexpressApp;
+    get(
+      path: string,
+      options: IRouteOptionPrecompile,
+      callback: HttpRoute
+    ): Promise<INanoexpressApp>;
     get(path: string, ...middlewares: MiddlewareRoute[]): INanoexpressApp;
     get(
       path: string,
       options: IRouteOption,
       ...middlewares: MiddlewareRoute[]
     ): INanoexpressApp;
+    get(
+      path: string,
+      options: IRouteOptionPrecompile,
+      ...middlewares: MiddlewareRoute[]
+    ): Promise<INanoexpressApp>;
 
     post(path: string, callback: HttpRoute): INanoexpressApp;
     post(
@@ -398,4 +401,4 @@ declare function nanoexpress(
   options?: nanoexpress.IAppOptions
 ): nanoexpress.INanoexpressApp;
 
-export = nanoexpress;
+export default nanoexpress;
