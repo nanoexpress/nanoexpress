@@ -45,6 +45,9 @@ jobs:
       - name: Test code
         run: bun run test
   release:
+    permissions:
+      id-token: write
+      contents: write
     needs: test
     runs-on: ubuntu-22.04
 
