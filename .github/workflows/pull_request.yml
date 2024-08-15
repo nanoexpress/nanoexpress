@@ -30,9 +30,6 @@ jobs:
 
       - name: Test code
         run: bun run test
-
-      - name: Build
-        run: bun run build
   auto-merge:
     needs: lint_test_build
     timeout-minutes: 5

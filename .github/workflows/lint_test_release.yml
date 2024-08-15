@@ -57,9 +57,6 @@ jobs:
       - name: Install
         run: bun install
 
-      - name: Build
-        run: bun run build
-
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
