@@ -5,8 +5,9 @@ export default (req) => {
     return;
   }
   const { promise, resolve, reject } = withResolvers();
+  const length = req.headers['content-length'];
 
-  if (!req.headers) {
+  if (!req.headers || !length) {
     return resolve();
   }
   if (

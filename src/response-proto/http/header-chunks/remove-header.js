@@ -5,7 +5,6 @@ export default function removeHeader(key) {
   if (!this._modifiedEnd) {
     this.modifyEnd();
   }
-  this._headers[key] = null;
   delete this._headers[key];
 
   return this;

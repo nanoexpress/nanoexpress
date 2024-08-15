@@ -2,9 +2,25 @@ import HttpResponseExtends from '../../src/response-proto/http/HttpResponse.js';
 
 class HttpResponse {
   constructor() {
+    this.corks = [];
     this.___headers = [];
     this.___code = '200 OK';
     this.___end = null;
+  }
+
+  runCorks() {
+    const { corks } = this;
+
+    for (const cork of corks) {
+      cork();
+    }
+
+    return this;
+  }
+
+  cork(callback) {
+    callback();
+    return this.runCorks();
   }
 
   writeHeader(key, value) {

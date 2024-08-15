@@ -1,12 +1,11 @@
 import { debug } from '../../../helpers/logs.js';
 
 export default function send(result) {
-  let _result = '';
-  let corkHandler = () => {
-    // noop
-  };
+  const { corks, aborted } = this;
 
-  if (this.aborted) {
+  let _result = '';
+
+  if (aborted) {
     debug({
       message: 'request was aborted',
       file: 'send.js',
@@ -14,17 +13,16 @@ export default function send(result) {
       kind: 'handler',
       case: 'log',
       meta: {
-        isCorked: this.corked,
-        isAborted: this.aborted
+        isAborted: true
       }
     });
     return;
   }
 
   if (typeof result === 'object') {
-    corkHandler = () => {
+    corks.push(() => {
       this.setHeader('Content-Type', 'application/json; charset=utf-8');
-    };
+    });
 
     const { serializer, rawStatusCode: statusCode } = this;
 
@@ -62,10 +60,8 @@ export default function send(result) {
     _result = result;
   }
 
-  return this.cork(() => {
-    this.corked = true;
-
-    corkHandler();
-    return this.end(_result);
+  corks.push(() => {
+    this.end(_result);
+    this.aborted = true;
   });
 }

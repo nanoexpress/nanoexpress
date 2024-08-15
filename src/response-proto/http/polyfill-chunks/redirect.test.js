@@ -47,27 +47,31 @@ describe('redirect polyfill method', () => {
   it('should return correct code', () => {
     const res = new HttpResponse();
 
-    redirect.call(res, 301);
+    res.cork(() => {
+      redirect.call(res, 301);
+    });
 
     expect(res.___code).toBe('301 Moved Permanently');
   });
   it('should return correct path and autocorrected code', () => {
     const res = new HttpResponse();
 
-    redirect.call(res, '/path');
+    res.cork(() => {
+      redirect.call(res, '/path');
+    });
 
     expect(res.___code).toBe('301 Moved Permanently');
     expect(res.___headers).toStrictEqual([{ key: 'Location', value: '/path' }]);
   });
   it('should return correct path with host', () => {
     const res = new HttpResponse();
-    res.__request = {
-      headers: {
-        host: 'localhost:3333'
-      }
+    res.$headers = {
+      host: 'localhost:3333'
     };
 
-    redirect.call(res, '/path');
+    res.cork(() => {
+      redirect.call(res, '/path');
+    });
 
     expect(res.___code).toBe('301 Moved Permanently');
     expect(res.___headers).toStrictEqual([

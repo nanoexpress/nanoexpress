@@ -8,31 +8,28 @@ import compressStream from '../../../helpers/compress-stream.js';
  */
 
 export default function pipe(_stream, size, compressed = false) {
-  const { __request: req } = this;
-  const { onAborted, headers, responseHeaders } = req;
+  const { corks, $headers } = this;
   let isAborted = false;
   let stream = _stream;
 
   this.stream = true;
 
   if (compressed) {
-    const compressedStream = compressStream(stream, responseHeaders || headers);
+    const compressedStream = compressStream(stream, $headers);
 
     if (compressedStream) {
       stream = compressedStream;
     }
   }
 
-  onAborted(() => {
+  this.onAborted(() => {
     if (stream) {
       stream.destroy();
     }
     isAborted = true;
   });
 
-  return this.cork(() => {
-    this.corked = true;
-
+  corks.push(() => {
     if (compressed || !size) {
       stream.on('data', (buffer) => {
         if (isAborted) {
