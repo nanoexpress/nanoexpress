@@ -4,8 +4,24 @@ import { HttpResponse } from '../../src/response-proto/index.js';
 // Init Fake HttpResponse
 class Response {
   constructor() {
+    this.corks = [];
     this.buffer = '';
     this.headers = {};
+  }
+
+  runCorks() {
+    const { corks } = this;
+
+    for (const cork of corks) {
+      cork();
+    }
+
+    return this;
+  }
+
+  cork(callback) {
+    callback();
+    return this.runCorks();
   }
 
   getRemoteAddressAsText() {
@@ -31,35 +47,42 @@ class Response {
 }
 Object.assign(Response.prototype, HttpResponse);
 
-describe('http response getIP', () => {
-  const fakeRes = new Response();
-
-  it('res.send', () => {
-    expect(fakeRes.getIP()).toBe('127.0.0.1');
-  });
-});
-
 describe('http response send', () => {
-  const fakeRes = new Response();
+  let fakeRes;
+
+  beforeEach(() => {
+    fakeRes = new Response();
+  });
 
   it('res.send', () => {
-    fakeRes.send('res.send works');
+    fakeRes.cork(() => {
+      fakeRes.send('res.send works');
+    });
     expect(fakeRes.buffer).toBe('res.send works');
   });
   it('res.json', () => {
-    fakeRes.json({ status: 'ok' });
+    fakeRes.cork(() => {
+      fakeRes.json({ status: 'ok' });
+    });
+
     expect(fakeRes.buffer).toBe('{"status":"ok"}');
   });
   it('res.xml', () => {
-    fakeRes.send('<xml />');
+    fakeRes.cork(() => {
+      fakeRes.send('<xml />');
+    });
     expect(fakeRes.buffer).toBe('<xml />');
   });
   it('res.html', () => {
-    fakeRes.send('<!DOCTYPE />');
+    fakeRes.cork(() => {
+      fakeRes.send('<!DOCTYPE />');
+    });
     expect(fakeRes.buffer).toBe('<!DOCTYPE />');
   });
   it('res.plain', () => {
-    fakeRes.send('Text works');
+    fakeRes.cork(() => {
+      fakeRes.send('Text works');
+    });
     expect(fakeRes.buffer).toBe('Text works');
   });
 });
@@ -97,7 +120,9 @@ describe('http response status', () => {
   const fakeRes = new Response();
 
   it('res.status', () => {
-    fakeRes.status(200);
+    fakeRes.cork(() => {
+      fakeRes.status(200);
+    });
     expect(fakeRes.statusCode).toBe('200 OK');
   });
 });
@@ -106,7 +131,9 @@ describe('http response writeHead', () => {
   const fakeRes = new Response();
 
   it('res.status', () => {
-    fakeRes.writeHead(201, { foo: 'bar' });
+    fakeRes.cork(() => {
+      fakeRes.writeHead(201, { foo: 'bar' });
+    });
     expect(fakeRes.statusCode).toBe('201 Created');
     expect(fakeRes._headers).toStrictEqual({ foo: 'bar' });
   });
@@ -114,14 +141,15 @@ describe('http response writeHead', () => {
 
 describe('http response redirect', () => {
   const fakeRes = new Response();
-  fakeRes.__request = {
-    headers: {
-      host: 'localhost'
-    }
+  fakeRes.$headers = {
+    host: 'localhost'
   };
 
   it('res.status', () => {
-    fakeRes.redirect('/another');
+    fakeRes.cork(() => {
+      fakeRes.redirect('/another');
+    });
+
     expect(fakeRes.headers).toStrictEqual({
       Location: 'http://localhost/another'
     });

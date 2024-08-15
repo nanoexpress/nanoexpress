@@ -6,10 +6,7 @@ export default function sendFile(
   lastModified = true,
   compressed = false
 ) {
-  const req = this.__request;
-  const { headers } = req;
-  const responseHeaders = {};
-
+  const { $headers } = this;
   const stat = statSync(path);
   let { size } = stat;
 
@@ -21,22 +18,22 @@ export default function sendFile(
     const mtimeutc = mtime.toUTCString();
 
     // Return 304 if last-modified
-    if (headers?.['if-modified-since']) {
-      if (new Date(headers['if-modified-since']) >= mtime) {
+    if ($headers?.['if-modified-since']) {
+      if (new Date($headers['if-modified-since']) >= mtime) {
         this.writeStatus('304 Not Modified');
         return this.end();
       }
     }
-    responseHeaders['last-modified'] = mtimeutc;
+    this.writeHeader('last-modified', mtimeutc);
   }
-  responseHeaders['content-type'] = getMime(path);
+  this.writeHeader('content-type', getMime(path));
 
   // write data
   let start = 0;
   let end = 0;
 
-  if (headers?.range) {
-    [start, end] = headers.range
+  if ($headers?.range) {
+    [start, end] = $headers.range
       .substr(6)
       .split('-')
       .map((byte) => (byte ? Number.parseInt(byte, 10) : undefined));
@@ -48,8 +45,8 @@ export default function sendFile(
 
     if (start !== undefined) {
       this.writeStatus('206 Partial Content');
-      responseHeaders['accept-ranges'] = 'bytes';
-      responseHeaders['content-range'] = `bytes ${start}-${end}/${size}`;
+      this.writeHeader('accept-ranges', 'bytes');
+      this.writeHeader('content-range', `bytes ${start}-${end}/${size}`);
       size = end - start + 1;
     }
   }
@@ -59,14 +56,11 @@ export default function sendFile(
     end = 0;
   }
 
-  req.responseHeaders = responseHeaders;
-
   const createStreamInstance = end
     ? createReadStream(path, { start, end })
     : createReadStream(path);
 
   const pipe = this.pipe(createStreamInstance, size, compressed);
-  this.writeHeaders(responseHeaders);
 
   return pipe;
 }

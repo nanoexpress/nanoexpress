@@ -1,4 +1,4 @@
-import { Readable } from 'stream';
+import { Readable } from 'node:stream';
 /* globals describe, it, expect */
 import fastQueryParse from 'fast-query-parse';
 import { prepareParams } from '../../src/helpers/index.js';
@@ -68,9 +68,14 @@ describe('body normalize', () => {
         // mock read
       }
     });
+
+    const bodyInput = 'fake body';
     const fakeReq = {
       stream,
-      headers: { 'content-type': 'application/json' }
+      headers: {
+        'content-type': 'application/json',
+        'content-length': bodyInput.length
+      }
     };
     const fakeRes = {
       onAborted() {
@@ -78,11 +83,11 @@ describe('body normalize', () => {
       }
     };
 
-    stream.push(Buffer.concat([Buffer.from('fake body')]));
+    stream.push(new TextEncoder().encode(bodyInput));
     setTimeout(() => stream.push(null), 50);
 
     await body(fakeReq, fakeRes);
-    expect(fakeReq.body).toStrictEqual(Buffer.from('fake body'));
+    expect(fakeReq.body).toStrictEqual(Buffer.from(bodyInput));
   });
   it('body normalize empty', async () => {
     const fakeReq = {};

@@ -12,8 +12,8 @@ import { stream, body, params, pipe } from './request-proto/http/index.js';
 import { HttpResponse } from './response-proto/http/index.js';
 import { debug } from './helpers/logs.js';
 import withResolvers from './helpers/with-resolvers.js';
+import precompileRoute from './compilers/precompile.js';
 
-const resAbortHandler = '___$HttpResponseAbortHandler';
 const __wsProto__ = Events.prototype;
 
 export default class Route {
@@ -107,7 +107,6 @@ export default class Route {
     let validation = null;
     let _direct = false;
     let _schema = null;
-    let isAborted = false;
     let isNotFoundHandler = false;
     let bodyAllowedMethod =
       method === 'POST' || method === 'PUT' || method === 'PATCH';
@@ -121,13 +120,14 @@ export default class Route {
           middleware.forceRaw !== undefined ||
           middleware.noMiddleware !== undefined ||
           middleware.onAborted ||
-          middleware.schema)
+          middleware.schema ||
+          middleware.precompile)
     );
     const isRaw = findConfig?.isRaw;
     const isStrictRaw = findConfig?.isStrictRaw;
     const forceRaw = findConfig?.forceRaw;
     const noMiddleware = findConfig?.noMiddleware;
-    const onAborted = findConfig?.onAborted;
+    const precompile = findConfig?.precompile;
     let schema = findConfig?.schema && findConfig;
 
     let isCanCompiled = false;
@@ -221,15 +221,14 @@ export default class Route {
               kind: 'polyfill',
               case: 'convert-compatibility',
               meta: {
-                isCorked: res.corked,
-                isAborted
+                isAborted: res.aborted
               }
             });
 
             const data = await _oldRouteFunction(req, res);
 
-            if (!isAborted && data && data !== res) {
-              isAborted = true;
+            if (!res.aborted && data && data !== res) {
+              res.aborted = true;
               return res.send(data);
             }
             return null;
@@ -265,8 +264,7 @@ export default class Route {
               kind: 'polyfill',
               case: 'convert-compatibility',
               meta: {
-                isCorked: res.corked,
-                isAborted
+                isAborted: res.aborted
               }
             });
 
@@ -301,32 +299,18 @@ export default class Route {
       originalUrl = originalUrl.substr(0, originalUrl.length - 1);
     }
 
-    const _onAbortedCallbacks = (!isShouldReduceTasks || isWebSocket) && [];
-    const _handleOnAborted =
-      (!isShouldReduceTasks || isWebSocket) &&
-      (() => {
-        isAborted = true;
-        if (onAborted) {
-          onAborted();
-        }
-        if (_onAbortedCallbacks.length > 0) {
-          for (let i = 0, len = _onAbortedCallbacks.length; i < len; i += 1) {
-            _onAbortedCallbacks[i]();
-          }
-          _onAbortedCallbacks.length = 0;
-        }
-      });
-
-    const attachOnAborted =
-      (!isShouldReduceTasks || isWebSocket) &&
-      ((fn) => {
-        _onAbortedCallbacks.push(fn);
-      });
-
     const handler =
       isShouldReduceTasks && !isWebSocket
         ? !compilePath && !compileMethod
-          ? (res, req) => routeFunction(req, res)
+          ? precompile && !isWebSocket
+            ? precompileRoute(routeFunction, {
+                method,
+                path,
+                baseUrl: _baseUrl,
+                url: path,
+                originalUrl
+              })
+            : routeFunction
           : (res, req) => {
               debug({
                 message: 'called handler',
@@ -369,16 +353,26 @@ export default class Route {
               }
             });
 
-            isAborted = false;
+            let isAborted = false;
+            const corks = [];
             if (!isRaw) {
-              res.onAborted(_handleOnAborted);
+              res.onAborted(() => {
+                debug({
+                  message: 'abort handler called',
+                  file: 'Route.js',
+                  line: [350, 400],
+                  kind: 3,
+                  meta: {
+                    isRaw
+                  }
+                });
+
+                res.aborted = true;
+                isAborted = true;
+              });
             }
-            attachOnAborted(() => {
-              res.aborted = true;
-              isAborted = true;
-            });
-            res[resAbortHandler] = true;
             res.corked = false;
+            res.corks = corks;
 
             req.method = fetchMethod ? req.getMethod().toUpperCase() : method;
             req.path = fetchUrl ? req.getUrl().substr(_baseUrl.length) : path;
@@ -403,7 +397,6 @@ export default class Route {
                 kind: 'error',
                 case: 'handling',
                 meta: {
-                  isCorked: res.corked,
                   isAborted,
                   isRaw,
                   stack: err
@@ -417,7 +410,6 @@ export default class Route {
                   kind: 'error',
                   case: 'handling',
                   meta: {
-                    isCorked: res.corked,
                     isAborted,
                     isRaw,
                     stack: err
@@ -460,21 +452,13 @@ export default class Route {
             req.url = req.path;
             req.originalUrl = originalUrl;
 
-            // Some callbacks which need for your
-            req.onAborted = attachOnAborted;
-
             // Aliases for future usage and easy-access
             if (!isRaw) {
-              req.__response = res;
-              res.__request = req;
-
               // Extending proto
               const { __proto__ } = res;
               for (const newMethod in HttpResponse) {
                 __proto__[newMethod] = HttpResponse[newMethod];
               }
-              req.getIP = res.getIP;
-              req.getProxiedIP = res.getProxiedIP;
               res.writeHead.notModified = true;
             }
 
@@ -492,6 +476,7 @@ export default class Route {
                 });
                 if (headers) {
                   req.headers = headers;
+                  res.$headers = headers;
                 }
               }
               if (!_schema || _schema.cookies !== false) {
@@ -500,6 +485,7 @@ export default class Route {
                   : req.getHeader('cookie');
                 if (cookie) {
                   req.cookies = fastQueryParse(cookie);
+                  res.$cookies = req.cookies;
                 }
               }
               if (!_schema || _schema.params !== false) {
@@ -540,7 +526,6 @@ export default class Route {
                 kind: 'polyfill',
                 case: 'method_fill',
                 meta: {
-                  isCorked: res.corked,
                   isAborted,
                   isRaw
                 }
@@ -550,6 +535,7 @@ export default class Route {
 
             if (
               isAborted ||
+              res.aborted ||
               (!isRaw &&
                 validation &&
                 processValidation(req, res, _config, validation))
@@ -561,7 +547,6 @@ export default class Route {
                 kind: 'validation',
                 case: 'abort',
                 meta: {
-                  isCorked: res.corked,
                   isAborted,
                   isRaw
                 }
@@ -584,7 +569,6 @@ export default class Route {
                   kind: 'middleware',
                   case: 'start',
                   meta: {
-                    isCorked: res.corked,
                     isAborted,
                     isRaw
                   }
@@ -598,7 +582,6 @@ export default class Route {
                     kind: 'middleware',
                     case: 'abort',
                     meta: {
-                      isCorked: res.corked,
                       isAborted,
                       isRaw
                     }
@@ -616,7 +599,6 @@ export default class Route {
                     kind: 'middleware',
                     case: 'early_return',
                     meta: {
-                      isCorked: res.corked,
                       isAborted,
                       isRaw
                     }
@@ -627,6 +609,7 @@ export default class Route {
 
             if (
               isAborted ||
+              res.aborted ||
               method === 'OPTIONS' ||
               res.stream === true ||
               res.stream === 1
@@ -638,7 +621,6 @@ export default class Route {
                 kind: 'handler',
                 case: 'abort',
                 meta: {
-                  isCorked: res.corked,
                   isAborted,
                   isRaw
                 }
@@ -648,19 +630,6 @@ export default class Route {
             }
 
             if (_direct || !fetchUrl || req.path === path) {
-              debug({
-                message: 'res.cork is called',
-                file: 'Route.js',
-                line: [690, 700],
-                kind: 'handler',
-                case: 'log',
-                meta: {
-                  isCorked: res.corked,
-                  isAborted,
-                  isRaw
-                }
-              });
-
               if (routeFunction.isAsync) {
                 debug({
                   message: 'async route is called with error handler',
@@ -669,27 +638,45 @@ export default class Route {
                   kind: 'handler',
                   case: 'log',
                   meta: {
-                    isCorked: res.corked,
                     isAborted,
                     isRaw
                   }
                 });
-                return routeFunction(req, res).catch(handleError);
+                await routeFunction(req, res).catch(handleError);
+              } else {
+                debug({
+                  message: 'route called and return',
+                  file: 'Route.js',
+                  line: [720, 730],
+                  kind: 'handler',
+                  case: 'log',
+                  meta: {
+                    isAborted,
+                    isRaw
+                  }
+                });
+                routeFunction(req, res);
               }
 
-              debug({
-                message: 'route called and return',
-                file: 'Route.js',
-                line: [720, 730],
-                kind: 'handler',
-                case: 'log',
-                meta: {
-                  isCorked: res.corked,
-                  isAborted,
-                  isRaw
+              if (isAborted || res.aborted || corks.length === 0) {
+                return;
+              }
+
+              return res.cork(() => {
+                res.corked = true;
+
+                const len = corks.length;
+                if (len === 1) {
+                  corks[0]();
+                } else if (len === 2) {
+                  corks[0]();
+                  corks[1]();
+                } else {
+                  for (let c = 0; c < len; c++) {
+                    corks[c]();
+                  }
                 }
               });
-              return routeFunction(req, res);
             }
           };
 
@@ -707,13 +694,17 @@ const exposeMethod = (method) =>
         originalUrl = _baseUrl + path;
       }
 
-      const preparedRouteFunction = this._prepareMethod(
-        method.toUpperCase(),
-        { path, originalUrl },
-        ...middlewares
-      );
+      (async () => {
+        this._pending = true;
+        const preparedRouteFunction = await this._prepareMethod(
+          method.toUpperCase(),
+          { path, originalUrl },
+          ...middlewares
+        );
 
-      _app[method](originalUrl, preparedRouteFunction);
+        _app[method](originalUrl, preparedRouteFunction);
+        this._pending = false;
+      })();
     }
 
     return this;

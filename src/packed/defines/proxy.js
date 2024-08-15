@@ -1,15 +1,22 @@
-import http from 'http';
-import https from 'https';
+import http from 'node:http';
+import https from 'node:https';
 
 http.globalAgent.keepAlive = true;
 https.globalAgent.keepAlive = true;
 
+/**
+ *
+ * @param {http | https} agent
+ * @param {string} url
+ * @param {{method: 'get' | 'post' | 'put'}} config
+ * @returns
+ */
 const httpRequest = (agent, url, config) =>
   new Promise((resolve, reject) => {
     agent[config.method](url, config, (response) => {
       let buff;
-      response.on('data', (chunk) => {
-        chunk = Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk);
+      response.on('data', (_chunk) => {
+        const chunk = Buffer.isBuffer(_chunk) ? _chunk : Buffer.from(_chunk);
 
         if (!buff) {
           buff = chunk;
@@ -138,7 +145,9 @@ const prepareProxy = (
 
         ws.instance.emit('open');
       },
-      message(ws, message, isBinary) {
+      message(ws, _message, isBinary) {
+        let message = _message;
+
         if (!isBinary) {
           message = Buffer.from(message).toString('utf8');
         }
