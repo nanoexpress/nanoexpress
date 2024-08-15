@@ -50,6 +50,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Use Bun.sh
         uses: oven-sh/setup-bun@v2
