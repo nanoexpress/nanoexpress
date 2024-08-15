@@ -6,6 +6,10 @@ app.get('/', (res) => {
   res.end('hello world');
 });
 
+app.get('/test', async (res, req) => {
+  res.end('success');
+});
+
 app.get('/foo/', (res) => {
   res.end('hello at /foo/');
 });

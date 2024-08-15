@@ -2,8 +2,8 @@ import nanoexpress from '../src/nanoexpress.js';
 
 const app = nanoexpress();
 
-app.get('/', { isRaw: true }, (req, res) => {
-  res.end('hello world');
+await app.get('/', { precompile: true }, (req, res) => {
+  return res.end('hello world');
 });
 
-app.listen(4000);
+await app.listen(4000);

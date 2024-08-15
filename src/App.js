@@ -173,13 +173,22 @@ export default class App {
       if (token) {
         const _debugContext = _console.debug ? _console : console;
 
-        this._instance = token;
-        _debugContext.debug(
-          `[Server]: started successfully at [${config.host}:${port}] in [${
-            Date.now() - this.time
-          }ms] as PID [${process.pid}]`
+        process.nextTick(
+          function resolveHandler() {
+            if (this._pending) {
+              process.nextTick(resolveHandler);
+            } else {
+              _debugContext.debug(
+                `[Server]: started successfully at [${config.host}:${port}] in [${
+                  Date.now() - this.time
+                }ms] as PID [${process.pid}]`
+              );
+              this._instance = token;
+
+              resolve(this);
+            }
+          }.bind(this)
         );
-        resolve(this);
       } else {
         const _errorContext = _console.error ? _console : console;
 
@@ -204,7 +213,7 @@ export default class App {
   }
 
   close() {
-    const { _config: config, _console } = this;
+    const { _config: config, _console, _app } = this;
 
     if (this._instance) {
       const _debugContext = _console.debug ? _console : console;
@@ -212,6 +221,7 @@ export default class App {
       config.host = null;
       config.port = null;
       uWS.us_listen_socket_close(this._instance);
+      _app.close();
       this._instance = null;
       _debugContext.debug('[Server]: stopped successfully');
       return true;
@@ -228,13 +238,19 @@ const exposeAppMethodHOC = (method) =>
     const { _app, _route, _anyRouteCalled } = this;
 
     if (fns.length > 0) {
-      const preparedRouteFunction = _route._prepareMethod(
-        method.toUpperCase(),
-        { path, originalUrl: path },
-        ...fns
-      );
+      (async () => {
+        // It is required to listening
+        this._pending = true;
 
-      _app[method](path, preparedRouteFunction);
+        const preparedRouteFunction = await _route._prepareMethod(
+          method.toUpperCase(),
+          { path, originalUrl: path },
+          ...fns
+        );
+
+        _app[method](path, preparedRouteFunction);
+        this._pending = false;
+      })();
 
       this._routeCalled = true;
 

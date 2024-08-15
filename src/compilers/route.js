@@ -142,16 +142,18 @@ export default function compileRoute(fn, params) {
     if (argumentsLine.includes('(req)') || argumentsLine.includes('(res)')) {
       argumentsLine = argumentsLine.replace(
         ARGUMENTS_MATCH_REG_EX,
-        '(req, res)'
+        '(res, res)'
       );
     } else {
-      argumentsLine = `(req, res)${argumentsLine.substr(
+      argumentsLine = `(res, res)${argumentsLine.substr(
         argumentsLine.indexOf('()') + 2
       )}`;
     }
     if (isAwait) {
       argumentsLine = `async ${argumentsLine}`;
     }
+  } else {
+    argumentsLine = argumentsLine.replace('(req, res)', '(res, req)');
   }
 
   if (returnLine === '}' && lines.length > 0) {
@@ -329,6 +331,7 @@ export default function compileRoute(fn, params) {
   if (compiled) {
     compiled.path = matchers(contentLines, 'path');
     compiled.method = matchers(contentLines, 'method');
+    compiled.isCompiled = true;
   }
 
   return compiled;
