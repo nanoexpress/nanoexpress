@@ -48,7 +48,7 @@
     "ajv": "^8.17.1",
     "cookie": "^0.6.0",
     "fast-query-parse": "^3.0.0",
-    "uWebSockets.js": "uNetworking/uWebSockets.js#v20.48.0"
+    "uWebSockets.js": "uNetworking/uWebSockets.js#v20.49.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.4.0",
