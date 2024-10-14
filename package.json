@@ -46,7 +46,7 @@
   "dependencies": {
     "@dalisoft/events": "^0.2.0",
     "ajv": "^8.17.1",
-    "cookie": "^0.7.0",
+    "cookie": "^1.0.1",
     "fast-query-parse": "^3.0.0",
     "uWebSockets.js": "uNetworking/uWebSockets.js#v20.49.0"
   },
