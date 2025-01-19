@@ -10,6 +10,7 @@
 ![Node.js CI](https://github.com/nanoexpress/nanoexpress/workflows/Node.js%20CI/badge.svg)
 [![Code Climate](https://codeclimate.com/github/nanoexpress/nanoexpress/badges/gpa.svg)](https://codeclimate.com/github/nanoexpress/nanoexpress)
 [![GitHub issues](https://img.shields.io/github/issues/nanoexpress/nanoexpress.svg)](http://github.com/nanoexpress/nanoexpress/issues)
+[<img src="https://api.gitsponsors.com/api/badge/img?id=239182786" height="20">](https://api.gitsponsors.com/api/badge/link?p=sBU42saDU28gIGcjQcc9FuLuY2lqvlwhD8o3XIJVV6hbzHqQuo9T5pWjCNQjXNpSnGgGeh42wpkyOHF0BQ6lKTPPQYZBcM7eiUpk60aNwi0GKnSDF9claIb0GpzTTQ8OOrqRfbAcxo6ShepkT6LfpQ==)
 
 <!-- [![Coverage Status](https://coveralls.io/repos/github/nanoexpress/nanoexpress/badge.svg?branch=master)](https://coveralls.io/github/nanoexpress/nanoexpress?branch=master) -->
 
