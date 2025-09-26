@@ -51,7 +51,7 @@
     "uWebSockets.js": "uNetworking/uWebSockets.js#v20.52.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "^19.4.0",
+    "@commitlint/cli": "^20.0.0",
     "@ls-lint/ls-lint": "^2.2.3",
     "@types/cookie": "~0.6.0",
     "@types/eslint": "~8",
