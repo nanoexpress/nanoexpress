@@ -58,7 +58,7 @@
     "@types/lint-staged": "~13.3.0",
     "@types/node": "^22.3.0",
     "commitlint-config-airlight": "^6.0.7",
-    "coveralls-next": "^4.2.1",
+    "coveralls-next": "^6.0.0",
     "eslint": "~8",
     "eslint-config-airlight-node": "^5.6.3",
     "husky": "^9.1.4",
