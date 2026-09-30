@@ -31,7 +31,8 @@ export default (req) => {
     offset += chunk.byteLength;
   });
   req.stream.once('end', () => {
-    req.body = Buffer.from(ab);
+    // zero-copy view over the assembled buffer (avoids re-copying the body)
+    req.body = Buffer.from(ab.buffer, 0, offset);
     resolve();
   });
   req.stream.once('error', (err) => {
