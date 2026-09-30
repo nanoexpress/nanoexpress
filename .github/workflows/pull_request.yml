@@ -3,13 +3,19 @@
 
 name: Linting, Testing and Auto-merge
 
-on: pull_request_target
+# pull_request: lint/test jobs run on the PR head without repo secrets.
+# pull_request_target: only the dependabot auto-merge job, which never checks
+# out PR code, so untrusted code is never executed with secrets access.
+on:
+  pull_request:
+  pull_request_target:
 
 env:
   CI: true
 
 jobs:
   lint_test_build:
+    if: github.event_name == 'pull_request'
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -21,6 +27,8 @@ jobs:
 
       - name: Use Bun.sh
         uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.2
 
       - name: Install
         run: bun install
@@ -31,11 +39,10 @@ jobs:
       - name: Test code
         run: bun run test
   auto-merge:
-    needs: lint_test_build
+    if: github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]'
     timeout-minutes: 5
 
     runs-on: ubuntu-22.04
-    if: github.actor == 'dependabot[bot]'
 
     steps:
       - uses: actions/checkout@v4
