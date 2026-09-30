@@ -35,6 +35,12 @@ jobs:
         with:
           node-version: 26
 
+      - name: Cache bun install cache (amortizes the uWS GitHub-tag fetch)
+        uses: actions/cache@v6
+        with:
+          path: '~/.bun/install/cache'
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
+
       - name: Install
         run: bun install
 
