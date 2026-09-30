@@ -436,9 +436,14 @@ export default class Route {
                 res.status(400);
               }
 
-              res.end(
-                `{"error":"${typeof err === 'string' ? err : err.message}"}`
-              );
+              const errorMessage =
+                process.env.NODE_ENV === 'production' && typeof err !== 'string'
+                  ? 'Internal Server Error'
+                  : typeof err === 'string'
+                    ? err
+                    : err.message;
+
+              res.end(`{"error":"${errorMessage}"}`);
 
               return res;
             };
