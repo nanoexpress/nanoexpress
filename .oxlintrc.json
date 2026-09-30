@@ -1,0 +1,11 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "ignorePatterns": [
+    "**/cjs/**",
+    "**/esm/**",
+    "**/typings/**",
+    "**/dist/**",
+    "**/coverage/**",
+    "**/bench.tmp.mjs"
+  ]
+}
