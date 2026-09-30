@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Use Bun.sh
         uses: oven-sh/setup-bun@v2
@@ -34,7 +34,7 @@ jobs:
         os: [ubuntu-24.04, macos-14]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Use Bun.sh
         uses: oven-sh/setup-bun@v2
@@ -42,7 +42,7 @@ jobs:
           bun-version: 1.4.2
 
       - name: Use Node.js 26 (node:test runtime + uWS binaries)
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 26
 
@@ -59,7 +59,7 @@ jobs:
     runs-on: ubuntu-22.04
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
           fetch-tags: true
