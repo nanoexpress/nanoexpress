@@ -15,6 +15,7 @@
         "@biomejs/biome": "^2.5.15",
         "@commitlint/cli": "^21.2.3",
         "@commitlint/config-conventional": "^21.2.3",
+        "@ls-lint/ls-lint": "^2.3.1",
         "@types/cookie": "~0.6.0",
         "@types/node": "^26.6.3",
         "commitlint-config-airlight": "^6.0.5",
@@ -89,6 +90,8 @@
     "@dalisoft/args": ["@dalisoft/args@0.1.1", "", {}, "sha512-PwmLEhnTyK6+AUwD0oqS57nLs1vpB17vEDlMc1i27zH8mrtFJmBmYfQv4FszoUHDHv3PtFk8M0X9yWxry2TSwA=="],
 
     "@dalisoft/events": ["@dalisoft/events@0.2.0", "", { "dependencies": { "@dalisoft/args": "^0.1.1" } }, "sha512-2NS/0vS9eL8ZxhgCVZQgPS4uoqbcSk9FN3G8Eqakcej7wOpH72z1kmDEDGI5T+MOp9IueKT2qI0XUdXhKeK9GA=="],
+
+    "@ls-lint/ls-lint": ["@ls-lint/ls-lint@2.3.1", "", { "os": [ "linux", "win32", "darwin", ], "cpu": [ "x64", "arm64", "s390x", ], "bin": { "ls-lint": "bin/cli.js" } }, "sha512-vPe6IDByQnQRTxcAYjTxrmga/tSIui50VBFTB5KIJWY3OOFmxE2VtymjeSEfQfiMbhZV/ZPAqYy2lt8pZFQ0Rw=="],
 
     "@rumdl/cli-darwin-arm64": ["@rumdl/cli-darwin-arm64@0.2.78", "", { "os": "darwin", "cpu": "arm64" }, "sha512-wuY7EL6Eda+2LyrOROr1OsenfxASDX/Zo8yel6HTmulhpUmjR1G4Bfr45KRii4pSr1e+WlGAgOejHY+AVT7suw=="],
 
