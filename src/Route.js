@@ -14,6 +14,9 @@ import { debug } from './helpers/logs.js';
 import withResolvers from './helpers/with-resolvers.js';
 import precompileRoute from './compilers/precompile.js';
 
+// The response prototype is shared by all uWS responses
+let __httpResponseProtoPatched = false;
+
 const __wsProto__ = Events.prototype;
 
 export default class Route {
@@ -454,10 +457,13 @@ export default class Route {
 
             // Aliases for future usage and easy-access
             if (!isRaw) {
-              // Extending proto
-              const { __proto__ } = res;
-              for (const newMethod in HttpResponse) {
-                __proto__[newMethod] = HttpResponse[newMethod];
+              // Extending proto (once, see __httpResponseProtoPatched)
+              if (!__httpResponseProtoPatched) {
+                const { __proto__ } = res;
+                for (const newMethod in HttpResponse) {
+                  __proto__[newMethod] = HttpResponse[newMethod];
+                }
+                __httpResponseProtoPatched = true;
               }
               res.writeHead.notModified = true;
             }
@@ -561,7 +567,12 @@ export default class Route {
               middlewares &&
               middlewares.length > 0
             ) {
-              for await (const middleware of middlewares) {
+              for (
+                let middlewareIndex = 0;
+                middlewareIndex < middlewares.length;
+                middlewareIndex += 1
+              ) {
+                const middleware = middlewares[middlewareIndex];
                 debug({
                   message: 'middlewares applying',
                   file: 'Route.js',
