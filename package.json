@@ -14,7 +14,7 @@
     "url": "https://www.patreon.com/dalisoft"
   },
   "scripts": {
-    "lint": "ls-lint && biome check . && rumdl check .",
+    "lint": "ls-lint && biome check . && oxlint . && rumdl check .",
     "test": "node --test tests src",
     "coverage": "node --test --experimental-test-coverage tests/ src/",
     "prepare": "lefthook install",
@@ -59,6 +59,7 @@
     "@types/node": "^26.6.3",
     "commitlint-config-airlight": "^6.0.5",
     "lefthook": "^2.1.15",
+    "oxlint": "^1.86.0",
     "release-me-sh": "^0.11.12",
     "rumdl": "^0.2.78",
     "typescript": "^7.0.2"
