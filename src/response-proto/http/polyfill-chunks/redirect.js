@@ -24,7 +24,6 @@ export const normalizeLocation = (_path, config, host) => {
 
 export default function redirect(_code, _path) {
   const { config } = this;
-  const host = this.$headers?.host;
   let code = _code;
   let path = _path;
 
@@ -35,7 +34,9 @@ export default function redirect(_code, _path) {
 
   let Location = '';
   if (path) {
-    Location = normalizeLocation(path, config, host);
+    // never build absolute URLs from the request Host header (Host-header
+    // injection); only the trusted `config.host` may produce an absolute URL
+    Location = normalizeLocation(path, config);
   }
 
   this.writeHead(code, { Location });

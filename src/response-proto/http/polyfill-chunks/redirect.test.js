@@ -69,10 +69,10 @@ describe('redirect polyfill method', () => {
     strictEqual(res.___code, '301 Moved Permanently');
     deepStrictEqual(res.___headers, [{ key: 'Location', value: '/path' }]);
   });
-  it('should return correct path with host', () => {
+  it('should ignore the request Host header (untrusted)', () => {
     const res = new HttpResponse();
     res.$headers = {
-      host: 'localhost:3333'
+      host: 'evil.example'
     };
 
     res.cork(() => {
@@ -80,8 +80,19 @@ describe('redirect polyfill method', () => {
     });
 
     strictEqual(res.___code, '301 Moved Permanently');
+    deepStrictEqual(res.___headers, [{ key: 'Location', value: '/path' }]);
+  });
+  it('should build absolute Location from trusted config.host only', () => {
+    const res = new HttpResponse();
+    res.config = { host: 'trusted.example' };
+
+    res.cork(() => {
+      redirect.call(res, '/path');
+    });
+
+    strictEqual(res.___code, '301 Moved Permanently');
     deepStrictEqual(res.___headers, [
-      { key: 'Location', value: 'http://localhost:3333/path' }
+      { key: 'Location', value: 'http://trusted.example/path' }
     ]);
   });
 });

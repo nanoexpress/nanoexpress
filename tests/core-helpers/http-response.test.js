@@ -152,7 +152,7 @@ describe('http response redirect', () => {
     });
 
     deepStrictEqual(fakeRes.headers, {
-      Location: 'http://localhost/another'
+      Location: '/another'
     });
   });
 });
