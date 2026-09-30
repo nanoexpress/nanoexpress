@@ -1,4 +1,5 @@
-/* global describe, expect, it */
+import { deepStrictEqual, strictEqual } from 'node:assert/strict';
+import { describe, it } from 'node:test';
 import HttpResponse from '../../../../tests/mock/HttpResponse.js';
 import writeHead from './write-head.js';
 
@@ -11,7 +12,7 @@ describe('writeHead status', () => {
     const res = new HttpResponse();
     writeHead.call(res, '201 Created');
 
-    expect(res.statusCode).toBe('201 Created');
+    strictEqual(res.statusCode, '201 Created');
   });
 });
 
@@ -24,8 +25,8 @@ describe('writeHead headers', () => {
     const res = new HttpResponse();
     writeHead.call(res, 201, { Location: '/path' });
 
-    expect(res.statusCode).toBe('201 Created');
-    expect(res._headers).toStrictEqual({
+    strictEqual(res.statusCode, '201 Created');
+    deepStrictEqual(res._headers, {
       Location: '/path'
     });
   });

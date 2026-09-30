@@ -1,26 +1,25 @@
-/* globals describe, it, expect, beforeAll, afterAll */
+import { strictEqual } from 'node:assert/strict';
+import { after, before, describe, it } from 'node:test';
 import nanoexpress from '../../src/nanoexpress.js';
-import fetch from 'node-fetch';
 
 describe('bind to specific host', () => {
   /** @type {import('../../nanoexpress.js').default.INanoexpressApp} */
   let app = null;
 
-  beforeAll(() => {
+  before(() => {
     app = nanoexpress();
     app.any('/*', (_, res) => {
-      // console.log("got request")
       res.end(Buffer.from(res.getRemoteAddress()).join('.'));
     });
     return app.listen(3000, '127.0.0.1');
   });
 
-  afterAll(() => app.close());
+  after(() => app.close());
 
   it('should return IPv4 address', async () => {
     const response = await fetch('http://127.0.0.1:3000');
     const ipaddr = await response.text();
 
-    expect(ipaddr).toStrictEqual('127.0.0.1');
+    strictEqual(ipaddr, '127.0.0.1');
   });
 });
