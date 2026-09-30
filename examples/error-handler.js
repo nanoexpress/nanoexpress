@@ -2,28 +2,28 @@ import nanoexpress from '../src/nanoexpress.js';
 
 const app = nanoexpress();
 
-app.setErrorHandler((err, _req, res) => {
+app.setErrorHandler((err, req, res) => {
   res.end(`error handled: ${err.message}`);
 });
 
-app.setNotFoundHandler((_req, res) => {
+app.setNotFoundHandler((req, res) => {
   res.end('you accessing to missing route??');
 });
 
-app.setValidationErrorHandler((errors, _req, res) => {
+app.setValidationErrorHandler((errors, req, res) => {
   res.end(`validation errors, ${JSON.stringify(errors)}`);
 });
 
 app.get(
   '/',
-  (_req, _res, next) => {
+  (req, res, next) => {
     next(new Error('Test error'));
   },
-  (_req, res) => {
+  (req, res) => {
     res.end('hello world');
   }
 );
-app.get('/bar', async (_req, res) => {
+app.get('/bar', async (req, res) => {
   throw new Error('Something was wrong in GET /bar');
   // biome-ignore lint/correctness/noUnreachable: example intentionally shows unreachable handler
   res.send({ status: 'success' });

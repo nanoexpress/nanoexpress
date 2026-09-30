@@ -36,7 +36,7 @@ app.get(
   })
 );
 
-app.get('/', (_req, res) => {
+app.get('/', (req, res) => {
   res.end('go to /graphql');
 });
 

@@ -5,14 +5,14 @@ const app = nanoexpress();
 const route = new Route();
 
 app.use('/foo', route);
-app.get('/', (_req, res) => {
+app.get('/', (req, res) => {
   res.end('go to /foo');
 });
 
-route.get('/', (_req, res) => {
+route.get('/', (req, res) => {
   res.end('/foo');
 });
-route.get('/bar', (_req, res) => {
+route.get('/bar', (req, res) => {
   res.end('/foo/bar');
 });
 

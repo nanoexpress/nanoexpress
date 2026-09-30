@@ -7,7 +7,7 @@ app.get(
   {
     isRaw: true
   },
-  (_req, res) => {
+  (req, res) => {
     res.end('hello world');
   }
 );

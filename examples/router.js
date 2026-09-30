@@ -6,7 +6,7 @@ app
     response.end('');
   })
   .get('/user/:id', (request, response) => response.end(request.params.id))
-  .post('/user', (_request, response) => {
+  .post('/user', (request, response) => {
     response.end('');
   })
   .get('/test/simple/:id', async (request) => ({
