@@ -48,7 +48,7 @@
     "ajv": "^8.20.0",
     "cookie": "^0.7.0",
     "fast-query-parse": "^3.1.0",
-    "uWebSockets.js": "uNetworking/uWebSockets.js#v20.70.0"
+    "uWebSockets.js": "https://github.com/uNetworking/uWebSockets.js/archive/refs/tags/v20.70.0.tar.gz"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.15",
