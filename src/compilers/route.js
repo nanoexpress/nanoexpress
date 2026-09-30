@@ -321,7 +321,7 @@ export default function compileRoute(fn, params) {
     compiled = new Function(`return ${contentLines}`)();
   } catch {
     try {
-      // biome-ignore lint/security/noGlobalEval: <explanation>
+      // biome-ignore lint/security/noGlobalEval: compiles precompiled route handler strings
       compiled = eval(contentLines);
     } catch {
       compiled = null;
