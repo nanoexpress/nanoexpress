@@ -36,12 +36,8 @@ export default function pipe(_stream, size, compressed = false) {
           stream.destroy();
           return;
         }
-        this.write(
-          buffer.buffer.slice(
-            buffer.byteOffset,
-            buffer.byteOffset + buffer.byteLength
-          )
-        );
+        // zero-copy view (ArrayBuffer.slice would copy the chunk)
+        this.write(buffer.subarray());
       });
     } else {
       stream.on('data', (_buffer) => {
@@ -51,10 +47,7 @@ export default function pipe(_stream, size, compressed = false) {
         }
         let buffer = _buffer;
 
-        buffer = buffer.buffer.slice(
-          buffer.byteOffset,
-          buffer.byteOffset + buffer.byteLength
-        );
+        buffer = buffer.subarray();
         const lastOffset = this.getWriteOffset();
 
         // First try
