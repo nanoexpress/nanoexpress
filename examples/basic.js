@@ -2,7 +2,7 @@ import nanoexpress from '../src/nanoexpress.js';
 
 const app = nanoexpress();
 
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
   res.end('hello world');
 });
 app.get('/got', async () => 'hello world');

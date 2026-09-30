@@ -1,7 +1,0 @@
-{
-  "collectCoverage": true,
-  "coverageReporters": ["lcov"],
-  "coverageDirectory": "./tests/coverage",
-  "testEnvironment": "node",
-  "testPathIgnorePatterns": ["<rootDir>/examples/", "<rootDir>/node_modules/"]
-}

@@ -1,11 +1,11 @@
 import nanoexpress from '../src/nanoexpress.js';
 
-function one(req, res, next) {
+function one(req, _res, next) {
   req.one = true;
   next();
 }
 
-function two(req, res, next) {
+function two(req, _res, next) {
   req.two = true;
   next();
 }
@@ -15,7 +15,7 @@ nanoexpress()
   .get('/favicon.ico', async () => {
     //
   })
-  .get('/', (req, res) => res.send('Hello'))
+  .get('/', (_req, res) => res.send('Hello'))
   .get('/user/:id', (req, res) =>
     res.end(`User: ${JSON.stringify(req.params.id)}`)
   )

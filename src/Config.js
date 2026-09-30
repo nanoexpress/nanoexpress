@@ -48,7 +48,5 @@ export default class Config {
     if (options.configureAjv) {
       this.ajv = options.configureAjv(this.ajv);
     }
-
-    return this;
   }
 }

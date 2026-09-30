@@ -2,13 +2,13 @@ import nanoexpress from '../src/nanoexpress.js';
 
 const app = nanoexpress();
 
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
   res.end('{"hello":"world"}');
 });
-app.get('/b', (req, res) => {
+app.get('/b', (_req, res) => {
   res.end('route /b');
 });
-app.any((req, res) => {
+app.any((_req, res) => {
   res.end('Not Found');
 });
 

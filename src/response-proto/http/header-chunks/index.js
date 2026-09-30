@@ -9,13 +9,13 @@ import writeHeaderValues from './write-header-values.js';
 import writeHeaders from './write-headers.js';
 
 export {
-  implicitHeader as _implicitHeader,
-  setHeader,
+  applyHeadersAndStatus,
   getHeader,
   hasHeader,
+  implicitHeader as _implicitHeader,
   removeHeader,
+  setHeader,
   setHeaders,
-  writeHeaderValues,
   writeHeaders,
-  applyHeadersAndStatus
+  writeHeaderValues
 };

@@ -1,0 +1,3 @@
+# Markdown lint/format (replaces prettier for markdown)
+# https://rumdl.dev/configuration
+disable = ["MD013", "MD033", "MD041", "MD059"]

@@ -13,7 +13,7 @@ nanoexpress()
   .get('/favicon.ico', () => {
     //
   })
-  .get('/', (req, res) => res.end('Hello'))
+  .get('/', (_req, res) => res.end('Hello'))
   .get('/user/:id', (req, res) =>
     res.end(`User: ${JSON.stringify(req.params.id)}`)
   )

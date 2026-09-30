@@ -14,11 +14,12 @@
     "url": "https://www.patreon.com/dalisoft"
   },
   "scripts": {
-    "lint": "rm -rf ./tests/coverage && ls-lint && eslint && prettier -c .",
+    "lint": "biome check . && rumdl check .",
     "test": "node --test tests/ src/",
     "coverage": "node --test --experimental-test-coverage tests/ src/",
-    "prepare": "husky",
-    "prepublishOnly": "npm run lint && npm run test"
+    "prepare": "lefthook install",
+    "prepublishOnly": "bun run lint && bun run test",
+    "format": "biome check --write . && rumdl fmt ."
   },
   "engines": {
     "node": ">=18.20.4"
@@ -50,17 +51,15 @@
     "uWebSockets.js": "uNetworking/uWebSockets.js#v20.70.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.5.15",
     "@commitlint/cli": "^21.2.3",
-    "@ls-lint/ls-lint": "^2.2.3",
+    "@commitlint/config-conventional": "^21.2.3",
     "@types/cookie": "~0.6.0",
     "@types/node": "^26.6.3",
     "commitlint-config-airlight": "^6.0.5",
-    "eslint": "~8",
-    "eslint-config-airlight-node": "^5.6.3",
-    "husky": "^9.1.4",
-    "jest": "^29.7.0",
-    "lint-staged": "^15.2.9",
+    "lefthook": "^2.1.15",
     "release-me-sh": "^0.11.12",
+    "rumdl": "^0.2.78",
     "typescript": "^7.0.2"
   },
   "packageManager": "bun@1.4.2"

@@ -5,10 +5,10 @@ import nanoexpress from '../src/nanoexpress.js';
  */
 const app = nanoexpress();
 
-app.setErrorHandler(async (err, req, res) => {
+app.setErrorHandler(async (_err, _req, res) => {
   return res.send('error');
 });
-await app.get('/test', async (req, res) => {
+await app.get('/test', async (_req, res) => {
   await new Promise((resolve) => setTimeout(() => resolve(), 5000));
 
   return res.end('success');

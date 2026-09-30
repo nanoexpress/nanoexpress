@@ -1,5 +1,0 @@
-{
-  "*.ts": ["eslint", "prettier -c"],
-  "*.js": ["eslint", "prettier -c"],
-  "*.md": ["prettier -c"]
-}

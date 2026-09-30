@@ -6,7 +6,7 @@ app.get('/', (res) => {
   res.end('hello world');
 });
 
-app.get('/test', async (res, req) => {
+app.get('/test', async (res, _req) => {
   res.end('success');
 });
 

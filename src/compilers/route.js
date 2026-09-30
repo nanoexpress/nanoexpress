@@ -22,7 +22,7 @@ const nonSimpleMethods = Object.keys(responseMethods)
   .map((method) => `res.${method}`);
 
 // eslint-disable-next-line no-useless-escape
-const HEADER_PARAM_KEY_REGEX = /['"`;(){}\[\]]/g;
+const HEADER_PARAM_KEY_REGEX = /['"`;(){}[\]]/g;
 const HEADER_PARAM_KEY_CONST_REGEX = /(\{(.*)\})?\s+?=?\s+req./m;
 const RETURN_TRIP_REGEX = /;/g;
 const ARGUMENTS_MATCH_REG_EX = /\((req|res)\)/;

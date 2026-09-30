@@ -1,6 +1,6 @@
-import { readdir } from 'fs';
-import path from 'path';
-import { promisify } from 'util';
+import { readdir } from 'node:fs';
+import path from 'node:path';
+import { promisify } from 'node:util';
 import nanoexpress from '../src/nanoexpress.js';
 
 const fsReadDir = promisify(readdir);
@@ -13,7 +13,7 @@ app.get('/', async () => {
   try {
     const files = await fsReadDir(path.resolve('static'));
     return { error: false, files };
-  } catch (err) {
+  } catch (_err) {
     return { error: true };
   }
 });

@@ -1,0 +1,21 @@
+pre-commit:
+  commands:
+    biome:
+      glob: "*.{js,mjs,cjs,ts,mts,cts,json,jsonc}"
+      run: bunx biome check --no-errors-on-unmatched --write {staged_files}
+      stage_fixed: true
+    rumdl:
+      glob: "*.md"
+      run: bunx rumdl check {staged_files}
+
+commit-msg:
+  commands:
+    commitlint:
+      run: bunx commitlint --edit {1}
+
+pre-push:
+  commands:
+    lint:
+      run: bun run lint
+    test:
+      run: bun run test
