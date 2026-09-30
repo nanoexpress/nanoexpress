@@ -7,7 +7,7 @@ import nanoexpress from '../src/nanoexpress.js';
 const app = nanoexpress();
 
 app.get('/', async () => 'Connect at /ws');
-app.ws('/ws', async (_req, res) => {
+app.ws('/ws', async (req, res) => {
   console.log('Connecting...');
 
   await setTimeout(1000);

@@ -13,7 +13,7 @@ app.get('/', async () => {
   try {
     const files = await fsReadDir(path.resolve('static'));
     return { error: false, files };
-  } catch (_err) {
+  } catch (err) {
     return { error: true };
   }
 });

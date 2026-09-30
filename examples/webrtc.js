@@ -11,6 +11,6 @@ app
   .use(staticMiddleware(resolve('examples/webrtc')))
   .define(webRTCServer)
   .webrtc('/webrtc')
-  .get('/health', (_req, res) => res.send({ status: 'ok' }));
+  .get('/health', (req, res) => res.send({ status: 'ok' }));
 
 app.listen(4044);

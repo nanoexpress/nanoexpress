@@ -15,6 +15,6 @@ app
     }
     // ws // If you want proxy WebSocket too, please import "ws" module
   )
-  .get('/health', (_req, res) => res.send({ status: 'ok' }));
+  .get('/health', (req, res) => res.send({ status: 'ok' }));
 
 app.listen(4044);

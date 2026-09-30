@@ -1,7 +1,6 @@
 import Events from '@dalisoft/events';
 import fastQueryParse from 'fast-query-parse';
 import { Route as RouteCompiler } from './compilers/index.js';
-import precompileRoute from './compilers/precompile.js';
 import {
   httpMethods,
   prepareParams,
@@ -9,10 +8,11 @@ import {
   prepareValidation,
   processValidation
 } from './helpers/index.js';
+import { stream, body, params, pipe } from './request-proto/http/index.js';
+import { HttpResponse } from './response-proto/http/index.js';
 import { debug } from './helpers/logs.js';
 import withResolvers from './helpers/with-resolvers.js';
-import { body, params, pipe, stream } from './request-proto/http/index.js';
-import { HttpResponse } from './response-proto/http/index.js';
+import precompileRoute from './compilers/precompile.js';
 
 const __wsProto__ = Events.prototype;
 
@@ -172,7 +172,8 @@ export default class Route {
     });
 
     // Prepare params
-    const preparedParams = _schema?.params !== false && prepareParams(path);
+    const preparedParams =
+      (!_schema || _schema.params !== false) && prepareParams(path);
 
     // Quick dirty hack to performance improvement
     if (!isWebSocket && !isCanCompiled && middlewares.length === 0) {
@@ -465,7 +466,7 @@ export default class Route {
             res.rawStatusCode = 200;
 
             if (!isRaw && _schema !== false) {
-              if (_schema?.headers !== false) {
+              if (!_schema || _schema.headers !== false) {
                 let headers;
                 req.forEach((key, value) => {
                   if (!headers) {
@@ -478,7 +479,7 @@ export default class Route {
                   res.$headers = headers;
                 }
               }
-              if (_schema?.cookies !== false) {
+              if (!_schema || _schema.cookies !== false) {
                 const cookie = req.headers
                   ? req.headers.cookie
                   : req.getHeader('cookie');
@@ -487,13 +488,13 @@ export default class Route {
                   res.$cookies = req.cookies;
                 }
               }
-              if (_schema?.params !== false) {
+              if (!_schema || _schema.params !== false) {
                 if (req.path !== path) {
                   path = req.path;
                 }
                 req.params = params(req, preparedParams);
               }
-              if (_schema?.query !== false) {
+              if (!_schema || _schema.query !== false) {
                 req.query = fastQueryParse(req.getQuery());
               }
               if (
@@ -506,7 +507,7 @@ export default class Route {
                 stream(req, res);
                 req.pipe = pipe;
               }
-              if (req.stream && _schema?.body !== false) {
+              if (req.stream && (!_schema || _schema.body !== false)) {
                 await body(req);
               }
             }

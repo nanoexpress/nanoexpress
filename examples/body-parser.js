@@ -6,7 +6,7 @@ app.use(async (req) => {
   req.body = JSON.parse(req.body);
 });
 
-app.get('/', (_req, res) => res.end('ok'));
+app.get('/', (req, res) => res.end('ok'));
 
 app.post(
   '/',
