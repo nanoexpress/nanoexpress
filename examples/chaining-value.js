@@ -3,7 +3,7 @@ import nanoexpress from '../src/nanoexpress.js';
 const app = nanoexpress();
 
 app.use((req, res, next) => next(null, { foo: 'bar' }));
-app.use(async (_req, _res, _config, prevValue) => {
+app.use(async (req, res, config, prevValue) => {
   prevValue.bar = 'baz';
   return prevValue;
 });
