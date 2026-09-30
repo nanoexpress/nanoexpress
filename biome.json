@@ -31,5 +31,12 @@
         }
       }
     }
-  ]
+  ],
+  "linter": {
+    "rules": {
+      "suspicious": {
+        "noExplicitAny": "off"
+      }
+    }
+  }
 }
