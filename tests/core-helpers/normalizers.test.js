@@ -1,5 +1,6 @@
+import { deepStrictEqual, strictEqual } from 'node:assert/strict';
 import { Readable } from 'node:stream';
-/* globals describe, it, expect */
+import { describe, it } from 'node:test';
 import fastQueryParse from 'fast-query-parse';
 import { prepareParams } from '../../src/helpers/index.js';
 import { body, params } from '../../src/request-proto/index.js';
@@ -17,7 +18,7 @@ describe('params normalize', () => {
 
     const preparedParams = prepareParams(fakeReq.rawPath);
 
-    expect(params(fakeReq, preparedParams)).toStrictEqual({
+    deepStrictEqual(params(fakeReq, preparedParams), {
       p1: 'paramValue1',
       p2: 'paramValue2'
     });
@@ -33,7 +34,7 @@ describe('params normalize', () => {
       }
     };
 
-    expect(params(fakeReq)).toBe(undefined);
+    strictEqual(params(fakeReq), undefined);
   });
 });
 
@@ -45,7 +46,7 @@ describe('queries normalize', () => {
       }
     };
 
-    expect(fastQueryParse(fakeReq.getQuery())).toStrictEqual({
+    deepStrictEqual(fastQueryParse(fakeReq.getQuery()), {
       foo: 'bar',
       bar: 'baz'
     });
@@ -57,7 +58,7 @@ describe('queries normalize', () => {
       }
     };
 
-    expect(fastQueryParse(fakeReq.getQuery())).toBe(null);
+    strictEqual(fastQueryParse(fakeReq.getQuery()), null);
   });
 });
 
@@ -87,12 +88,12 @@ describe('body normalize', () => {
     setTimeout(() => stream.push(null), 50);
 
     await body(fakeReq, fakeRes);
-    expect(fakeReq.body).toStrictEqual(Buffer.from(bodyInput));
+    deepStrictEqual(fakeReq.body, Buffer.from(bodyInput));
   });
   it('body normalize empty', async () => {
     const fakeReq = {};
 
-    expect(await body(fakeReq)).toBe(undefined);
+    strictEqual(await body(fakeReq), undefined);
   });
 });
 
@@ -104,7 +105,7 @@ describe('cookie normalize', () => {
       }
     };
 
-    expect(fastQueryParse(fakeReq.headers.cookie)).toStrictEqual({
+    deepStrictEqual(fastQueryParse(fakeReq.headers.cookie), {
       foo: 'bar'
     });
   });
@@ -112,6 +113,6 @@ describe('cookie normalize', () => {
     const fakeReq = {};
     fakeReq.getHeader = () => '';
 
-    expect(fastQueryParse(fakeReq.getHeader('cookie'))).toBe(null);
+    strictEqual(fastQueryParse(fakeReq.getHeader('cookie')), null);
   });
 });

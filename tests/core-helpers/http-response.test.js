@@ -1,4 +1,5 @@
-/* globals describe, it, expect */
+import { deepStrictEqual, strictEqual } from 'node:assert/strict';
+import { beforeEach, describe, it } from 'node:test';
 import { HttpResponse } from '../../src/response-proto/index.js';
 
 // Init Fake HttpResponse
@@ -58,32 +59,32 @@ describe('http response send', () => {
     fakeRes.cork(() => {
       fakeRes.send('res.send works');
     });
-    expect(fakeRes.buffer).toBe('res.send works');
+    strictEqual(fakeRes.buffer, 'res.send works');
   });
   it('res.json', () => {
     fakeRes.cork(() => {
       fakeRes.json({ status: 'ok' });
     });
 
-    expect(fakeRes.buffer).toBe('{"status":"ok"}');
+    strictEqual(fakeRes.buffer, '{"status":"ok"}');
   });
   it('res.xml', () => {
     fakeRes.cork(() => {
       fakeRes.send('<xml />');
     });
-    expect(fakeRes.buffer).toBe('<xml />');
+    strictEqual(fakeRes.buffer, '<xml />');
   });
   it('res.html', () => {
     fakeRes.cork(() => {
       fakeRes.send('<!DOCTYPE />');
     });
-    expect(fakeRes.buffer).toBe('<!DOCTYPE />');
+    strictEqual(fakeRes.buffer, '<!DOCTYPE />');
   });
   it('res.plain', () => {
     fakeRes.cork(() => {
       fakeRes.send('Text works');
     });
-    expect(fakeRes.buffer).toBe('Text works');
+    strictEqual(fakeRes.buffer, 'Text works');
   });
 });
 
@@ -93,26 +94,26 @@ describe('http response header', () => {
   it('res.setHeader', () => {
     fakeRes.setHeader('foo', 'bar');
     fakeRes.setHeader('bar', 'baz');
-    expect(fakeRes._headers.foo).toBe('bar');
-    expect(fakeRes._headers).toStrictEqual({ foo: 'bar', bar: 'baz' });
+    strictEqual(fakeRes._headers.foo, 'bar');
+    deepStrictEqual(fakeRes._headers, { foo: 'bar', bar: 'baz' });
   });
   it('res.getHeader', () => {
-    expect(fakeRes.getHeader('foo')).toBe('bar');
-    expect(fakeRes.getHeader('bar')).toBe('baz');
+    strictEqual(fakeRes.getHeader('foo'), 'bar');
+    strictEqual(fakeRes.getHeader('bar'), 'baz');
   });
   it('res.hasHeader', () => {
-    expect(fakeRes.hasHeader('foo')).toBe(true);
-    expect(fakeRes.hasHeader('bar')).toBe(true);
+    strictEqual(fakeRes.hasHeader('foo'), true);
+    strictEqual(fakeRes.hasHeader('bar'), true);
   });
   it('res.removeHeader', () => {
     fakeRes.removeHeader('foo');
-    expect(fakeRes._headers).toStrictEqual({ bar: 'baz' });
-    expect(fakeRes.hasHeader('foo')).toBe(false);
+    deepStrictEqual(fakeRes._headers, { bar: 'baz' });
+    strictEqual(fakeRes.hasHeader('foo'), false);
   });
   it('res.removeHeader - last item delete', () => {
     fakeRes.removeHeader('bar');
-    expect(fakeRes._headers).toStrictEqual({});
-    expect(fakeRes.hasHeader('bar')).toBe(false);
+    deepStrictEqual(fakeRes._headers, {});
+    strictEqual(fakeRes.hasHeader('bar'), false);
   });
 });
 
@@ -123,7 +124,7 @@ describe('http response status', () => {
     fakeRes.cork(() => {
       fakeRes.status(200);
     });
-    expect(fakeRes.statusCode).toBe('200 OK');
+    strictEqual(fakeRes.statusCode, '200 OK');
   });
 });
 
@@ -134,8 +135,8 @@ describe('http response writeHead', () => {
     fakeRes.cork(() => {
       fakeRes.writeHead(201, { foo: 'bar' });
     });
-    expect(fakeRes.statusCode).toBe('201 Created');
-    expect(fakeRes._headers).toStrictEqual({ foo: 'bar' });
+    strictEqual(fakeRes.statusCode, '201 Created');
+    deepStrictEqual(fakeRes._headers, { foo: 'bar' });
   });
 });
 
@@ -150,7 +151,7 @@ describe('http response redirect', () => {
       fakeRes.redirect('/another');
     });
 
-    expect(fakeRes.headers).toStrictEqual({
+    deepStrictEqual(fakeRes.headers, {
       Location: 'http://localhost/another'
     });
   });
