@@ -1,16 +1,17 @@
 // eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { Ajv, Options as AjvOptions } from 'ajv';
+
 import type {
   AppOptions as AppOptionsBasic,
+  TemplatedApp as AppTemplatedApp,
   HttpRequest as HttpRequestBasic,
   HttpResponse as HttpResponseBasic,
-  TemplatedApp as AppTemplatedApp,
+  WebSocket,
   WebSocket as WebSocketBasic,
-  WebSocketBehavior,
-  WebSocket
+  WebSocketBehavior
 } from 'uWebSockets.js';
-import type { Writable, Readable } from 'node:stream';
+import type { Readable, Writable } from 'node:stream';
+import type { Ajv, Options as AjvOptions } from 'ajv';
 
 declare namespace nanoexpress {
   interface IRecord {

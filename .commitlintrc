@@ -1,5 +1,3 @@
 {
-  "extends": [
-    "airlight"
-  ]
+  "extends": ["@commitlint/config-conventional"]
 }

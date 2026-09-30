@@ -5,7 +5,7 @@ import nanoexpress from '../src/nanoexpress.js';
 const app = nanoexpress({ swagger: {} });
 const sseApp = sse();
 
-app.use(async (req, res) => {
+app.use(async (_req, res) => {
   res.socket = {
     setNoDelay: () => {
       //
@@ -17,7 +17,7 @@ app.use(async (req, res) => {
     callback();
   };
 });
-app.get('/events', (req, res) => {
+app.get('/events', (_req, res) => {
   sseApp.subscribe('channel', res);
 });
 

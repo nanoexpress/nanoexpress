@@ -1,12 +1,13 @@
 // eslint-disable-next-line @eslint-community/eslint-comments/disable-enable-pair
 /* eslint-disable no-console */
-import nanoexpress from '../src/nanoexpress.js';
+
 import { setTimeout } from 'node:timers/promises';
+import nanoexpress from '../src/nanoexpress.js';
 
 const app = nanoexpress();
 
 app.get('/', async () => 'Connect at /ws');
-app.ws('/ws', async (req, res) => {
+app.ws('/ws', async (_req, res) => {
   console.log('Connecting...');
 
   await setTimeout(1000);

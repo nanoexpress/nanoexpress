@@ -4,7 +4,7 @@ import * as swagger from './swagger.js';
 
 const app = nanoexpress();
 
-app.setErrorHandler((error, req, res) =>
+app.setErrorHandler((error, _req, res) =>
   res.send({ error: error.stack_trace })
 );
 

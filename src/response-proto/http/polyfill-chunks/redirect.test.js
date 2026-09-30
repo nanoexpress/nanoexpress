@@ -18,7 +18,10 @@ describe('normalize location', () => {
     strictEqual(normalizeLocation('/path'), '/path');
   });
   it('config:host argument should be parsed correctly', () => {
-    strictEqual(normalizeLocation('/path', { host: 'localhost' }), 'http://localhost/path');
+    strictEqual(
+      normalizeLocation('/path', { host: 'localhost' }),
+      'http://localhost/path'
+    );
   });
   it('config:https argument should be parsed correctly', () => {
     strictEqual(
@@ -33,7 +36,10 @@ describe('normalize location', () => {
     );
   });
   it('third host argument should be parsed correctly', () => {
-    strictEqual(normalizeLocation('/path', null, 'myhost'), 'http://myhost/path');
+    strictEqual(
+      normalizeLocation('/path', null, 'myhost'),
+      'http://myhost/path'
+    );
   });
   it('third host argument should be in priority than second config argument', () => {
     strictEqual(

@@ -2,7 +2,7 @@ import nanoexpress from '../src/nanoexpress.js';
 
 const app = nanoexpress();
 
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
   res.setHeader('Content-Type', 'application/json');
   res.status(401);
   res.end(JSON.stringify({ status: 'unknown' }));

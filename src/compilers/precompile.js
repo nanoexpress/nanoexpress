@@ -1,5 +1,5 @@
-import responseMethods from '../response-proto/http/HttpResponse.js';
 import uWS from 'uWebSockets.js';
+import responseMethods from '../response-proto/http/HttpResponse.js';
 
 class HttpResponseAOT extends uWS.DeclarativeResponse {
   cork(callback) {

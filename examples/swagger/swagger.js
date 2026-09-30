@@ -14,4 +14,4 @@ const documentation = swaggerUi.setup(specs, {
   explorer: true
 });
 
-export { serve, documentation };
+export { documentation, serve };

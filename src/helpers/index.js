@@ -6,10 +6,10 @@ import processValidation from './process-validation.js';
 import sendFile from './send-file.js';
 
 export {
-  sendFile,
+  httpMethods,
+  prepareParams,
+  prepareSwaggerDocs,
   prepareValidation,
   processValidation,
-  prepareSwaggerDocs,
-  prepareParams,
-  httpMethods
+  sendFile
 };
