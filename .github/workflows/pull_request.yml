@@ -3,19 +3,19 @@
 
 name: Linting, Testing and Auto-merge
 
-# pull_request: lint/test jobs run on the PR head without repo secrets.
-# pull_request_target: only the dependabot auto-merge job, which never checks
-# out PR code, so untrusted code is never executed with secrets access.
-on:
-  pull_request:
-  pull_request_target:
+# runs on the PR head without repo secrets (dependabot auto-merge lives in
+# automerge.yml, the only pull_request_target workflow, and it never checks
+# out PR code)
+on: pull_request
+
+permissions:
+  contents: read
 
 env:
   CI: true
 
 jobs:
   lint_test_build:
-    if: github.event_name == 'pull_request'
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -23,20 +23,20 @@ jobs:
         os: [ubuntu-24.04]
 
     steps:
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Use Bun.sh
-        uses: oven-sh/setup-bun@v2
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
         with:
           bun-version: 1.4.2
 
       - name: Use Node.js 26 (node:test runtime + uWS binaries)
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: 26
 
       - name: Cache bun install cache (amortizes the uWS GitHub-tag fetch)
-        uses: actions/cache@v6
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: '~/.bun/install/cache'
           key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
@@ -49,16 +49,3 @@ jobs:
 
       - name: Test code
         run: bun run test
-  auto-merge:
-    if: github.event_name == 'pull_request_target' && github.actor == 'dependabot[bot]'
-    timeout-minutes: 5
-
-    runs-on: ubuntu-22.04
-
-    steps:
-      - uses: actions/checkout@v7
-      - uses: ahmadnassri/action-dependabot-auto-merge@v2
-        with:
-          target: minor
-          approve: true
-          github-token: ${{ secrets.GH_TOKEN }}
