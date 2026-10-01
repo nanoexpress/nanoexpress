@@ -42,7 +42,7 @@ jobs:
           key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
 
       - name: Install
-        run: bun install
+        run: bun install --frozen-lockfile
 
       - name: Lint code
         run: bun run lint

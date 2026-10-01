@@ -21,7 +21,7 @@ jobs:
         uses: oven-sh/setup-bun@v2.2.0
 
       - name: Install
-        run: bun install
+        run: bun install --frozen-lockfile
 
       - name: Lint code
         run: bun run lint
@@ -46,13 +46,8 @@ jobs:
         with:
           node-version: 26
 
-      - name: Use Node.js 26 (node:test runtime + uWS binaries)
-        uses: actions/setup-node@v7.0.0
-        with:
-          node-version: 26
-
       - name: Install
-        run: bun install
+        run: bun install --frozen-lockfile
 
       - name: Test code
         run: bun run test
@@ -74,7 +69,7 @@ jobs:
         uses: oven-sh/setup-bun@v2.2.0
 
       - name: Install
-        run: bun install
+        run: bun install --frozen-lockfile
 
       - name: Release
         env:
