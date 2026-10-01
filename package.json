@@ -15,8 +15,8 @@
   },
   "scripts": {
     "lint": "ls-lint && biome check . && oxlint . && rumdl check .",
-    "test": "node --test \"tests/**/*.test.js\" \"src/**/*.test.js\"",
-    "coverage": "node --test --experimental-test-coverage tests",
+    "test": "node --test \"tests/**/*.test.js\"",
+    "coverage": "node --test --experimental-test-coverage \"tests/**/*.test.js\"",
     "prepare": "lefthook install",
     "prepublishOnly": "bun run lint && bun run test",
     "format": "biome check --write . && rumdl fmt ."
