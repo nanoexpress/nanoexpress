@@ -80,4 +80,7 @@ jobs:
           GPG_KEY: ${{ secrets.GPG_KEY }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: bun run release-me --plugins=npm,npm-post,git,github-release
+        # `npm-post` is dropped: it commits the version bump straight to
+        # `master`, which is protected (PR + review required). The git tag
+        # made by the `git` plugin is the version of record instead.
+        run: bun run release-me --plugins=npm,git,github-release
