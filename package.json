@@ -22,7 +22,7 @@
     "format": "biome check --write . && rumdl fmt ."
   },
   "engines": {
-    "node": ">=18.20.4"
+    "node": ">=22"
   },
   "repository": {
     "type": "git",
