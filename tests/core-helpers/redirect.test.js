@@ -1,7 +1,9 @@
 import { deepStrictEqual, strictEqual } from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import HttpResponse from '../../../../tests/mock/HttpResponse.js';
-import redirect, { normalizeLocation } from './redirect.js';
+import HttpResponse from '../mock/HttpResponse.js';
+import redirect, {
+  normalizeLocation
+} from '../../src/response-proto/http/polyfill-chunks/redirect.js';
 
 describe('normalize location', () => {
   it('empty values should throw', () => {

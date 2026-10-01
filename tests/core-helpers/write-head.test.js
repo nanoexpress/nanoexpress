@@ -1,7 +1,7 @@
 import { deepStrictEqual, strictEqual } from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import HttpResponse from '../../../../tests/mock/HttpResponse.js';
-import writeHead from './write-head.js';
+import HttpResponse from '../mock/HttpResponse.js';
+import writeHead from '../../src/response-proto/http/polyfill-chunks/write-head.js';
 
 describe('writeHead status', () => {
   it('empty status should do nothing', async () => {
