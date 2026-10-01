@@ -46,6 +46,11 @@ jobs:
         with:
           node-version: 26
 
+      - name: Use Node.js 26 (node:test runtime + uWS binaries)
+        uses: actions/setup-node@v7.0.0
+        with:
+          node-version: 26
+
       - name: Install
         run: bun install
 
