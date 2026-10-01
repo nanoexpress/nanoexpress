@@ -9,3 +9,10 @@ updates:
       include: scope
     schedule:
       interval: daily
+  - package-ecosystem: github-actions
+    open-pull-requests-limit: 10
+    directory: /
+    commit-message:
+      prefix: ci
+    schedule:
+      interval: weekly
