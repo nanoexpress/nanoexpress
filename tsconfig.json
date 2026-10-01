@@ -41,7 +41,7 @@
     // "paths": {},
     // "rootDirs": [],
     // "typeRoots": [],
-    // "types": [],
+    "types": ["node"],
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     // "preserveSymlinks": true,

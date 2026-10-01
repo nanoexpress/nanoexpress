@@ -8,10 +8,7 @@ describe('normalize location', () => {
     try {
       normalizeLocation();
     } catch (e) {
-      strictEqual(
-        e.message,
-        "Cannot read properties of undefined (reading 'indexOf')"
-      );
+      strictEqual(e.message, 'Input validation error');
     }
   });
   it('only one argument should return the argument itself', () => {

@@ -4,6 +4,9 @@ const HTTPS_PREFIX = 'https://';
 export const normalizeLocation = (_path, config, host) => {
   let path = _path;
 
+  if (path === undefined) {
+    throw new Error('Input validation error');
+  }
   if (path.indexOf('http') === -1) {
     if (path.indexOf('/') === -1) {
       path = `/${path}`;
