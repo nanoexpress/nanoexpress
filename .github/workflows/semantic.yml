@@ -1,0 +1,59 @@
+name: Semantic PR Title and Commits
+
+# release-me picks release type from commit subjects with the
+# Conventional Commits preset (`type(scope)?: description`), and the PR
+# title becomes the squash-merge commit subject, so both the title and
+# every commit subject in the PR must be Conventional Commits compatible:
+# feat/fix/perf/refactor/revert release, docs/test/chore/ci/style/build
+# do not
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+permissions:
+  contents: read
+
+env:
+  COMMIT_REGEX: '^(feat|fix|perf|refactor|revert|docs|test|build|chore|style|ci)(\([a-zA-Z0-9./_-]+\))?(!)?: .+'
+
+jobs:
+  semantic:
+    timeout-minutes: 5
+    # dependabot titles ("Bump x from y to z") are not Conventional; the
+    # automerge workflow handles them and release-me skips such commits
+    if: github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          # full history needed to diff PR commits against the base branch
+          fetch-depth: 0
+
+      - name: Validate PR title
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          echo "PR title: ${PR_TITLE}"
+          if ! echo "${PR_TITLE}" | grep -qE "${COMMIT_REGEX}"; then
+            echo "::error::PR title must follow Conventional Commits: type(scope)?: description (e.g. 'feat: add X', 'fix(core): handle Y')"
+            exit 1
+          fi
+
+      - name: Validate commit messages
+        env:
+          BASE_REF: ${{ github.base_ref }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          merge_base="$(git merge-base "origin/${BASE_REF}" "${HEAD_SHA}")"
+          subjects="$(git log --no-merges --format=%s "${merge_base}..${HEAD_SHA}")"
+          if [ -z "${subjects}" ]; then
+            echo "No commits to validate"
+            exit 0
+          fi
+          invalid="$(echo "${subjects}" | grep -vE "${COMMIT_REGEX}" || true)"
+          if [ -n "${invalid}" ]; then
+            echo "::error::These commit subjects do not follow Conventional Commits (type(scope)?: description):"
+            echo "${invalid}"
+            exit 1
+          fi

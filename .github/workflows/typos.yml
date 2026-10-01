@@ -1,0 +1,21 @@
+name: Typos
+
+# spelling check with the Rust typos-cli, config via `_typos.toml`
+on:
+  push:
+    branches: [master, next, beta]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  typos:
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7.0.1
+
+      - name: Check spelling
+        uses: crate-ci/typos@v1.50.3
