@@ -14,7 +14,10 @@ export default function requestStream(req, res) {
   req.stream = stream;
 
   res.onData((chunk, isLast) => {
-    stream.push(new Uint8Array(chunk));
+    // uWS recycles the chunk ArrayBuffer after this callback, so the bytes
+    // must be copied (Buffer.from(TypedArray) copies) — a view would read
+    // garbage when the stream consumer reads it later
+    stream.push(Buffer.from(new Uint8Array(chunk)));
 
     if (isLast) {
       stream.push(null);
