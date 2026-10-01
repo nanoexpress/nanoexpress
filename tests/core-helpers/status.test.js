@@ -1,6 +1,6 @@
 import { strictEqual } from 'node:assert/strict';
 import { describe, it } from 'node:test';
-import status from './status.js';
+import status from '../../src/response-proto/http/polyfill-chunks/status.js';
 
 describe('normalize status', () => {
   const _this = {};
