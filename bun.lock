@@ -21,7 +21,7 @@
         "commitlint-config-airlight": "^6.0.5",
         "lefthook": "^2.1.15",
         "oxlint": "^1.86.0",
-        "release-me-sh": "^0.11.12",
+        "release-me-sh": "^0.12.3",
         "rumdl": "^0.2.78",
         "typescript": "^7.0.2",
       },
@@ -312,7 +312,7 @@
 
     "picocolors": ["picocolors@1.1.1", "", {}, "sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA=="],
 
-    "release-me-sh": ["release-me-sh@0.11.12", "", { "bin": { "release-me": "release.sh", "release-me-sh": "release.sh" } }, "sha512-rLfJKZs/qei3GAb3aAZMH77gMfDJxqR9HxqjxCqBkx3F2eC+7CHPYvErJGlIka8Z4unyEkAJ3BKkqd2OHYL2lA=="],
+    "release-me-sh": ["release-me-sh@0.12.3", "", { "bin": { "release-me": "release.sh", "release-me-sh": "release.sh" } }, "sha512-uhOvQgVNGsZC1igi7t4+gGJ3kinKbdUOa9MYPRL5eBiVejvkhQTNxUH+2Zx+yRLZIgRD2Rs0ou1K+6xblaHxUw=="],
 
     "require-from-string": ["require-from-string@2.0.2", "", {}, "sha512-Xf0nWe6RseziFMu+Ap9biiUbmplq6S9/p+7w7YXP/JBHhrUDDUhwa+vANyubuqfZWTveU//DYVGsDG7RKL/vEw=="],
 
