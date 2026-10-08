@@ -1,10 +1,17 @@
-import cookie from 'cookie';
+import { stringifySetCookie } from 'cookie';
 
-export default function setCookie(name, value, options) {
+/**
+ * Set cookie
+ * @param {string} name
+ * @param {string | number} value
+ * @param {Partial<SetCookie>} options
+ * @returns {string}
+ */
+export default function setCookie(name, value, options = {}) {
   if (options.expires && Number.isInteger(options.expires)) {
     options.expires = new Date(options.expires);
   }
-  const serialized = cookie.serialize(name, value, options);
+  const serialized = stringifySetCookie({ ...options, name, value });
 
   let getCookie = this.getHeader('Set-Cookie');
 
