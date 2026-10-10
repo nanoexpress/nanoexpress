@@ -42,7 +42,7 @@ jobs:
           bun-version: 1.4.2
 
       - name: Use Node.js 26 (node:test runtime + uWS binaries)
-        uses: actions/setup-node@v7.0.0
+        uses: actions/setup-node@v7.1.0
         with:
           node-version: 26
 
