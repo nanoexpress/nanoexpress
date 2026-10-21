@@ -61,7 +61,7 @@
     "lefthook": "^2.2.1",
     "oxlint": "^1.87.0",
     "release-me-sh": "^0.12.3",
-    "rumdl": "^0.2.78",
+    "rumdl": "^0.3.0",
     "typescript": "^7.0.2"
   },
   "packageManager": "bun@1.4.2"
