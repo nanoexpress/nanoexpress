@@ -19,7 +19,8 @@
   "formatter": {
     "indentStyle": "space",
     "indentWidth": 2,
-    "lineWidth": 80
+    "lineWidth": 80,
+    "useEditorconfig": true
   },
   "javascript": {
     "formatter": {
