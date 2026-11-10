@@ -22,6 +22,14 @@
     "lineWidth": 80,
     "useEditorconfig": true
   },
+  "markdown": {
+    "formatter": { "enabled": false },
+    "linter": { "enabled": false }
+  },
+  "yaml": {
+    "formatter": { "enabled": false },
+    "linter": { "enabled": false }
+  },
   "javascript": {
     "formatter": {
       "quoteStyle": "single",
