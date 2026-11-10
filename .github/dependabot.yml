@@ -3,6 +3,7 @@ updates:
   - package-ecosystem: bun
     open-pull-requests-limit: 10
     directory: /
+    versioning-strategy: increase
     commit-message:
       prefix: build
       prefix-development: chore
