@@ -39,7 +39,7 @@ jobs:
       - name: Use Bun.sh
         uses: oven-sh/setup-bun@v2.2.0
         with:
-          bun-version: 1.4.2
+          bun-version: 1.4.4
 
       - name: Use Node.js 26 (node:test runtime + uWS binaries)
         uses: actions/setup-node@v7.1.0
