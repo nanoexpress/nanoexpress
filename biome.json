@@ -5,6 +5,17 @@
     "clientKind": "git",
     "useIgnoreFile": true
   },
+  "files": {
+    "includes": [
+      "**",
+      "!**/cjs",
+      "!**/esm",
+      "!**/typings",
+      "!**/dist",
+      "!**/coverage",
+      "!**/bench.tmp.mjs"
+    ]
+  },
   "formatter": {
     "indentStyle": "space",
     "indentWidth": 2,
