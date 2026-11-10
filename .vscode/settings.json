@@ -1,23 +1,22 @@
 {
   "eslint.validate": ["javascript"],
   "eslint.useFlatConfig": false,
-  "typescript.validate.enable": true,
-  "javascript.validate.enable": false,
+  "js/ts.validate.enabled": true,
   "prettier.requireConfig": true,
   "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "biomejs.biome"
   },
   "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "biomejs.biome"
   },
   "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "biomejs.biome"
   },
   "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "biomejs.biome"
   },
   "[markdown]": {
-    "editor.defaultFormatter": "dprint.dprint"
+    "editor.defaultFormatter": "rvben.rumdl"
   },
   "files.associations": {
     "*.js": "javascript",
